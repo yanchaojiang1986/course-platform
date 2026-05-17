@@ -1,0 +1,39 @@
+# Changelog
+
+## [1.0.1] - 2026-05-17
+
+### 新增
+- 授权码 + 会员等级系统（free / vip / svip 三档权限，PostgreSQL 持久化）
+- 邀请码兑换 / 登录 / 登出接口（`/api/auth/*`）
+- 管理员接口：批量生成邀请码（`/api/admin/invite-codes/generate`）
+- AuthPage.jsx：登录 / 邀请码兑换前端页面
+- Sidebar.jsx：侧边导航组件
+- ContentViewer.jsx：支持 `<!-- DEMO:type -->` 标记的富媒体内容渲染器
+- 交互组件库（`src/components/interactive/`）：BarChart、Checklist、Comparison、DevTools、Flashcard、Flowchart、HttpDemo、InputDemo、Mindmap、SalaryChart、SqlDemo、Terminal、TestCase、Timeline
+- 章节内嵌检验题数据（`src/data/inlineChecks/`，共 12 个模块 × N 题）
+- 可视化教学样例挂载到模块 03、05、06
+
+### 变更
+- `server.js`：从 mock-only 服务升级为全功能后端（认证、权限、数据库、AI 流式对话）
+- 模块内容访问加入计划权限检查（`requiredPlan` 字段）
+- `INTERACTIVE_MAP.md`：记录全课程交互组件插入位置
+
+### 修复
+- 构建时 lint 脚本兼容无 `rg` 环境（fallback 到 `find`）
+
+---
+
+## [1.0.0] - 2026-05-17（初始封板）
+
+### 新增
+- CourseMap.jsx：Scrimba 风格课程地图主页（12 模块）
+- ModuleCard.jsx、ModuleDetail.jsx：两阶段模块卡片与详情页
+- Exercise.jsx：80% 通关门槛 + 错题写入
+- WrongBook.jsx：跨模块错题本
+- ScenarioPanel.jsx：Phase 2 实战情境面板
+- AIPanel.jsx：三模式 AI 教练（教辅 / 苏格拉底 / 模拟面试官）
+- DemoFrame.jsx：Demo 应用内嵌组件
+- `public/demo/`：register.html（5 个预埋 Bug）、shop.html（8 个预埋 Bug）、weather.html（5 个预埋 Bug）
+- `src/data/`：modules.js、exercises.js、scenarios.js、interactive.js
+- `server.js`：Express 后端（Mock API + Anthropic SSE 流式对话）
+- Zeabur 部署配置（zbpack.json）

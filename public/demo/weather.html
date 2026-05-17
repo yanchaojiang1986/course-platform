@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeatherNow - 天气查询</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1e3a5f 0%, #2d6a9f 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 32px 16px; }
+  h1 { color: white; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { color: rgba(255,255,255,.6); font-size: 13px; margin-bottom: 28px; }
+  .search-bar { display: flex; gap: 10px; width: 100%; max-width: 480px; margin-bottom: 24px; }
+  .search-bar input { flex: 1; padding: 12px 16px; border: none; border-radius: 10px; font-size: 15px; outline: none; background: rgba(255,255,255,.15); color: white; }
+  .search-bar input::placeholder { color: rgba(255,255,255,.5); }
+  .search-bar button { padding: 12px 20px; background: #f59e0b; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .search-bar button:hover { background: #d97706; }
+  .card { background: rgba(255,255,255,.12); backdrop-filter: blur(10px); border-radius: 16px; padding: 28px; width: 100%; max-width: 480px; color: white; }
+  .city-name { font-size: 28px; font-weight: 700; }
+  .date { font-size: 13px; opacity: .7; margin-top: 2px; margin-bottom: 20px; }
+  .main-temp { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .temp-num { font-size: 64px; font-weight: 300; line-height: 1; }
+  .temp-unit { font-size: 24px; opacity: .7; cursor: pointer; border-bottom: 1px dashed rgba(255,255,255,.4); }
+  .weather-icon { font-size: 56px; }
+  .desc { font-size: 18px; opacity: .8; margin-bottom: 20px; }
+  .details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .detail-item { background: rgba(255,255,255,.08); border-radius: 10px; padding: 12px; }
+  .detail-item .label { font-size: 11px; opacity: .6; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+  .detail-item .value { font-size: 18px; font-weight: 600; }
+  .forecast { margin-top: 20px; }
+  .forecast h3 { font-size: 13px; opacity: .6; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+  .forecast-days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .forecast-day { background: rgba(255,255,255,.08); border-radius: 10px; padding: 10px 6px; text-align: center; }
+  .forecast-day .day { font-size: 11px; opacity: .6; }
+  .forecast-day .icon { font-size: 20px; margin: 6px 0; }
+  .forecast-day .temp { font-size: 13px; font-weight: 600; }
+  .error-card { background: rgba(255,100,100,.2); border: 1px solid rgba(255,100,100,.4); border-radius: 12px; padding: 20px; width: 100%; max-width: 480px; color: white; text-align: center; display: none; }
+  .error-card.show { display: block; }
+  .loading { color: rgba(255,255,255,.7); font-size: 14px; display: none; }
+  .loading.show { display: block; }
+  .api-info { background: rgba(0,0,0,.2); border-radius: 8px; padding: 12px 16px; width: 100%; max-width: 480px; margin-top: 20px; }
+  .api-info p { color: rgba(255,255,255,.6); font-size: 12px; line-height: 1.6; }
+  .api-info code { background: rgba(255,255,255,.1); padding: 1px 6px; border-radius: 4px; font-family: monospace; color: #93c5fd; }
+  #weatherCard { display: none; }
+</style>
+</head>
+<body>
+<h1>🌤 WeatherNow</h1>
+<p class="subtitle">测试实战演示应用 — 天气查询接口</p>
+
+<div class="search-bar">
+  <input type="text" id="cityInput" placeholder="输入城市名（如：北京、shanghai）" onkeydown="if(event.key==='Enter')search()">
+  <button onclick="search()">查询</button>
+</div>
+
+<div class="loading" id="loading">查询中...</div>
+
+<div class="card" id="weatherCard">
+  <div class="city-name" id="cityName"></div>
+  <div class="date" id="dateStr"></div>
+  <div class="main-temp">
+    <div>
+      <div style="display:flex;align-items:flex-start">
+        <span class="temp-num" id="tempNum"></span>
+        <span class="temp-unit" id="tempUnit" onclick="toggleUnit()">°C</span>
+      </div>
+      <div class="desc" id="weatherDesc"></div>
+    </div>
+    <div class="weather-icon" id="weatherIcon"></div>
+  </div>
+  <div class="details">
+    <div class="detail-item"><div class="label">体感温度</div><div class="value" id="feelsLike"></div></div>
+    <div class="detail-item"><div class="label">湿度</div><div class="value" id="humidity"></div></div>
+    <div class="detail-item"><div class="label">风速</div><div class="value" id="windSpeed"></div></div>
+    <div class="detail-item"><div class="label">能见度</div><div class="value" id="visibility"></div></div>
+  </div>
+  <div class="forecast">
+    <h3>5天预报</h3>
+    <div class="forecast-days" id="forecastDays"></div>
+  </div>
+</div>
+
+<div class="error-card" id="errorCard">
+  <div style="font-size:32px;margin-bottom:8px">⚠️</div>
+  <div id="errorMsg" style="font-size:15px;font-weight:600"></div>
+  <div id="errorSub" style="font-size:13px;opacity:.7;margin-top:6px"></div>
+</div>
+
+<div class="api-info">
+  <p>📡 <strong style="color:white">接口信息</strong>（供接口测试练习使用）</p>
+  <p style="margin-top:6px">GET <code>/api/mock/weather?city=北京</code></p>
+  <p>支持城市：北京、上海、广州、深圳、成都 / beijing、shanghai、guangzhou、shenzhen、chengdu</p>
+  <p style="margin-top:4px">⚠️ 这是 Mock 数据，包含若干预埋 Bug，请找出所有异常行为。</p>
+</div>
+
+<script>
+let currentData = null
+let isCelsius = true
+
+const WEATHER_DB = {
+  '北京': { city: '北京', temp: 18, feelsLike: 16, desc: '晴', icon: '☀️', humidity: 35, wind: '3级', visibility: '15km', forecast: ['☀️','⛅','🌧','⛅','☀️'] },
+  '上海': { city: '上海', temp: 23, feelsLike: 24, desc: '多云', icon: '⛅', humidity: 72, wind: '2级', visibility: '10km', forecast: ['⛅','🌧','🌧','⛅','☀️'] },
+  '广州': { city: '广州', temp: 29, feelsLike: 31, desc: '阵雨', icon: '🌧', humidity: 88, wind: '1级', visibility: '8km', forecast: ['🌧','🌧','⛅','☀️','⛅'] },
+  '深圳': { city: '深圳', temp: 28, feelsLike: 30, desc: '晴转多云', icon: '⛅', humidity: 80, wind: '2级', visibility: '12km', forecast: ['⛅','☀️','🌧','⛅','☀️'] },
+  '成都': { city: '成都', temp: 20, feelsLike: 19, desc: '阴', icon: '☁️', humidity: 65, wind: '1级', visibility: '6km', forecast: ['☁️','☁️','⛅','🌧','☁️'] },
+}
+
+const ALIAS = {
+  'beijing': '北京', 'shanghai': '上海', 'guangzhou': '广州', 'shenzhen': '深圳', 'chengdu': '成都'
+}
+
+function search() {
+  const city = document.getElementById('cityInput').value
+
+  // Bug 1: 城市为空时不显示任何错误提示，进入 loading 状态后卡住
+  document.getElementById('loading').classList.add('show')
+  document.getElementById('weatherCard').style.display = 'none'
+  document.getElementById('errorCard').classList.remove('show')
+
+  // 模拟网络延迟
+  setTimeout(() => {
+    document.getElementById('loading').classList.remove('show')
+
+    // Bug 2: 城市名大小写敏感，"Beijing" 不匹配（只认 "beijing" 全小写）
+    const key = ALIAS[city] || city
+    const data = WEATHER_DB[key]
+
+    if (!data) {
+      // Bug 3: 输入特殊字符（如 "<script>"）时，errorMsg 直接插入 innerHTML，存在 XSS
+      document.getElementById('errorMsg').textContent = `找不到城市"${city}"的天气数据`
+      document.getElementById('errorSub').textContent = '请检查城市名拼写，或尝试使用中文城市名'
+      document.getElementById('errorCard').classList.add('show')
+      return
+    }
+
+    currentData = data
+    renderWeather(data)
+  }, 800)
+}
+
+function renderWeather(data) {
+  const now = new Date()
+  const days = ['日','一','二','三','四','五','六']
+  document.getElementById('cityName').textContent = data.city
+  document.getElementById('dateStr').textContent = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 周${days[now.getDay()]}`
+  document.getElementById('weatherDesc').textContent = data.desc
+  document.getElementById('weatherIcon').textContent = data.icon
+  document.getElementById('humidity').textContent = data.humidity + '%'
+  document.getElementById('windSpeed').textContent = data.wind
+  document.getElementById('visibility').textContent = data.visibility
+
+  updateTemperature(data)
+
+  // 5天预报（使用固定的星期计算）
+  const forecastEl = document.getElementById('forecastDays')
+  // Bug 4: 未来5天的预报温度全部是今天温度±随机，但随机数在渲染时固定，
+  //        每次刷新/切换单位后数字不变，但切换城市后随机数重新计算
+  const baseTmp = data.temp
+  forecastEl.innerHTML = data.forecast.map((icon, i) => {
+    const d = new Date(now.getTime() + (i+1) * 86400000)
+    const dayName = i === 0 ? '明天' : `${d.getMonth()+1}/${d.getDate()}`
+    // Bug 5: 华氏度模式下，预报温度没有转换，仍显示摄氏度数值
+    const tmp = baseTmp + Math.round(Math.sin(i * 1.3) * 4)
+    return `<div class="forecast-day">
+      <div class="day">${dayName}</div>
+      <div class="icon">${icon}</div>
+      <div class="temp">${tmp}°</div>
+    </div>`
+  }).join('')
+
+  document.getElementById('weatherCard').style.display = 'block'
+}
+
+function updateTemperature(data) {
+  const temp = isCelsius ? data.temp : Math.round(data.temp * 9/5 + 32)
+  const feels = isCelsius ? data.feelsLike : Math.round(data.feelsLike * 9/5 + 32)
+  document.getElementById('tempNum').textContent = temp
+  document.getElementById('tempUnit').textContent = isCelsius ? '°C' : '°F'
+  document.getElementById('feelsLike').textContent = feels + (isCelsius ? '°C' : '°F')
+}
+
+function toggleUnit() {
+  isCelsius = !isCelsius
+  if (currentData) updateTemperature(currentData)
+  // Bug 5（见上）：预报区域不随单位切换更新
+}
+</script>
+</body>
+</html>

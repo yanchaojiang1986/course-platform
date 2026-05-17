@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechMall - 购物车</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; min-height: 100vh; }
+  .header { background: #1e293b; color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { font-size: 18px; font-weight: 700; }
+  .header span { font-size: 13px; opacity: .7; }
+  .container { max-width: 960px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
+  .products h2, .cart h2 { font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 16px; }
+  .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .product-card { background: white; border-radius: 10px; padding: 16px; border: 1px solid #e2e8f0; }
+  .product-card .emoji { font-size: 32px; margin-bottom: 8px; }
+  .product-card .name { font-size: 14px; font-weight: 600; color: #1e293b; }
+  .product-card .price { font-size: 16px; color: #4f46e5; font-weight: 700; margin: 4px 0; }
+  .product-card .stock { font-size: 11px; color: #6b7280; }
+  .product-card button { width: 100%; margin-top: 10px; padding: 8px; background: #4f46e5; color: white; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .product-card button:hover { background: #4338ca; }
+  .product-card button:disabled { background: #d1d5db; cursor: not-allowed; }
+  .cart { background: white; border-radius: 10px; padding: 20px; border: 1px solid #e2e8f0; height: fit-content; position: sticky; top: 24px; }
+  .cart-empty { text-align: center; color: #9ca3af; font-size: 13px; padding: 24px 0; }
+  .cart-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+  .cart-item .info { flex: 1; }
+  .cart-item .iname { font-size: 13px; font-weight: 500; color: #1e293b; }
+  .cart-item .iprice { font-size: 12px; color: #6b7280; }
+  .qty-ctrl { display: flex; align-items: center; gap: 6px; }
+  .qty-btn { width: 24px; height: 24px; border: 1px solid #d1d5db; background: white; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .qty-btn:hover { background: #f1f5f9; }
+  .qty-num { font-size: 13px; font-weight: 600; min-width: 20px; text-align: center; }
+  .del-btn { color: #dc2626; border: none; background: none; cursor: pointer; font-size: 16px; padding: 2px 6px; }
+  .divider { border: none; border-top: 1px solid #e2e8f0; margin: 12px 0; }
+  .coupon-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .coupon-row input { flex: 1; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; outline: none; }
+  .coupon-row button { padding: 8px 14px; background: #e0e7ff; color: #4f46e5; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .totals { font-size: 13px; color: #4b5563; }
+  .totals .row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .totals .row.discount { color: #16a34a; }
+  .totals .total { font-size: 16px; font-weight: 700; color: #1e293b; }
+  .checkout-btn { width: 100%; padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 14px; }
+  .checkout-btn:hover { background: #4338ca; }
+  .msg { font-size: 12px; margin-top: 8px; min-height: 18px; }
+  .msg.ok { color: #16a34a; }
+  .msg.err { color: #dc2626; }
+  @media (max-width: 640px) { .container { grid-template-columns: 1fr; } .product-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🛒 TechMall</h1>
+  <span>测试实战演示应用</span>
+</div>
+
+<div class="container">
+  <div class="products">
+    <h2>商品列表</h2>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+  <div class="cart">
+    <h2>购物车</h2>
+    <div id="cartItems"><div class="cart-empty">购物车是空的</div></div>
+    <div id="cartBottom" style="display:none">
+      <hr class="divider">
+      <div class="coupon-row">
+        <input id="couponInput" placeholder="输入优惠码" />
+        <button onclick="applyCoupon()">使用</button>
+      </div>
+      <div class="msg" id="couponMsg"></div>
+      <hr class="divider">
+      <div class="totals">
+        <div class="row"><span>小计</span><span id="subtotal">¥0</span></div>
+        <div class="row discount" id="discountRow" style="display:none"><span>优惠</span><span id="discountAmt"></span></div>
+        <div class="row"><span>运费</span><span id="shipping">¥0</span></div>
+        <hr class="divider" style="margin:8px 0">
+        <div class="row total"><span>合计</span><span id="total">¥0</span></div>
+      </div>
+      <button class="checkout-btn" onclick="checkout()">去结算</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRODUCTS = [
+  { id: 1, name: '无线鼠标 ProX', emoji: '🖱️', price: 89.9,  stock: 5 },
+  { id: 2, name: '机械键盘 K75',  emoji: '⌨️', price: 299.0, stock: 3 },
+  { id: 3, name: 'USB-C 集线器',  emoji: '🔌', price: 149.9, stock: 10 },
+  { id: 4, name: '降噪耳机 Q30',  emoji: '🎧', price: 399.0, stock: 2 },
+]
+
+let cart = []
+let discount = 0
+
+// 渲染商品
+function renderProducts() {
+  document.getElementById('productGrid').innerHTML = PRODUCTS.map(p => `
+    <div class="product-card">
+      <div class="emoji">${p.emoji}</div>
+      <div class="name">${p.name}</div>
+      <div class="price">¥${p.price.toFixed(2)}</div>
+      <div class="stock">库存：${p.stock} 件</div>
+      <button onclick="addToCart(${p.id})" ${p.stock === 0 ? 'disabled' : ''}>
+        ${p.stock === 0 ? '已售罄' : '加入购物车'}
+      </button>
+    </div>
+  `).join('')
+}
+
+function addToCart(productId) {
+  const product = PRODUCTS.find(p => p.id === productId)
+  const existing = cart.find(c => c.id === productId)
+  if (existing) {
+    // Bug 1: 没有校验库存上限，可以无限加购
+    existing.qty++
+  } else {
+    cart.push({ ...product, qty: 1 })
+  }
+  renderCart()
+}
+
+function changeQty(productId, delta) {
+  const item = cart.find(c => c.id === productId)
+  if (!item) return
+  item.qty += delta
+  // Bug 2: 数量减到 0 不移除，还显示 0 件商品在购物车
+  if (item.qty < 0) item.qty = 0
+  renderCart()
+}
+
+function removeItem(productId) {
+  // Bug 3: 删除时用索引，但找的是第一个匹配 id 的位置，多件同款时逻辑正确
+  // 然而这里实际上可以正常删除，测试人员可能会发现删除后折扣还在
+  cart = cart.filter(c => c.id !== productId)
+  renderCart()
+}
+
+function renderCart() {
+  const cartItems = document.getElementById('cartItems')
+  const cartBottom = document.getElementById('cartBottom')
+
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<div class="cart-empty">购物车是空的</div>'
+    cartBottom.style.display = 'none'
+    discount = 0
+    return
+  }
+
+  cartItems.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <span style="font-size:20px">${item.emoji}</span>
+      <div class="info">
+        <div class="iname">${item.name}</div>
+        <div class="iprice">¥${item.price.toFixed(2)}</div>
+      </div>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+        <span class="qty-num">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${item.id}, +1)">+</button>
+      </div>
+      <button class="del-btn" onclick="removeItem(${item.id})">×</button>
+    </div>
+  `).join('')
+
+  cartBottom.style.display = 'block'
+  updateTotals()
+}
+
+function updateTotals() {
+  // Bug 4: 直接用浮点数相加，会出现精度问题（如 89.9 + 149.9 = 239.79999999999998）
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+  const shipping = subtotal >= 200 ? 0 : 12
+  const discountAmt = subtotal * discount
+  const total = subtotal - discountAmt + shipping
+
+  document.getElementById('subtotal').textContent = '¥' + subtotal.toFixed(2)
+  document.getElementById('shipping').textContent = shipping === 0 ? '免运费' : '¥' + shipping
+
+  if (discount > 0) {
+    document.getElementById('discountRow').style.display = 'flex'
+    document.getElementById('discountAmt').textContent = '-¥' + discountAmt.toFixed(2)
+  } else {
+    document.getElementById('discountRow').style.display = 'none'
+  }
+
+  // Bug 5: 合计金额直接拼接，没用 toFixed，当 total 是整数时显示正常，
+  //        但当有折扣时可能出现 ¥239.19999999999999
+  document.getElementById('total').textContent = '¥' + total.toFixed(2)
+}
+
+function applyCoupon() {
+  const code = document.getElementById('couponInput').value
+  const msg = document.getElementById('couponMsg')
+
+  // Bug 6: 优惠码区分大小写，"SAVE10" 生效，"save10" / "Save10" 不生效
+  if (code === 'SAVE10') {
+    discount = 0.1
+    msg.textContent = '✓ 优惠码已使用，享9折优惠'
+    msg.className = 'msg ok'
+    updateTotals()
+  } else if (code === 'SAVE20') {
+    discount = 0.2
+    msg.textContent = '✓ 优惠码已使用，享8折优惠'
+    msg.className = 'msg ok'
+    updateTotals()
+  } else if (code === '') {
+    // Bug 7: 优惠码为空点使用，没有提示，静默失败
+    msg.textContent = ''
+  } else {
+    msg.textContent = '优惠码无效或已过期'
+    msg.className = 'msg err'
+  }
+}
+
+function checkout() {
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+  // Bug 8: 购物车中数量为 0 的商品也会出现在结算中
+  const zeroQtyItems = cart.filter(c => c.qty === 0)
+  if (zeroQtyItems.length > 0) {
+    alert(`结算包含 ${zeroQtyItems.length} 件数量为0的商品，这是一个 Bug！`)
+    return
+  }
+  alert(`订单已提交！\n共 ${cart.reduce((s,c)=>s+c.qty,0)} 件商品\n合计：¥${total.toFixed(2)}\n\n（演示应用，非真实下单）`)
+}
+
+renderProducts()
+</script>
+</body>
+</html>

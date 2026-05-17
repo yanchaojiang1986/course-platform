@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechStart - 用户注册</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .card { background: white; border-radius: 12px; padding: 36px; width: 100%; max-width: 420px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  .logo { text-align: center; margin-bottom: 28px; }
+  .logo h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+  .logo p { font-size: 13px; color: #6b7280; margin-top: 4px; }
+  .field { margin-bottom: 16px; }
+  label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
+  input { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; transition: border-color .2s; }
+  input:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,.1); }
+  .hint { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+  .error { font-size: 12px; color: #dc2626; margin-top: 4px; display: none; }
+  .error.show { display: block; }
+  button { width: 100%; padding: 11px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background .2s; }
+  button:hover { background: #4338ca; }
+  .success { background: #ecfdf5; border: 1px solid #6ee7b7; border-radius: 8px; padding: 16px; text-align: center; display: none; }
+  .success.show { display: block; }
+  .success h3 { color: #065f46; font-size: 15px; margin-bottom: 4px; }
+  .success p { color: #047857; font-size: 13px; }
+  .divider { text-align: center; font-size: 12px; color: #9ca3af; margin: 16px 0; }
+  .req-list { font-size: 11px; color: #6b7280; margin-top: 4px; line-height: 1.6; }
+  .tab-bar { display: flex; border-bottom: 1px solid #e5e7eb; margin-bottom: 24px; }
+  .tab { flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 500; color: #6b7280; cursor: pointer; border-bottom: 2px solid transparent; }
+  .tab.active { color: #4f46e5; border-bottom-color: #4f46e5; }
+  #loginForm { display: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <h1>🚀 TechStart</h1>
+    <p>测试实战演示应用</p>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab('register')">注册</div>
+    <div class="tab" onclick="switchTab('login')">登录</div>
+  </div>
+
+  <!-- 注册表单 -->
+  <form id="registerForm" onsubmit="return handleRegister(event)">
+    <div class="field">
+      <label>用户名</label>
+      <input type="text" id="username" placeholder="输入用户名" autocomplete="off">
+      <div class="hint">4-16个字符</div>
+      <div class="error" id="usernameErr"></div>
+    </div>
+    <div class="field">
+      <label>邮箱</label>
+      <input type="text" id="email" placeholder="输入邮箱地址" autocomplete="off">
+      <div class="error" id="emailErr"></div>
+    </div>
+    <div class="field">
+      <label>密码</label>
+      <input type="password" id="password" placeholder="设置密码" autocomplete="new-password">
+      <div class="req-list">要求：8-20位，包含大写字母和数字</div>
+      <div class="error" id="passwordErr"></div>
+    </div>
+    <div class="field">
+      <label>确认密码</label>
+      <input type="password" id="confirmPwd" placeholder="再次输入密码" autocomplete="new-password">
+      <div class="error" id="confirmErr"></div>
+    </div>
+    <button type="submit">立即注册</button>
+  </form>
+
+  <!-- 登录表单 -->
+  <form id="loginForm" onsubmit="return handleLogin(event)">
+    <div class="field">
+      <label>用户名或邮箱</label>
+      <input type="text" id="loginUser" placeholder="输入用户名或邮箱" autocomplete="off">
+      <div class="error" id="loginUserErr"></div>
+    </div>
+    <div class="field">
+      <label>密码</label>
+      <input type="password" id="loginPwd" placeholder="输入密码" autocomplete="current-password">
+      <div class="error" id="loginPwdErr"></div>
+    </div>
+    <button type="submit">登录</button>
+  </form>
+
+  <div class="success" id="successMsg">
+    <h3>✓ 注册成功！</h3>
+    <p id="successText"></p>
+  </div>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (tab==='register'&&i===0)||(tab==='login'&&i===1)))
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none'
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none'
+  document.getElementById('successMsg').classList.remove('show')
+}
+
+function showErr(id, msg) {
+  const el = document.getElementById(id)
+  el.textContent = msg; el.classList.add('show')
+}
+function clearErr(id) { document.getElementById(id).classList.remove('show') }
+
+// 预埋 Bug 列表（学员需要找到这些）:
+// Bug 1: 用户名允许空格（"test user" 会通过，但实际系统应该拒绝）
+// Bug 2: 密码长度只检查最小值，没检查最大值（999位密码会通过）
+// Bug 3: 邮箱验证不完整（"a@b" 会通过，"test@" 也会通过）
+// Bug 4: 确认密码在密码字段为空时不报错，直接显示注册成功
+// Bug 5: 注册成功后表单不清空，可以重复提交同一数据
+
+function handleRegister(e) {
+  e.preventDefault()
+  const username = document.getElementById('username').value
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
+  const confirmPwd = document.getElementById('confirmPwd').value
+  let hasError = false
+
+  clearErr('usernameErr'); clearErr('emailErr'); clearErr('passwordErr'); clearErr('confirmErr')
+  document.getElementById('successMsg').classList.remove('show')
+
+  // Bug 1: 没有 .trim()，用户名含空格也能通过长度检查
+  if (username.length < 4) {
+    showErr('usernameErr', '用户名至少需要4个字符'); hasError = true
+  } else if (username.length > 16) {
+    showErr('usernameErr', '用户名不能超过16个字符'); hasError = true
+  }
+
+  // Bug 3: 简单检查 @ 和 .，但 "a@b" 或 "test@." 也能通过
+  if (!email.includes('@') || email.length < 5) {
+    showErr('emailErr', '请输入有效的邮箱地址'); hasError = true
+  }
+
+  // Bug 2: 只检查了最小长度，没检查最大长度和字符要求（有提示但未验证大写和数字）
+  if (password.length < 8) {
+    showErr('passwordErr', '密码至少需要8位'); hasError = true
+  }
+
+  // Bug 4: confirmPwd 为空时，'' !== password（非空）会显示不匹配，
+  //        但如果 password 也是空，则 '' === '' 不报错直接通过
+  if (confirmPwd !== password) {
+    showErr('confirmErr', '两次输入的密码不一致'); hasError = true
+  }
+
+  if (!hasError) {
+    // Bug 5: 成功后不清空表单
+    document.getElementById('successMsg').classList.add('show')
+    document.getElementById('successText').textContent = `欢迎，${username}！请前往 ${email} 验证邮箱。`
+    document.getElementById('registerForm').style.display = 'none'
+  }
+  return false
+}
+
+function handleLogin(e) {
+  e.preventDefault()
+  const user = document.getElementById('loginUser').value
+  const pwd = document.getElementById('loginPwd').value
+  clearErr('loginUserErr'); clearErr('loginPwdErr')
+
+  if (!user) { showErr('loginUserErr', '请输入用户名或邮箱'); return false }
+  if (!pwd) { showErr('loginPwdErr', '请输入密码'); return false }
+
+  // 模拟登录（固定账号）
+  if ((user === 'testuser' || user === 'test@example.com') && pwd === 'Test1234') {
+    document.getElementById('loginForm').style.display = 'none'
+    document.getElementById('successMsg').classList.add('show')
+    document.getElementById('successText').textContent = `登录成功！欢迎回来，${user}`
+  } else {
+    showErr('loginPwdErr', '用户名或密码错误')
+  }
+  return false
+}
+</script>
+</body>
+</html>

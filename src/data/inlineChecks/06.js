@@ -1,0 +1,33 @@
+export const INLINE_CHECKS_06 = {
+  q06_1: {
+    id: 'q06_1',
+    type: 'choice',
+    question: '前端请求参数正确，但后端返回 500，这更像谁的问题？',
+    options: ['后端处理异常', '前端页面样式问题', '浏览器缓存问题', '数据库一定没启动'],
+    answer: 0,
+    explanation: '500 是典型服务器内部错误，优先怀疑后端处理逻辑。',
+  },
+  q06_2: {
+    id: 'q06_2',
+    type: 'choice',
+    question: 'Postman 对测试人员最直接的价值是什么？',
+    options: ['做视觉设计', '不依赖前端页面直接验证接口', '查看服务器 CPU', '管理排期'],
+    answer: 1,
+    explanation: 'Postman 的核心用途是构造请求、观察响应，独立验证接口行为。',
+  },
+  q06_3: {
+    id: 'q06_3',
+    type: 'truefalse',
+    question: '接口测试时，只检查状态码就足够，不需要再看返回字段。',
+    answer: false,
+    explanation: '字段名、字段类型、业务码和返回内容都要校验。',
+  },
+  q06_4: {
+    id: 'q06_4',
+    type: 'choice',
+    question: '超时后自动重试的场景里，最应该优先关注哪种风险？',
+    options: ['按钮颜色偏浅', '重复处理导致重复扣款或重复记账', '文案不够简洁', '接口名称太长'],
+    answer: 1,
+    explanation: '重试场景的关键就是幂等控制，否则极易出现重复处理。',
+  },
+}
