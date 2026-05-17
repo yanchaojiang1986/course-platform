@@ -1,6 +1,42 @@
 # 封板记录
 
-## v1.0.8 — 2026-05-17（当前版本）
+## v1.0.9 — 2026-05-17（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`，39 个 blockId） |
+| `npm run build` | ✅ 通过（79 modules） |
+
+### 本次变更摘要
+- 新增 `todolist.md`，沉淀会员权限、Pro AI 知识库约束、移动端兼容、登录页 UI、暗色模式、二维码联系弹窗与推广裂变等后续事项。
+- 清除课程内容中的 AI 测试教学：删除模块 07 的“AI 辅助测试”章节，并替换模块 11 相关练习题。
+- 同步更新课程说明、学习路线与教辅系统提示，去掉“AI 辅助测试”覆盖描述。
+- 求职模块推荐交互形式调整为“面试问答练习入口”。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `464c801e4831f2d7675e8d5567646d794d57ef3b0ac6a4eb91d628addf1a3ca1` |
+| `package-lock.json` | `16918538bc8fe71bbceb8362d4d7f32b0c8c3782306c5480a7e56595cc4f2c35` |
+| `todolist.md` | `d0004964a6201fa67ebbfde762abdaae4f2d4333a728eb99718e3ae989b3fc55` |
+| `public/content/07_测试工具基础.md` | `2cd0289793a2a36cac1261b6ce4bde978e96bbcc31bfe074c16d0f6de92a723b` |
+| `public/content/09_求职转型与面试准备.md` | `a597673ecda0b033225c6b23f5da4da1b92b61b579badfb00dc0d62bf68e4376` |
+| `public/content/README.md` | `dc2d59fed40d79530d8ebe5aaaec43048bd0c69bf142e70583ef786a9040c808` |
+| `src/components/AIPanel.jsx` | `a900d3160b5c2b8aa3182ddd4dd06ca6f05eae88550a57db6b8bfcad7f846feb` |
+| `src/data/exercises.js` | `1412bb300f79b2ab51472edc700155b7e46337ad21f30ba1c95960861144fb29` |
+| `src/data/inlineChecks/11.js` | `a16cca6ed7f9396f6f9ff435672f85f9fa3c1ac8f113fcc7c799df41153141cc` |
+| `src/data/interactive.js` | `ee12799ab372df766232803f6f90afe1a793a369f888d9572e7b8b60ecc33219` |
+
+### 说明
+- 本次封板为“课程 AI 测试内容清理 + 后续待办沉淀”，已通过构建与内容校验闸门。
+
+---
+
+## v1.0.8 — 2026-05-17（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）

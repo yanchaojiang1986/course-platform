@@ -17,7 +17,7 @@ export const INTERACTIVE_DATA = {
       ]},
       { stage: '阶段三：工具提升', color: '#8B5CF6', modules: [
         { id: '06', name: '接口测试入门', desc: 'Postman + 前后端联调思路' },
-        { id: '07', name: '测试工具基础', desc: 'JIRA / 禅道 / F12 / MySQL / Linux / AI 辅助' },
+        { id: '07', name: '测试工具基础', desc: 'JIRA / 禅道 / F12 / MySQL / Linux' },
       ]},
       { stage: '阶段四：实战串联', color: '#F59E0B', modules: [
         { id: '08', name: '企业级实战项目', desc: '从需求到报告的完整交付' },

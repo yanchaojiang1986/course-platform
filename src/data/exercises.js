@@ -523,23 +523,29 @@ export const EXERCISES = {
     },
     {
       id: 'q11_3',
-      type: 'truefalse',
-      question: '使用 AI 工具（如 ChatGPT）帮助生成测试用例，就不需要人工审查了，可以直接使用。',
-      answer: false,
-      explanation: '错误。AI 生成的测试用例可能遗漏业务特有的隐性规则，或产生不符合实际需求的用例。人工必须审查、补充和调整，AI 是提效工具，不能替代测试判断力。'
+      type: 'choice',
+      question: '在测试库执行 UPDATE 或 DELETE 时，最重要的安全习惯是什么？',
+      options: [
+        '先确认环境和影响范围，并写明确的 WHERE 条件',
+        '直接全表更新，测试库不需要谨慎',
+        '只要页面显示正常，就不用查数据库',
+        '所有数据都交给开发处理，测试不需要关注'
+      ],
+      answer: 0,
+      explanation: '即使是测试库，也要先确认环境、备份或明确影响范围，并避免无 WHERE 的 UPDATE / DELETE。'
     },
     {
       id: 'q11_4',
       type: 'choice',
-      question: '让 AI 帮你分析一段错误日志时，最有效的 Prompt 写法是？',
+      question: '术语 UAT 通常指什么？',
       options: [
-        '帮我看一下这个错误',
-        '你是一个资深测试工程师，下面是我们系统的报错日志，请分析可能的原因并给出排查建议：[日志内容]',
-        '这是什么错误',
-        '请修复这个 Bug'
+        '单元测试',
+        '用户验收测试',
+        '接口压力测试',
+        '数据库备份'
       ],
       answer: 1,
-      explanation: '好的 Prompt = 角色设定 + 背景说明 + 完整信息 + 明确的输出要求。给 AI 角色（资深测试工程师）、上下文（错误日志）、任务（分析原因+排查建议）会得到更精准的结果。'
+      explanation: 'UAT 是 User Acceptance Test，中文通常叫用户验收测试，常发生在上线前或业务验收阶段。'
     }
   ],
 
