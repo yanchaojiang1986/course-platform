@@ -3,26 +3,92 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  :root[data-theme="dark"] {
     color-scheme: dark;
+
+    /* Page background gradient stack */
+    --page-bg-1: radial-gradient(1100px 520px at -5% -10%, rgba(56, 189, 248, 0.2), transparent 55%);
+    --page-bg-2: radial-gradient(900px 500px at 105% 8%, rgba(16, 185, 129, 0.18), transparent 52%);
+    --page-bg-3: radial-gradient(700px 420px at 50% 110%, rgba(245, 158, 11, 0.12), transparent 60%);
+    --page-bg-base: linear-gradient(180deg, #050914 0%, #0a1020 45%, #070b14 100%);
+
+    /* Surfaces */
     --bg: #070b14;
     --bg-soft: #0d1424;
     --surface: rgba(18, 27, 45, 0.82);
     --surface-strong: rgba(17, 24, 39, 0.93);
+    --surface-elevated: rgba(20, 30, 50, 0.92);
     --surface-muted: rgba(148, 163, 184, 0.08);
+    --surface-reading: linear-gradient(180deg, rgba(15, 23, 42, 0.65), rgba(11, 18, 32, 0.85));
+
+    /* Borders */
     --border: rgba(148, 163, 184, 0.24);
     --border-strong: rgba(148, 163, 184, 0.4);
+
+    /* Text */
     --text: #e2e8f0;
+    --text-strong: #f8fafc;
     --text-muted: #9fb0c8;
+    --text-faint: #64748b;
+
+    /* Inline code / pre */
+    --code-bg: rgba(56, 189, 248, 0.12);
+    --code-fg: #7dd3fc;
+    --pre-bg: rgba(2, 6, 23, 0.7);
+    --pre-fg: #e2e8f0;
+
+    /* Accent (shared across themes) */
     --primary: #38bdf8;
     --secondary: #10b981;
     --accent: #f59e0b;
     --danger: #f43f5e;
+
+    /* Decorative */
+    --grid-opacity: 0.33;
+    --grid-line: rgba(148, 163, 184, 0.08);
+    --shadow-strong: 0 24px 80px rgba(2, 6, 23, 0.45);
+    --shadow-soft: 0 16px 40px rgba(2, 6, 23, 0.34);
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+
+    --page-bg-1: radial-gradient(1100px 520px at -5% -10%, rgba(56, 189, 248, 0.18), transparent 55%);
+    --page-bg-2: radial-gradient(900px 500px at 105% 8%, rgba(16, 185, 129, 0.14), transparent 52%);
+    --page-bg-3: radial-gradient(700px 420px at 50% 110%, rgba(245, 158, 11, 0.1), transparent 60%);
+    --page-bg-base: linear-gradient(180deg, #f8fbff 0%, #eef3fa 45%, #f1f5f9 100%);
+
+    --bg: #f8fafc;
+    --bg-soft: #ffffff;
+    --surface: rgba(255, 255, 255, 0.96);
+    --surface-strong: rgba(255, 255, 255, 1);
+    --surface-elevated: rgba(255, 255, 255, 0.98);
+    --surface-muted: rgba(15, 23, 42, 0.04);
+    --surface-reading: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 1));
+
+    --border: rgba(15, 23, 42, 0.1);
+    --border-strong: rgba(15, 23, 42, 0.18);
+
+    --text: #1e293b;
+    --text-strong: #0f172a;
+    --text-muted: #475569;
+    --text-faint: #94a3b8;
+
+    --code-bg: rgba(14, 165, 233, 0.1);
+    --code-fg: #0369a1;
+    --pre-bg: #0f172a;
+    --pre-fg: #e2e8f0;
+
+    --grid-opacity: 0.16;
+    --grid-line: rgba(15, 23, 42, 0.08);
+    --shadow-strong: 0 18px 56px rgba(15, 23, 42, 0.1);
+    --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.07);
   }
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(148, 163, 184, 0.45) rgba(15, 23, 42, 0.5);
+    scrollbar-color: var(--border-strong) transparent;
   }
 
   *::-webkit-scrollbar {
@@ -31,11 +97,11 @@
   }
 
   *::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.4);
+    background: transparent;
   }
 
   *::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.45);
+    background: var(--border-strong);
     border-radius: 999px;
   }
 
@@ -45,11 +111,12 @@
     color: var(--text);
     font-family: "Avenir Next", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
     background:
-      radial-gradient(1100px 520px at -5% -10%, rgba(56, 189, 248, 0.2), transparent 55%),
-      radial-gradient(900px 500px at 105% 8%, rgba(16, 185, 129, 0.18), transparent 52%),
-      radial-gradient(700px 420px at 50% 110%, rgba(245, 158, 11, 0.12), transparent 60%),
-      linear-gradient(180deg, #050914 0%, #0a1020 45%, #070b14 100%);
+      var(--page-bg-1),
+      var(--page-bg-2),
+      var(--page-bg-3),
+      var(--page-bg-base);
     min-height: 100vh;
+    transition: background-color 240ms ease, color 240ms ease;
   }
 
   body::before {
@@ -58,11 +125,11 @@
     inset: 0;
     pointer-events: none;
     background:
-      linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 30px 30px;
     mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.7), transparent 88%);
-    opacity: 0.33;
+    opacity: var(--grid-opacity);
     z-index: -1;
   }
 }
@@ -83,15 +150,29 @@
   .glass-panel {
     @apply border backdrop-blur-2xl;
     border-color: var(--border);
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.68), rgba(11, 18, 32, 0.88));
-    box-shadow: 0 24px 80px rgba(2, 6, 23, 0.45);
+    background: var(--surface-reading);
+    box-shadow: var(--shadow-strong);
     animation: lift-in 420ms ease-out both;
   }
 
   .metric-panel {
     @apply rounded-2xl border p-4;
-    border-color: rgba(148, 163, 184, 0.26);
-    background: linear-gradient(180deg, rgba(12, 20, 36, 0.85), rgba(9, 15, 29, 0.93));
+    border-color: var(--border);
+    background: var(--surface);
+  }
+
+  .content-surface {
+    @apply rounded-3xl border;
+    border-color: var(--border);
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .elevated-card {
+    @apply rounded-2xl border;
+    border-color: var(--border);
+    background: var(--surface-elevated);
+    box-shadow: var(--shadow-soft);
   }
 
   .section-chip {
@@ -99,23 +180,54 @@
     color: var(--text-muted);
   }
 
-  .content-surface {
-    @apply rounded-3xl border;
-    border-color: rgba(148, 163, 184, 0.24);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.98));
-    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.26);
-  }
-
-  .elevated-card {
-    @apply rounded-2xl border;
-    border-color: rgba(148, 163, 184, 0.24);
-    background: linear-gradient(180deg, rgba(20, 30, 50, 0.92), rgba(11, 17, 31, 0.96));
-    box-shadow: 0 16px 40px rgba(2, 6, 23, 0.34);
-  }
-
   .dot-signal {
     box-shadow: 0 0 24px rgba(56, 189, 248, 0.65);
   }
+
+  /* 统一卡片层级 ----------------------------------------------------
+   * Tier 1 (.glass-panel)   page-level sections   rounded-3xl + backdrop-blur + strong shadow
+   * Tier 2 (.content-surface / .elevated-card) container surfaces  rounded-2xl + soft shadow
+   * Tier 3 (.card-surface)  content cards          rounded-xl  + border-themed + bg-surface
+   * Tier 4 (.card-item)     inline items inside .card-surface  rounded-lg + border-themed
+   * Accent (.card-accent-*) status-tinted cards   一律 10% bg + 40% border + 700/200 文字
+   */
+  .card-surface {
+    @apply rounded-xl border;
+    border-color: var(--border);
+    background: var(--surface);
+  }
+
+  .card-item {
+    @apply rounded-lg border;
+    border-color: var(--border);
+    background: var(--surface);
+  }
+
+  /* 统一的"带强调色"卡片 — 所有 status / category 卡片都基于这个 */
+  .card-accent {
+    @apply rounded-xl border p-4;
+  }
+  .card-accent-sky      { background: rgba(14, 165, 233, 0.10); border-color: rgba(56, 189, 248, 0.40); }
+  .card-accent-emerald  { background: rgba(16, 185, 129, 0.10); border-color: rgba(52, 211, 153, 0.40); }
+  .card-accent-amber    { background: rgba(245, 158, 11, 0.10); border-color: rgba(251, 191, 36, 0.40); }
+  .card-accent-rose     { background: rgba(244, 63, 94, 0.10);  border-color: rgba(251, 113, 133, 0.40); }
+  .card-accent-fuchsia  { background: rgba(217, 70, 239, 0.10); border-color: rgba(232, 121, 249, 0.40); }
+  .card-accent-violet   { background: rgba(139, 92, 246, 0.10); border-color: rgba(167, 139, 250, 0.40); }
+}
+
+@layer utilities {
+  /* Semantic theme-aware utilities. Use these instead of bg-white / text-gray-* */
+  .bg-page          { background: var(--page-bg-base); }
+  .bg-surface       { background: var(--surface); }
+  .bg-surface-soft  { background: var(--surface-muted); }
+  .bg-surface-strong{ background: var(--surface-strong); }
+  .bg-elevated      { background: var(--surface-elevated); }
+  .text-fg          { color: var(--text); }
+  .text-fg-strong   { color: var(--text-strong); }
+  .text-fg-muted    { color: var(--text-muted); }
+  .text-fg-faint    { color: var(--text-faint); }
+  .border-themed    { border-color: var(--border); }
+  .border-themed-strong { border-color: var(--border-strong); }
 }
 
 @keyframes lift-in {
@@ -129,27 +241,82 @@
   }
 }
 
-/* Markdown 内容样式 */
-.markdown-body h1 { @apply text-2xl font-bold text-slate-900 mb-4 mt-6 pb-2 border-b border-slate-200; }
-.markdown-body h2 { @apply text-xl font-semibold text-slate-800 mb-3 mt-8; }
-.markdown-body h3 { @apply text-lg font-semibold text-slate-700 mb-2 mt-6; }
-.markdown-body p { @apply text-slate-700 leading-relaxed mb-4; }
+/* Markdown 内容样式 — 全部走主题变量 */
+.markdown-body h1 {
+  @apply text-2xl font-bold mb-4 mt-6 pb-2 border-b;
+  color: var(--text-strong);
+  border-color: var(--border);
+}
+.markdown-body h2 {
+  @apply text-xl font-semibold mb-3 mt-8;
+  color: var(--text-strong);
+}
+.markdown-body h3 {
+  @apply text-lg font-semibold mb-2 mt-6;
+  color: var(--text);
+}
+.markdown-body p {
+  @apply leading-relaxed mb-4;
+  color: var(--text);
+}
 .markdown-body ul { @apply list-disc list-inside space-y-1 mb-4 pl-2; }
 .markdown-body ol { @apply list-decimal list-inside space-y-1 mb-4 pl-2; }
-.markdown-body li { @apply text-slate-700 leading-relaxed; }
+.markdown-body li {
+  @apply leading-relaxed;
+  color: var(--text);
+}
 .markdown-body li > ul { @apply mt-1 pl-4; }
-.markdown-body strong { @apply font-semibold text-slate-900; }
+.markdown-body strong {
+  @apply font-semibold;
+  color: var(--text-strong);
+}
 .markdown-body em { @apply italic; }
-.markdown-body code { @apply bg-slate-100 text-sky-700 px-1.5 py-0.5 rounded text-sm font-mono; }
-.markdown-body pre { @apply bg-slate-900 text-slate-100 p-4 rounded-xl overflow-x-auto mb-4; }
-.markdown-body pre code { @apply bg-transparent text-slate-100 p-0 text-sm; }
-.markdown-body blockquote { @apply border-l-4 border-sky-400 bg-sky-50 pl-4 py-2 pr-2 rounded-r my-4 text-slate-700 italic; }
-.markdown-body table { @apply w-full border-collapse mb-6 text-sm; }
-.markdown-body th { @apply bg-slate-100 text-slate-700 font-semibold px-4 py-2 text-left border border-slate-200; }
-.markdown-body td { @apply px-4 py-2 border border-slate-200 text-slate-700; }
-.markdown-body tr:nth-child(even) { @apply bg-slate-50; }
-.markdown-body hr { @apply my-6 border-slate-200; }
-.markdown-body a { @apply text-sky-600 underline; }
+.markdown-body code {
+  @apply px-1.5 py-0.5 rounded text-sm font-mono;
+  background: var(--code-bg);
+  color: var(--code-fg);
+}
+.markdown-body pre {
+  @apply p-4 rounded-xl overflow-x-auto mb-4;
+  background: var(--pre-bg);
+  color: var(--pre-fg);
+}
+.markdown-body pre code {
+  background: transparent;
+  color: var(--pre-fg);
+  @apply p-0 text-sm;
+}
+.markdown-body blockquote {
+  @apply border-l-4 pl-4 py-2 pr-2 rounded-r my-4 italic;
+  border-color: var(--primary);
+  background: var(--surface-muted);
+  color: var(--text);
+}
+.markdown-body table {
+  @apply w-full border-collapse mb-6 text-sm;
+}
+.markdown-body th {
+  @apply font-semibold px-4 py-2 text-left border;
+  background: var(--surface-muted);
+  color: var(--text-strong);
+  border-color: var(--border);
+}
+.markdown-body td {
+  @apply px-4 py-2 border;
+  color: var(--text);
+  border-color: var(--border);
+}
+.markdown-body tr:nth-child(even) td {
+  background: var(--surface-muted);
+}
+.markdown-body hr {
+  @apply my-6;
+  border-color: var(--border);
+}
+.markdown-body a {
+  color: var(--primary);
+  text-decoration: underline;
+}
 
 /* 聊天气泡 */
 .bubble-user {
@@ -160,12 +327,12 @@
 
 .bubble-ai {
   @apply rounded-2xl rounded-bl-md px-4 py-2 max-w-sm border;
-  border-color: rgba(148, 163, 184, 0.35);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.93), rgba(248, 250, 252, 0.97));
-  color: #1e293b;
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text);
 }
 
 .sidebar-scroll { scrollbar-width: thin; }
 .sidebar-scroll::-webkit-scrollbar { width: 5px; }
-.sidebar-scroll::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.48); }
-.sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 999px; }
+.sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }

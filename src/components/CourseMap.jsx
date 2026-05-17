@@ -50,11 +50,11 @@ function ProgressRing({ value, total, color, label }) {
             className="transition-all duration-700"
           />
         </svg>
-        <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-100">{pct}%</span>
+        <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-fg-strong">{pct}%</span>
       </div>
       <div>
-        <div className="text-xs uppercase tracking-[0.14em] text-slate-400">{label}</div>
-        <div className="mt-1 text-sm font-semibold text-slate-100">{value}/{total} 完成</div>
+        <div className="text-xs uppercase tracking-[0.14em] text-fg-muted">{label}</div>
+        <div className="mt-1 text-sm font-semibold text-fg-strong">{value}/{total} 完成</div>
       </div>
     </div>
   )
@@ -63,14 +63,29 @@ function ProgressRing({ value, total, color, label }) {
 function Metric({ title, value, hint, color }) {
   return (
     <div className="metric-panel">
-      <div className="text-[11px] uppercase tracking-[0.16em] text-slate-400">{title}</div>
+      <div className="text-[11px] uppercase tracking-[0.16em] text-fg-muted">{title}</div>
       <div className="mt-2 text-2xl font-semibold" style={{ color }}>{value}</div>
-      <div className="mt-1 text-xs text-slate-400">{hint}</div>
+      <div className="mt-1 text-xs text-fg-muted">{hint}</div>
     </div>
   )
 }
 
-export default function CourseMap({ modules, onSelectModule, wrongbookCount, user, onLogout }) {
+function ThemeToggle({ theme, onToggle }) {
+  const isDark = theme !== 'light'
+  return (
+    <button
+      onClick={onToggle}
+      aria-label={isDark ? '切换为浅色模式' : '切换为深色模式'}
+      title={isDark ? '切换为浅色模式' : '切换为深色模式'}
+      className="px-3 py-2.5 rounded-xl border border-themed bg-surface text-fg hover:bg-elevated transition-colors flex items-center gap-1.5 text-sm"
+    >
+      <span aria-hidden>{isDark ? '🌙' : '☀️'}</span>
+      <span>{isDark ? '深色' : '浅色'}</span>
+    </button>
+  )
+}
+
+export default function CourseMap({ modules, onSelectModule, wrongbookCount, user, onLogout, theme, onToggleTheme }) {
   const [progress, setProgress] = useState(() => getOverallProgress(modules))
 
   useEffect(() => {
@@ -97,7 +112,7 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
   const doneRate = Math.round((doneModules / totalUnits) * 100)
 
   return (
-    <div className="min-h-screen app-shell text-slate-100">
+    <div className="min-h-screen app-shell text-fg">
       <div className="absolute inset-0 app-grid-overlay pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-10 space-y-8">
@@ -105,23 +120,24 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div className="max-w-3xl">
               <p className="section-chip">Test Engineering Bootcamp</p>
-              <h1 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight bg-gradient-to-r from-slate-50 via-sky-100 to-emerald-100 bg-clip-text text-transparent">
+              <h1 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-fg-strong">
                 功能测试训练营 · 任务地图
               </h1>
-              <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
+              <p className="mt-3 text-sm sm:text-base text-fg-muted leading-relaxed">
                 按“基础关卡 → 实战关卡”推进。每个模块都以可验证结果为目标，不是看完就算学完。
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-2 text-xs">
-                <span className="px-3 py-1 rounded-full border border-slate-600/70 bg-slate-900/40">账号：{user?.username}</span>
-                <span className="px-3 py-1 rounded-full border border-sky-500/40 bg-sky-500/10 text-sky-200">计划：{(user?.plan || '').toUpperCase()}</span>
-                <span className="px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-200">总进度：{doneRate}%</span>
+                <span className="px-3 py-1 rounded-full border border-themed bg-surface-soft text-fg">账号：{user?.username}</span>
+                <span className="px-3 py-1 rounded-full border border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-200">计划：{(user?.plan || '').toUpperCase()}</span>
+                <span className="px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200">总进度：{doneRate}%</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0 self-start">
+            <div className="flex items-center gap-2 shrink-0 self-start flex-wrap">
+              <ThemeToggle theme={theme} onToggle={onToggleTheme} />
               <button
                 onClick={() => onSelectModule('wrongbook')}
-                className="relative px-4 py-2.5 rounded-xl border border-rose-400/35 bg-rose-500/10 text-rose-100 hover:bg-rose-500/20 transition-colors"
+                className="relative px-4 py-2.5 rounded-xl border border-rose-400/35 bg-rose-500/10 text-rose-700 dark:text-rose-100 hover:bg-rose-500/20 transition-colors"
               >
                 错题本
                 {wrongbookCount > 0 && (
@@ -132,7 +148,7 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
               </button>
               <button
                 onClick={onLogout}
-                className="px-4 py-2.5 rounded-xl border border-slate-600/70 bg-slate-900/40 text-slate-200 hover:bg-slate-800/60 transition-colors"
+                className="px-4 py-2.5 rounded-xl border border-themed bg-surface text-fg hover:bg-elevated transition-colors"
               >
                 退出登录
               </button>
@@ -158,10 +174,10 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
             <section key={group.label} className="glass-panel rounded-3xl p-5 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
                 <div>
-                  <h2 className="text-sm font-semibold tracking-[0.12em] uppercase text-slate-200">{group.label}</h2>
-                  <p className="mt-1 text-sm text-slate-400">{group.desc}</p>
+                  <h2 className="text-sm font-semibold tracking-[0.12em] uppercase text-fg-strong">{group.label}</h2>
+                  <p className="mt-1 text-sm text-fg-muted">{group.desc}</p>
                 </div>
-                <span className="text-xs text-slate-400">{mods.length} 个模块</span>
+                <span className="text-xs text-fg-muted">{mods.length} 个模块</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">

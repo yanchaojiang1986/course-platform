@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import CourseMap from './components/CourseMap.jsx'
 import ModuleDetail from './components/ModuleDetail.jsx'
 import WrongBook from './components/WrongBook.jsx'
@@ -9,6 +9,28 @@ import { validateInteractiveData } from './data/validateInteractive.js'
 
 const BYPASS_LOGIN = true
 const DEMO_USER = { id: 0, username: 'demo', plan: 'svip', status: 'active', memberExpiresAt: null }
+
+const THEME_KEY = 'cp_theme'
+const THEMES = ['dark', 'light']
+
+function readInitialTheme() {
+  try {
+    const saved = localStorage.getItem(THEME_KEY)
+    if (THEMES.includes(saved)) return saved
+  } catch { /* ignore */ }
+  if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: light)').matches) {
+    return 'light'
+  }
+  return 'dark'
+}
+
+function applyTheme(theme) {
+  if (typeof document === 'undefined') return
+  document.documentElement.dataset.theme = theme
+}
+
+// 初始化主题（在 React 渲染前同步执行，避免一闪烁）
+applyTheme(readInitialTheme())
 
 const INTERACTIVE_ERRORS = validateInteractiveData()
 if (INTERACTIVE_ERRORS.length > 0) {
@@ -50,6 +72,16 @@ export default function App() {
   const [wrongbookCount, setWrongbookCount] = useState(getWrongbookCount)
   const [authLoading, setAuthLoading] = useState(true)
   const [user, setUser] = useState(null)
+  const [theme, setTheme] = useState(readInitialTheme)
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => {
+      const next = prev === 'dark' ? 'light' : 'dark'
+      try { localStorage.setItem(THEME_KEY, next) } catch { /* ignore */ }
+      applyTheme(next)
+      return next
+    })
+  }, [])
 
   useEffect(() => {
     let mounted = true
@@ -117,6 +149,8 @@ export default function App() {
           onSelectModule={handleSelectModule}
           wrongbookCount={wrongbookCount}
           onLogout={handleLogout}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
       ) : (
         <ModuleDetail

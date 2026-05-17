@@ -31,10 +31,10 @@ function TabButton({ active, locked, icon, label, hint, onClick }) {
       onClick={onClick}
       disabled={locked}
       className={`px-4 py-2.5 rounded-xl text-sm border transition-all ${active
-        ? 'border-sky-400/55 bg-sky-500/12 text-sky-100'
+        ? 'border-sky-400/55 bg-sky-500/12 text-sky-700 dark:text-sky-200'
         : locked
-          ? 'border-slate-700/60 bg-slate-900/35 text-slate-500 cursor-not-allowed'
-          : 'border-slate-600/60 bg-slate-900/35 text-slate-300 hover:border-slate-400/60 hover:text-slate-100'}`}
+          ? 'border-themed bg-surface-soft text-fg-faint cursor-not-allowed'
+          : 'border-themed bg-surface text-fg-muted hover:border-themed-strong hover:text-fg'}`}
     >
       <span className="inline-flex items-center gap-2 font-medium">
         <span>{icon}</span>
@@ -78,7 +78,7 @@ export default function ModuleDetail({ module, onBack }) {
   const scenarioContext = scenario ? `${scenario.title}\n\n${scenario.context}\n\n任务：${scenario.tasks.join('；')}` : ''
 
   return (
-    <div className="min-h-screen app-shell text-slate-100">
+    <div className="min-h-screen app-shell text-fg">
       <div className="absolute inset-0 app-grid-overlay pointer-events-none" />
 
       <div className="relative max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-4">
@@ -87,16 +87,16 @@ export default function ModuleDetail({ module, onBack }) {
             <div className="flex items-center gap-3 min-w-0">
               <button
                 onClick={onBack}
-                className="px-3 py-1.5 rounded-lg border border-slate-600/70 bg-slate-900/45 text-slate-200 hover:bg-slate-800/60 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-themed bg-surface text-fg hover:bg-elevated transition-colors"
               >
                 ← 返回地图
               </button>
               <div className="min-w-0">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Module {module.id}</p>
-                <h1 className="text-base sm:text-lg font-semibold truncate">{module.emoji} {module.title}</h1>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-fg-muted">Module {module.id}</p>
+                <h1 className="text-base sm:text-lg font-semibold truncate text-fg-strong">{module.emoji} {module.title}</h1>
               </div>
             </div>
-            <span className="self-start lg:self-auto text-xs px-2.5 py-1 rounded-full border border-slate-500/60 bg-slate-900/45 text-slate-200">
+            <span className="self-start lg:self-auto text-xs px-2.5 py-1 rounded-full border border-themed bg-surface text-fg">
               {module.tag}
             </span>
           </div>
@@ -160,9 +160,9 @@ export default function ModuleDetail({ module, onBack }) {
                     scenarioContext={scenarioContext}
                   />
                 ) : (
-                  <div className="h-full flex flex-col items-center justify-center text-center p-8 bg-slate-100">
+                  <div className="h-full flex flex-col items-center justify-center text-center p-8 bg-surface-soft">
                     <div className="text-5xl mb-4">🎯</div>
-                    <p className="text-slate-600 text-sm">先在左侧点击「开始实战」，然后与 AI 教练进入任务对话。</p>
+                    <p className="text-fg-muted text-sm">先在左侧点击「开始实战」，然后与 AI 教练进入任务对话。</p>
                   </div>
                 )}
               </div>

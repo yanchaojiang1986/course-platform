@@ -31,8 +31,10 @@ function getPhase2State(moduleId) {
 
 function StageBadge({ ok, label }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] ${ok ? 'border-emerald-400/35 bg-emerald-500/10 text-emerald-200' : 'border-slate-500/45 bg-slate-700/25 text-slate-300'}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${ok ? 'bg-emerald-300 dot-signal' : 'bg-slate-500'}`} />
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] ${ok
+      ? 'border-emerald-400/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200'
+      : 'border-themed bg-surface-soft text-fg-muted'}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${ok ? 'bg-emerald-400 dot-signal' : 'bg-fg-faint opacity-60'}`} style={!ok ? { background: 'var(--text-faint)' } : undefined} />
       {label}
     </span>
   )
@@ -55,23 +57,23 @@ export default function ModuleCard({ module, onClick }) {
       as="button"
       onClick={onClick}
       spotlightColor={theme.spot}
-      className="group w-full text-left rounded-2xl border border-slate-600/45 bg-gradient-to-b from-slate-900/85 to-slate-950/95 text-slate-100 hover:-translate-y-1.5 hover:border-slate-400/65 hover:shadow-2xl hover:shadow-sky-950/35 transition-all duration-300"
+      className="group w-full text-left elevated-card text-fg hover:-translate-y-1.5 hover:border-themed-strong transition-all duration-300"
     >
-      <div className={`h-1.5 bg-gradient-to-r ${theme.line}`} />
+      <div className={`h-1.5 bg-gradient-to-r ${theme.line} rounded-t-2xl`} />
 
       <div className="p-4 sm:p-5 space-y-4">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 shrink-0 rounded-xl border border-slate-500/45 bg-slate-800/70 flex items-center justify-center text-xl">
+          <div className="w-10 h-10 shrink-0 rounded-xl border border-themed bg-surface-soft flex items-center justify-center text-xl">
             {module.emoji}
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] font-mono tracking-[0.08em] text-slate-400">M-{module.id}</span>
+              <span className="text-[11px] font-mono tracking-[0.08em] text-fg-muted">M-{module.id}</span>
               <span className={`text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r ${theme.line} text-slate-950 font-semibold`}>
                 {module.tag}
               </span>
             </div>
-            <h3 className="text-sm font-semibold leading-snug text-slate-100 group-hover:text-sky-200 transition-colors">
+            <h3 className="text-sm font-semibold leading-snug text-fg-strong group-hover:text-sky-600 dark:group-hover:text-sky-200 transition-colors">
               {module.title}
             </h3>
           </div>
@@ -80,18 +82,18 @@ export default function ModuleCard({ module, onClick }) {
         <div className="space-y-3">
           <div>
             <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className="text-slate-400">基础关卡进度</span>
+              <span className="text-fg-muted">基础关卡进度</span>
               {exercises.length === 0 ? (
-                <span className="text-slate-500">无练习题</span>
+                <span className="text-fg-faint">无练习题</span>
               ) : p1Passed ? (
-                <span className="text-emerald-300 font-medium">已通关 {p1Pct}%</span>
+                <span className="text-emerald-600 dark:text-emerald-300 font-medium">已通关 {p1Pct}%</span>
               ) : phase1.attempts > 0 ? (
-                <span className="text-amber-300">进行中 {p1Pct}%</span>
+                <span className="text-amber-600 dark:text-amber-300">进行中 {p1Pct}%</span>
               ) : (
-                <span className="text-slate-500">待开始</span>
+                <span className="text-fg-faint">待开始</span>
               )}
             </div>
-            <div className="h-1.5 bg-slate-800/85 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-surface-soft rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${p1Passed ? 'bg-emerald-400' : 'bg-amber-400'}`}
                 style={{ width: `${Math.max(0, Math.min(100, p1Pct))}%` }}

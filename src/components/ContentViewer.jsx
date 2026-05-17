@@ -106,8 +106,8 @@ function InlineCheckCard({ checkId, question, state, onPass, onContinue }) {
 
   if (!question) {
     return (
-      <div className="my-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
-        <p className="text-sm text-amber-800">练习题 `{checkId}` 未找到。可先继续学习。</p>
+      <div className="my-6 card-accent card-accent-amber">
+        <p className="text-sm text-amber-700 dark:text-amber-200">练习题 `{checkId}` 未找到。可先继续学习。</p>
         {!finished && (
           <button
             onClick={() => onContinue(checkId)}
@@ -121,14 +121,14 @@ function InlineCheckCard({ checkId, question, state, onPass, onContinue }) {
   }
 
   return (
-    <div className="my-6 rounded-xl border border-blue-200 bg-blue-50 p-5 space-y-3">
+    <div className="my-6 card-accent card-accent-sky p-5 space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <h4 className="text-sm font-semibold text-blue-900">章节检查题</h4>
-        {status === 'passed' && <span className="text-xs text-green-700 font-medium">✓ 已通过</span>}
-        {status === 'continued' && <span className="text-xs text-amber-700 font-medium">已继续（未掌握）</span>}
+        <h4 className="text-sm font-semibold text-sky-700 dark:text-sky-200">章节检查题</h4>
+        {status === 'passed' && <span className="text-xs text-emerald-600 dark:text-emerald-300 font-medium">✓ 已通过</span>}
+        {status === 'continued' && <span className="text-xs text-amber-600 dark:text-amber-300 font-medium">已继续（未掌握）</span>}
       </div>
 
-      <p className="text-sm text-gray-800">{question.question}</p>
+      <p className="text-sm text-fg-strong">{question.question}</p>
 
       {question.type === 'choice' && (
         <div className="space-y-2">
@@ -137,10 +137,10 @@ function InlineCheckCard({ checkId, question, state, onPass, onContinue }) {
               key={i}
               onClick={() => !finished && !submitted && setSelected(i)}
               disabled={finished || submitted}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm border transition-colors ${selected === i ? 'bg-blue-100 border-blue-400 text-blue-900' : 'bg-white border-gray-200 text-gray-700'
-                } ${finished || submitted ? 'opacity-80' : 'hover:border-blue-300'}`}
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm border transition-colors ${selected === i ? 'bg-sky-500/15 border-sky-400/60 text-sky-700 dark:text-sky-200' : 'bg-surface border-themed text-fg'
+                } ${finished || submitted ? 'opacity-80' : 'hover:border-sky-400/50'}`}
             >
-              <span className="font-mono mr-2 text-gray-400">{String.fromCharCode(65 + i)}.</span>
+              <span className="font-mono mr-2 text-fg-faint">{String.fromCharCode(65 + i)}.</span>
               {opt}
             </button>
           ))}
@@ -154,8 +154,8 @@ function InlineCheckCard({ checkId, question, state, onPass, onContinue }) {
               key={String(v)}
               onClick={() => !finished && !submitted && setSelected(v)}
               disabled={finished || submitted}
-              className={`px-4 py-2 rounded-lg text-sm border transition-colors ${selected === v ? 'bg-blue-100 border-blue-400 text-blue-900' : 'bg-white border-gray-200 text-gray-700'
-                } ${finished || submitted ? 'opacity-80' : 'hover:border-blue-300'}`}
+              className={`px-4 py-2 rounded-lg text-sm border transition-colors ${selected === v ? 'bg-sky-500/15 border-sky-400/60 text-sky-700 dark:text-sky-200' : 'bg-surface border-themed text-fg'
+                } ${finished || submitted ? 'opacity-80' : 'hover:border-sky-400/50'}`}
             >
               {v ? '✓ 正确' : '✗ 错误'}
             </button>
@@ -177,20 +177,20 @@ function InlineCheckCard({ checkId, question, state, onPass, onContinue }) {
             setSubmitted(true)
           }}
           disabled={selected === null}
-          className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 transition-colors"
+          className="px-4 py-2 text-sm rounded-lg bg-sky-600 text-white hover:bg-sky-700 disabled:opacity-40 transition-colors"
         >
           提交并解锁
         </button>
       )}
 
       {!finished && submitted && (
-        <div className={`rounded-lg p-3 text-xs ${isCorrect ? 'bg-green-50 text-green-800' : 'bg-amber-50 text-amber-800'}`}>
+        <div className={`rounded-lg p-3 text-xs ${isCorrect ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-200' : 'bg-amber-500/10 text-amber-700 dark:text-amber-200'}`}>
           {isCorrect ? '回答正确，已解锁下一节。' : `还不对。解析：${question.explanation}`}
           {!isCorrect && (
             <div className="mt-2 flex gap-2">
               <button
                 onClick={resetTry}
-                className="px-3 py-1.5 rounded bg-white border border-amber-300 text-amber-800 hover:bg-amber-100 transition-colors"
+                className="px-3 py-1.5 rounded bg-surface border border-amber-400/40 text-amber-700 dark:text-amber-200 hover:bg-amber-500/10 transition-colors"
               >
                 再试一次
               </button>
@@ -283,20 +283,20 @@ export default function ContentViewer({ module }) {
     <div className="max-w-3xl mx-auto px-8 py-8">
       {loading ? (
         <div className="space-y-3 animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-2/3" />
-          <div className="h-4 bg-gray-200 rounded w-full" />
-          <div className="h-4 bg-gray-200 rounded w-5/6" />
-          <div className="h-4 bg-gray-200 rounded w-4/5" />
+          <div className="h-6 bg-surface-soft rounded w-2/3" />
+          <div className="h-4 bg-surface-soft rounded w-full" />
+          <div className="h-4 bg-surface-soft rounded w-5/6" />
+          <div className="h-4 bg-surface-soft rounded w-4/5" />
         </div>
       ) : (
         <>
           {loadError && (
-            <div className="mb-4 text-xs rounded-lg border border-red-200 bg-red-50 text-red-700 px-3 py-2">
+            <div className="mb-4 text-xs rounded-lg border border-rose-400/40 bg-rose-500/10 text-rose-600 dark:text-rose-200 px-3 py-2">
               {loadError}
             </div>
           )}
           {checkSegments.length > 0 && (
-            <div className="mb-5 text-xs text-gray-500">
+            <div className="mb-5 text-xs text-fg-muted">
               章节解锁进度：{unlockedChecks}/{checkSegments.length}
             </div>
           )}

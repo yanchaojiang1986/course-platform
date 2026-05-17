@@ -1,6 +1,39 @@
 # 封板记录
 
-## v1.0.5 — 2026-05-17（当前版本）
+## v1.0.6 — 2026-05-17（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`） |
+| `npm run build` | ✅ 通过（78 modules，759ms） |
+
+### 本次变更摘要
+- 完成 UI 色彩语义层统一：新增 `card-surface / card-item / card-accent-*` 体系，收敛背景透明度与边框强度。
+- 模块卡、错题本、章节练习、实战面板、内嵌检测题与错误卡全面切换到统一卡片语义，提升浅/深色一致性与可读性。
+- 降低样式维护成本：后续调色可集中在 `index.css` 变体层完成，减少跨组件重复改色。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `f378ba254fa047be853c945b1ab5acc7cb2fc403c587bbf4f1c5edc64a40ff75` |
+| `src/index.css` | `4b8fbbf48fed7bead3262ac3bb0e670d641c88e5bb0c0ea5036cc8bc18123108` |
+| `src/components/ModuleCard.jsx` | `26eaf948a328e6273c08f2c9f0906259f2a67f0fd15511cf1f6972a17adb7b5d` |
+| `src/components/WrongBook.jsx` | `5ff0b02b77dc572e8349d67b09578c07906ecac26851ca547a45cd60b5356dab` |
+| `src/components/Exercise.jsx` | `87ed56658b2001823c53868b0cae94560d2a3b8eb1258ba3d3fbc9febf8429d8` |
+| `src/components/ScenarioPanel.jsx` | `8f77aa400f094dc93dc803be3fbcb3afaf689c2b2400d9952f995d89cd80e4cf` |
+| `src/components/ContentViewer.jsx` | `7c84706a9a0d1f43829cd90a3770904c69c2fdd08a45269fa65f2ae7a128fcca` |
+| `src/components/interactive/ErrorCard.jsx` | `6fc800c51a64078df957c9393728b8a60039f7c71ac0d34b77f2db4fdeeec907` |
+
+### 说明
+- 本次封板为“视觉语义一致性增强”，不改变课程数据结构与业务流程。
+
+---
+
+## v1.0.5 — 2026-05-17（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）

@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.0.6] - 2026-05-17
+
+### 变更
+- 建立统一卡片语义层：`src/index.css` 新增 `.card-surface` / `.card-item` / `.card-accent` 及六色变体（`sky/emerald/amber/rose/fuchsia/violet`），集中管理透明度与边框强度。
+- 课程核心页面统一改造到语义化卡片系统：
+  - `ModuleCard.jsx`：去除硬编码深色渐变，改为 `elevated-card + text-fg-*`，状态徽章配色统一。
+  - `WrongBook.jsx`：抽屉容器与题卡改为 `bg-surface + card-surface`，选项配色与 `Exercise` 对齐。
+  - `Exercise.jsx`：容器与结果反馈改为 `card-accent-*` 体系。
+  - `ScenarioPanel.jsx`：场景背景/任务条/提示条改为 `card-surface/card-item/card-accent-*`。
+  - `ContentViewer.jsx`：内嵌检测题与缺题提示改为 `card-accent-*`。
+  - `interactive/ErrorCard.jsx`：错误卡改为 `card-accent-rose`，浅深色一致。
+
+### 修复
+- 修复浅色模式可读性问题：统一失败态/提示态文字到 `*-700`，深色模式统一为 `*-200`。
+- 消除组件内重复透明度写法（`/8 /10 /12 /15` 与 `border /35 /40 /45`），收敛为统一 token（背景 10%、边框 40%）。
+
+### 质量校验
+- `npm run lint` 通过（含 `lint:content`，39 个 blockId 全通过）。
+- `npm run build` 通过（78 modules，css 47.84kB gzip 9.17kB）。
+
+---
+
 ## [1.0.5] - 2026-05-17
 
 ### 新增

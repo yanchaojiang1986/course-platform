@@ -158,33 +158,33 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
   }
 
   const headerConfig = {
-    tutor:    { bg: 'bg-blue-50 border-blue-100',    icon: '🤖', label: 'AI 教辅助手' },
-    socratic: { bg: 'bg-purple-50 border-purple-100', icon: '🎯', label: 'AI 实战教练' },
-    interview:{ bg: 'bg-orange-50 border-orange-100', icon: '🎤', label: 'AI 面试官' },
+    tutor:    { bg: 'bg-sky-500/10',     icon: '🤖', label: 'AI 教辅助手',  accent: 'text-sky-700 dark:text-sky-200' },
+    socratic: { bg: 'bg-fuchsia-500/10', icon: '🎯', label: 'AI 实战教练', accent: 'text-fuchsia-700 dark:text-fuchsia-200' },
+    interview:{ bg: 'bg-amber-500/10',   icon: '🎤', label: 'AI 面试官',   accent: 'text-amber-700 dark:text-amber-200' },
   }
   const hc = headerConfig[mode] || headerConfig.tutor
 
   return (
-    <div className="flex flex-col h-full border-l border-slate-200 bg-gradient-to-b from-white to-slate-50 w-full max-w-[460px] min-w-[320px]">
-      <div className={`flex items-center justify-between px-4 py-3 border-b border-slate-200 ${hc.bg} shrink-0`}>
+    <div className="flex flex-col h-full border-l border-themed bg-surface w-full max-w-[460px] min-w-[320px]">
+      <div className={`flex items-center justify-between px-4 py-3 border-b border-themed ${hc.bg} shrink-0`}>
         <div className="flex items-center gap-2">
           <span className="text-lg">{hc.icon}</span>
           <div>
-            <div className="text-sm font-semibold text-gray-800">{hc.label}</div>
+            <div className="text-sm font-semibold text-fg-strong">{hc.label}</div>
             {mode === 'tutor' && moduleContext && (
-              <div className="text-xs text-gray-500">当前：{moduleContext}</div>
+              <div className="text-xs text-fg-muted">当前：{moduleContext}</div>
             )}
             {mode === 'socratic' && (
-              <div className="text-xs text-purple-600">苏格拉底模式·引导思考</div>
+              <div className={`text-xs ${hc.accent}`}>苏格拉底模式·引导思考</div>
             )}
           </div>
         </div>
         {onClose && (
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
+          <button onClick={onClose} className="text-fg-muted hover:text-fg text-lg leading-none">×</button>
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/65">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-surface-soft">
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {m.role === 'assistant' && <span className="text-base mr-2 mt-0.5 shrink-0">{hc.icon}</span>}
@@ -193,7 +193,7 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
               {loading && i === messages.length - 1 && m.role === 'assistant' && !m.content && (
                 <span className="inline-flex gap-1">
                   {[0, 150, 300].map(d => (
-                    <span key={d} className="animate-bounce text-gray-400 text-lg" style={{ animationDelay: `${d}ms` }}>·</span>
+                    <span key={d} className="animate-bounce text-fg-faint text-lg" style={{ animationDelay: `${d}ms` }}>·</span>
                   ))}
                 </span>
               )}
@@ -203,7 +203,7 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
         <div ref={bottomRef} />
       </div>
 
-      <div className="p-3 border-t border-slate-200 bg-white shrink-0">
+      <div className="p-3 border-t border-themed bg-surface shrink-0">
         <div className="flex gap-2">
           <input
             ref={inputRef}
@@ -211,7 +211,7 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
             placeholder={mode === 'interview' ? '回答面试官的问题…' : mode === 'socratic' ? '说说你的思路…' : '问任何测试相关问题…'}
-            className="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-sky-400"
+            className="flex-1 px-3 py-2 text-sm border border-themed bg-surface text-fg rounded-lg focus:outline-none focus:border-sky-400 placeholder:text-fg-faint"
             disabled={loading}
           />
           <button onClick={send} disabled={!input.trim() || loading}
@@ -219,7 +219,7 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
             发送
           </button>
         </div>
-        <p className="text-xs text-gray-400 mt-1.5 text-center">Enter 发送</p>
+        <p className="text-xs text-fg-faint mt-1.5 text-center">Enter 发送</p>
       </div>
     </div>
   )
