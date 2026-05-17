@@ -6,6 +6,9 @@ import AuthPage from './components/AuthPage.jsx'
 import { MODULES } from './data/modules.js'
 import { hasPlanAccess } from './utils/access.js'
 
+const BYPASS_LOGIN = true
+const DEMO_USER = { id: 0, username: 'demo', plan: 'svip', status: 'active', memberExpiresAt: null }
+
 function getWrongbookCount() {
   try {
     const wb = JSON.parse(localStorage.getItem('wrongbook') || '[]')
@@ -42,7 +45,9 @@ export default function App() {
     setWrongbookCount(getWrongbookCount())
   }, [view, showWrongBook])
 
-  const visibleModules = MODULES.filter(m => hasPlanAccess(user?.plan, m.requiredPlan))
+  const effectiveUser = user || (BYPASS_LOGIN ? DEMO_USER : null)
+
+  const visibleModules = MODULES.filter(m => hasPlanAccess(effectiveUser?.plan, m.requiredPlan))
   const visibleIds = new Set(visibleModules.map(m => m.id))
 
   const handleSelectModule = (id) => {
@@ -66,11 +71,11 @@ export default function App() {
     setShowWrongBook(false)
   }
 
-  if (authLoading) {
+  if (authLoading && !BYPASS_LOGIN) {
     return <div className="min-h-screen grid place-items-center text-gray-500">加载中...</div>
   }
 
-  if (!user) {
+  if (!effectiveUser) {
     return <AuthPage onAuthed={(u) => setUser(u)} />
   }
 
@@ -78,7 +83,7 @@ export default function App() {
     <>
       {view === 'map' || !activeModule ? (
         <CourseMap
-          user={user}
+          user={effectiveUser}
           modules={visibleModules}
           onSelectModule={handleSelectModule}
           wrongbookCount={wrongbookCount}
