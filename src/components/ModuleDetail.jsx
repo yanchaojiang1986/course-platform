@@ -25,6 +25,26 @@ function savePhase2(moduleId, state) {
   window.dispatchEvent(new Event('progress-updated'))
 }
 
+function TabButton({ active, locked, icon, label, hint, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={locked}
+      className={`px-4 py-2.5 rounded-xl text-sm border transition-all ${active
+        ? 'border-sky-400/55 bg-sky-500/12 text-sky-100'
+        : locked
+          ? 'border-slate-700/60 bg-slate-900/35 text-slate-500 cursor-not-allowed'
+          : 'border-slate-600/60 bg-slate-900/35 text-slate-300 hover:border-slate-400/60 hover:text-slate-100'}`}
+    >
+      <span className="inline-flex items-center gap-2 font-medium">
+        <span>{icon}</span>
+        {label}
+      </span>
+      {hint ? <span className="ml-2 text-[11px] opacity-80">{hint}</span> : null}
+    </button>
+  )
+}
+
 export default function ModuleDetail({ module, onBack }) {
   const exercises = EXERCISES[module.id] || []
   const scenario = SCENARIOS[module.id] || null
@@ -35,7 +55,6 @@ export default function ModuleDetail({ module, onBack }) {
 
   const hasExercises = exercises.length > 0
   const hasScenario = !!scenario
-
   const phase2Locked = hasExercises && !phase1Passed
 
   const handlePhase1Passed = () => {
@@ -59,98 +78,98 @@ export default function ModuleDetail({ module, onBack }) {
   const scenarioContext = scenario ? `${scenario.title}\n\n${scenario.context}\n\n任务：${scenario.tasks.join('；')}` : ''
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      {/* 面包屑导航 */}
-      <div className="flex items-center gap-2 px-6 py-3 border-b border-gray-200 bg-white shrink-0">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors"
-        >
-          <span>←</span>
-          <span>课程地图</span>
-        </button>
-        <span className="text-gray-300">/</span>
-        <span className="text-sm font-medium text-gray-800">{module.emoji} 模块 {module.id} · {module.title}</span>
-        <span className="ml-auto text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full">{module.tag}</span>
-      </div>
+    <div className="min-h-screen app-shell text-slate-100">
+      <div className="absolute inset-0 app-grid-overlay pointer-events-none" />
 
-      {/* Tab 切换 */}
-      <div className="flex border-b border-gray-200 bg-white shrink-0">
-        <button
-          onClick={() => setActiveTab('phase1')}
-          className={`flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'phase1'
-              ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          <span>📖</span>
-          <span>基础关卡</span>
-          {phase1Passed && <span className="text-xs text-green-600">✓</span>}
-        </button>
-
-        {hasScenario && (
-          <button
-            onClick={() => !phase2Locked && setActiveTab('phase2')}
-            className={`flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === 'phase2'
-                ? 'border-purple-600 text-purple-600'
-                : phase2Locked
-                  ? 'border-transparent text-gray-300 cursor-not-allowed'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            <span>{phase2Locked ? '🔒' : '🎯'}</span>
-            <span>实战关卡</span>
-            {phase2Locked && hasExercises && (
-              <span className="text-xs text-gray-400">需先通过基础关卡</span>
-            )}
-            {phase2State.completed && <span className="text-xs text-green-600">✓</span>}
-          </button>
-        )}
-      </div>
-
-      {/* Phase 1 内容 */}
-      {activeTab === 'phase1' && (
-        <div className="flex-1 overflow-y-auto">
-          <ContentViewer module={module} />
-          {hasExercises && (
-            <div className="max-w-3xl mx-auto px-6 pb-10">
-              <Exercise
-                exercises={exercises}
-                moduleId={module.id}
-                onPassed={handlePhase1Passed}
-              />
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Phase 2 内容 */}
-      {activeTab === 'phase2' && hasScenario && (
-        <div className="flex flex-1 overflow-hidden">
-          <ScenarioPanel
-            scenario={scenario}
-            phase2State={phase2State}
-            onStart={handlePhase2Start}
-            onComplete={handlePhase2Complete}
-          />
-          <div className="flex-1 overflow-hidden">
-            {phase2State.started ? (
-              <AIPanel
-                mode={aiMode}
-                moduleContext={module.title}
-                scenarioContext={scenarioContext}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                <div className="text-5xl mb-4">{aiMode === 'interview' ? '🎤' : '🎯'}</div>
-                <p className="text-gray-500 text-sm">点击左侧「开始实战」按钮开始对话</p>
+      <div className="relative max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-4">
+        <header className="glass-panel rounded-2xl px-4 sm:px-6 py-4">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <button
+                onClick={onBack}
+                className="px-3 py-1.5 rounded-lg border border-slate-600/70 bg-slate-900/45 text-slate-200 hover:bg-slate-800/60 transition-colors"
+              >
+                ← 返回地图
+              </button>
+              <div className="min-w-0">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Module {module.id}</p>
+                <h1 className="text-base sm:text-lg font-semibold truncate">{module.emoji} {module.title}</h1>
               </div>
+            </div>
+            <span className="self-start lg:self-auto text-xs px-2.5 py-1 rounded-full border border-slate-500/60 bg-slate-900/45 text-slate-200">
+              {module.tag}
+            </span>
+          </div>
+        </header>
+
+        <div className="glass-panel rounded-2xl p-3 sm:p-4">
+          <div className="flex flex-wrap gap-2">
+            <TabButton
+              active={activeTab === 'phase1'}
+              locked={false}
+              icon="📖"
+              label="基础关卡"
+              hint={phase1Passed ? '已通关' : ''}
+              onClick={() => setActiveTab('phase1')}
+            />
+
+            {hasScenario && (
+              <TabButton
+                active={activeTab === 'phase2'}
+                locked={phase2Locked}
+                icon={phase2Locked ? '🔒' : '🎯'}
+                label="实战关卡"
+                hint={phase2State.completed ? '已完成' : phase2Locked ? '需先通过基础关卡' : ''}
+                onClick={() => !phase2Locked && setActiveTab('phase2')}
+              />
             )}
           </div>
         </div>
-      )}
+
+        {activeTab === 'phase1' && (
+          <div className="content-surface overflow-hidden">
+            <div className="max-h-[calc(100vh-220px)] overflow-y-auto">
+              <ContentViewer module={module} />
+              {hasExercises && (
+                <div className="max-w-3xl mx-auto px-6 pb-10">
+                  <Exercise
+                    exercises={exercises}
+                    moduleId={module.id}
+                    onPassed={handlePhase1Passed}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'phase2' && hasScenario && (
+          <div className="content-surface overflow-hidden">
+            <div className="flex h-[calc(100vh-220px)] overflow-hidden">
+              <ScenarioPanel
+                scenario={scenario}
+                phase2State={phase2State}
+                onStart={handlePhase2Start}
+                onComplete={handlePhase2Complete}
+              />
+              <div className="flex-1 overflow-hidden">
+                {phase2State.started ? (
+                  <AIPanel
+                    mode={aiMode}
+                    moduleContext={module.title}
+                    scenarioContext={scenarioContext}
+                  />
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-center p-8 bg-slate-100">
+                    <div className="text-5xl mb-4">🎯</div>
+                    <p className="text-slate-600 text-sm">先在左侧点击「开始实战」，然后与 AI 教练进入任务对话。</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

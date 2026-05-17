@@ -165,8 +165,8 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
   const hc = headerConfig[mode] || headerConfig.tutor
 
   return (
-    <div className="flex flex-col h-full border-l border-gray-200 bg-white" style={{ width: 380, minWidth: 320 }}>
-      <div className={`flex items-center justify-between px-4 py-3 border-b ${hc.bg} shrink-0`}>
+    <div className="flex flex-col h-full border-l border-slate-200 bg-gradient-to-b from-white to-slate-50 w-full max-w-[460px] min-w-[320px]">
+      <div className={`flex items-center justify-between px-4 py-3 border-b border-slate-200 ${hc.bg} shrink-0`}>
         <div className="flex items-center gap-2">
           <span className="text-lg">{hc.icon}</span>
           <div>
@@ -184,7 +184,7 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/65">
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {m.role === 'assistant' && <span className="text-base mr-2 mt-0.5 shrink-0">{hc.icon}</span>}
@@ -203,7 +203,7 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
         <div ref={bottomRef} />
       </div>
 
-      <div className="p-3 border-t border-gray-200 shrink-0">
+      <div className="p-3 border-t border-slate-200 bg-white shrink-0">
         <div className="flex gap-2">
           <input
             ref={inputRef}
@@ -211,11 +211,11 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
             placeholder={mode === 'interview' ? '回答面试官的问题…' : mode === 'socratic' ? '说说你的思路…' : '问任何测试相关问题…'}
-            className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-blue-400"
+            className="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-sky-400"
             disabled={loading}
           />
           <button onClick={send} disabled={!input.trim() || loading}
-            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-40 transition-colors">
+            className="px-4 py-2 bg-sky-600 text-white text-sm rounded-lg hover:bg-sky-700 disabled:opacity-40 transition-colors">
             发送
           </button>
         </div>

@@ -3,27 +3,15 @@ import { SCENARIOS } from '../data/scenarios.js'
 import SpotlightCard from './ui/SpotlightCard.jsx'
 
 const TAG_COLORS = {
-  '导航': 'from-zinc-500 to-zinc-700',
-  '基础': 'from-cyan-400 to-blue-600',
-  '认知': 'from-violet-400 to-fuchsia-600',
-  '流程': 'from-teal-400 to-emerald-600',
-  '核心技能': 'from-orange-400 to-rose-500',
-  '工具': 'from-lime-400 to-emerald-600',
-  '实战': 'from-pink-500 to-rose-600',
-  '求职': 'from-amber-400 to-orange-600',
-  '附录': 'from-slate-400 to-slate-600',
-}
-
-const TAG_SPOTLIGHT = {
-  '导航': 'rgba(255,255,255,0.25)',
-  '基础': 'rgba(59,130,246,0.35)',
-  '认知': 'rgba(168,85,247,0.35)',
-  '流程': 'rgba(16,185,129,0.3)',
-  '核心技能': 'rgba(249,115,22,0.32)',
-  '工具': 'rgba(132,204,22,0.3)',
-  '实战': 'rgba(244,63,94,0.32)',
-  '求职': 'rgba(245,158,11,0.35)',
-  '附录': 'rgba(148,163,184,0.28)',
+  '导航': { line: 'from-slate-300 to-slate-500', spot: 'rgba(203,213,225,0.28)' },
+  '基础': { line: 'from-sky-400 to-cyan-300', spot: 'rgba(56,189,248,0.34)' },
+  '认知': { line: 'from-emerald-400 to-teal-300', spot: 'rgba(16,185,129,0.32)' },
+  '流程': { line: 'from-cyan-500 to-emerald-400', spot: 'rgba(34,211,238,0.3)' },
+  '核心技能': { line: 'from-amber-400 to-orange-500', spot: 'rgba(245,158,11,0.34)' },
+  '工具': { line: 'from-lime-400 to-emerald-500', spot: 'rgba(132,204,22,0.3)' },
+  '实战': { line: 'from-rose-400 to-orange-400', spot: 'rgba(251,113,133,0.32)' },
+  '求职': { line: 'from-orange-300 to-amber-500', spot: 'rgba(251,146,60,0.34)' },
+  '附录': { line: 'from-slate-400 to-slate-600', spot: 'rgba(148,163,184,0.3)' },
 }
 
 function getPhase1State(moduleId) {
@@ -41,6 +29,15 @@ function getPhase2State(moduleId) {
   } catch { return { started: false, completed: false } }
 }
 
+function StageBadge({ ok, label }) {
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] ${ok ? 'border-emerald-400/35 bg-emerald-500/10 text-emerald-200' : 'border-slate-500/45 bg-slate-700/25 text-slate-300'}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${ok ? 'bg-emerald-300 dot-signal' : 'bg-slate-500'}`} />
+      {label}
+    </span>
+  )
+}
+
 export default function ModuleCard({ module, onClick }) {
   const exercises = EXERCISES[module.id] || []
   const hasScenario = !!SCENARIOS[module.id]
@@ -49,79 +46,68 @@ export default function ModuleCard({ module, onClick }) {
 
   const p1Passed = phase1.passed === true
   const p1Score = phase1.score || 0
-  const p1Pct = exercises.length ? Math.round(p1Score * 100) : null
+  const p1Pct = exercises.length ? Math.round(p1Score * 100) : 0
 
-  const gradientClass = TAG_COLORS[module.tag] || TAG_COLORS['附录']
-  const spotlightColor = TAG_SPOTLIGHT[module.tag] || TAG_SPOTLIGHT['附录']
+  const theme = TAG_COLORS[module.tag] || TAG_COLORS['附录']
 
   return (
     <SpotlightCard
       as="button"
       onClick={onClick}
-      spotlightColor={spotlightColor}
-      className="group w-full text-left rounded-2xl border border-white/15 bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/30 transition-all duration-300"
+      spotlightColor={theme.spot}
+      className="group w-full text-left rounded-2xl border border-slate-600/45 bg-gradient-to-b from-slate-900/85 to-slate-950/95 text-slate-100 hover:-translate-y-1.5 hover:border-slate-400/65 hover:shadow-2xl hover:shadow-sky-950/35 transition-all duration-300"
     >
-      <div className={`h-1.5 bg-gradient-to-r ${gradientClass}`} />
+      <div className={`h-1.5 bg-gradient-to-r ${theme.line}`} />
 
-      <div className="p-5">
-        <div className="flex items-start gap-3 mb-4">
-          <span className="text-2xl shrink-0 mt-0.5">{module.emoji}</span>
-          <div className="flex-1 min-w-0">
+      <div className="p-4 sm:p-5 space-y-4">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 shrink-0 rounded-xl border border-slate-500/45 bg-slate-800/70 flex items-center justify-center text-xl">
+            {module.emoji}
+          </div>
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono text-slate-400">模块 {module.id}</span>
-              <span className={`text-[11px] px-2 py-0.5 rounded-full bg-gradient-to-r ${gradientClass} text-white font-medium shadow-sm`}>
+              <span className="text-[11px] font-mono tracking-[0.08em] text-slate-400">M-{module.id}</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r ${theme.line} text-slate-950 font-semibold`}>
                 {module.tag}
               </span>
             </div>
-            <h3 className="font-semibold text-slate-100 text-sm leading-snug group-hover:text-cyan-300 transition-colors">
+            <h3 className="text-sm font-semibold leading-snug text-slate-100 group-hover:text-sky-200 transition-colors">
               {module.title}
             </h3>
           </div>
         </div>
 
-        <div className="space-y-2.5">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-400 flex items-center gap-1">
-              <span>📖</span> 基础关卡
-            </span>
-            {exercises.length === 0 ? (
-              <span className="text-slate-500">无练习题</span>
-            ) : p1Passed ? (
-              <span className="text-emerald-300 font-medium flex items-center gap-1">
-                <span>✓</span> 已通关 {p1Pct}%
-              </span>
-            ) : p1Pct !== null ? (
-              <span className="text-amber-300">进行中 {p1Pct}%</span>
-            ) : (
-              <span className="text-slate-500">待开始</span>
-            )}
-          </div>
-
-          {exercises.length > 0 && (
-            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${p1Passed ? 'bg-emerald-400' : 'bg-amber-400'}`}
-                style={{ width: `${p1Pct || 0}%` }}
-              />
-            </div>
-          )}
-
-          {hasScenario && (
-            <div className="flex items-center justify-between text-xs mt-1">
-              <span className="text-slate-400 flex items-center gap-1">
-                <span>🎯</span> 实战关卡
-              </span>
-              {!p1Passed && exercises.length > 0 ? (
-                <span className="text-slate-500 flex items-center gap-1">🔒 需通关基础</span>
-              ) : phase2.completed ? (
-                <span className="text-emerald-300 font-medium flex items-center gap-1"><span>✓</span> 已完成</span>
-              ) : phase2.started ? (
-                <span className="text-cyan-300">进行中</span>
+        <div className="space-y-3">
+          <div>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-slate-400">基础关卡进度</span>
+              {exercises.length === 0 ? (
+                <span className="text-slate-500">无练习题</span>
+              ) : p1Passed ? (
+                <span className="text-emerald-300 font-medium">已通关 {p1Pct}%</span>
+              ) : phase1.attempts > 0 ? (
+                <span className="text-amber-300">进行中 {p1Pct}%</span>
               ) : (
-                <span className="text-cyan-400 flex items-center gap-1">▶ 可开始</span>
+                <span className="text-slate-500">待开始</span>
               )}
             </div>
-          )}
+            <div className="h-1.5 bg-slate-800/85 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${p1Passed ? 'bg-emerald-400' : 'bg-amber-400'}`}
+                style={{ width: `${Math.max(0, Math.min(100, p1Pct))}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <StageBadge ok={p1Passed || exercises.length === 0} label="P1 基础" />
+            {hasScenario && (
+              <StageBadge
+                ok={phase2.completed}
+                label={!p1Passed && exercises.length > 0 ? 'P2 锁定' : phase2.started ? 'P2 进行中' : 'P2 待开始'}
+              />
+            )}
+          </div>
         </div>
       </div>
     </SpotlightCard>

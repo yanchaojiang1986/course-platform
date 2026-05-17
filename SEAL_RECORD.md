@@ -1,6 +1,66 @@
 # 封板记录
 
-## v1.0.2 — 2026-05-17（当前版本）
+## v1.0.4 — 2026-05-17（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过 |
+| `npm run build` | ✅ 通过（76 modules，717ms） |
+
+### 本次变更摘要
+- 完成前端整体视觉升级（CourseMap / ModuleCard / ModuleDetail / ScenarioPanel / AIPanel / 全局样式）。
+- 修复模块 `00` 薪资看板错映射：恢复 `salary-chart` 专属 schema，恢复经验等级与城市双视图。
+- 清除模块 `01` 薪资参考看板，避免与模块 `00` 重复。
+- 新增 `SEAL_PROCESS.md` 并规定封板后自动推送 GitHub。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `87484caec24e71ed414b7ef72c687bade745ad8d53ac07704cf1300b7d889ec9` |
+| `src/index.css` | `1b988e4dbf466c36fbe59eebb9772c5b24a1d8106eba63ff20bf7a0613718186` |
+| `src/components/CourseMap.jsx` | `46032371cbb3660229bea0f71b410a7545df1fba3b4adcd1fb51f4c8ac2fa5b3` |
+| `src/components/ModuleDetail.jsx` | `cf527c0d66f672c1923cff859699d0fda856a34e0b0aa183a8315538cc6b741d` |
+| `src/data/interactive.js` | `4e641c90a9204ab2756cc310054ec51280fcdb9ba3922000b0cadd2b25f19634` |
+| `public/content/00_课程介绍与学习说明.md` | `f85ff9cecdd839c42a87cb3a365ad017b38575ec716b8b2e56df312ec0c994fc` |
+| `public/content/01_测试前的计算机基础扫盲.md` | `bbca7cefcc4ddac094faf28681ad03e30a3cc5271e4e6b34c68735ea617d9654` |
+| `SEAL_PROCESS.md` | `4c7852a529100d78cab17e98abbfabb05e9d1f6c6edb7129bc799342401e620b` |
+
+### 说明
+- 本次封板包含界面升级与课程映射修复两类变更，均已通过构建与语法校验。
+
+---
+
+## v1.0.3 — 2026-05-17（已归档）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过 |
+| `npm run build` | ✅ 通过（76 modules，725ms） |
+
+### 本次变更摘要
+- 纳入 Claude 最新 code review 结果到 `review.md`（v1.0.2 全量评审）。
+- 版本号提升至 `1.0.3`，同步更新封板记录与变更日志。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `review.md` | `c9b6610aecb3cfd8c6577f61046c015a6123150d73dbc4ded1480719754dfd1d` |
+| `package.json` | `c3f77b4cebfb91dd2b1f21f48951f84f2f153365892919806803f5cf12855454` |
+
+### 说明
+- 本次封板为“文档与评审基线封板”，不涉及运行时代码逻辑变更。
+
+---
+
+## v1.0.2 — 2026-05-17（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）

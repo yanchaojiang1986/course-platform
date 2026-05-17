@@ -60,6 +60,32 @@ export const INTERACTIVE_DATA = {
     ],
   },
 
+  '00-04': {
+    type: 'salary-chart',
+    title: '功能测试工程师薪资参考',
+    note: '数据来源：招聘平台公开区间（教学示例）',
+    stats: [
+      { icon: '📈', value: '需求稳定', label: '功能测试岗位长期有招聘需求' },
+      { icon: '⏱', value: '1-3 个月', label: '零基础到拿到第一份 offer 的常见周期' },
+      { icon: '🚀', value: '可进阶', label: '接口/自动化/性能能力可持续抬升薪资' },
+    ],
+    levels: [
+      { title: '初级（0-1 年）', badge: '本课程目标', min: 6000, max: 12000, note: '先拿到入场岗位，再做能力升级' },
+      { title: '中级（1-3 年）', min: 10000, max: 20000, note: '接口测试、SQL、日志定位能力形成差异化' },
+      { title: '高级（3-5 年）', min: 18000, max: 30000, note: '具备自动化或性能能力后区间提升明显' },
+      { title: '资深/测试开发（5 年+）', min: 25000, max: 50000, note: '走测试架构或测试开发路线' },
+    ],
+    cities: [
+      { name: '北京', min: 10000, max: 15000 },
+      { name: '上海', min: 9000, max: 14000 },
+      { name: '深圳', min: 9000, max: 14000 },
+      { name: '杭州', min: 8000, max: 12000 },
+      { name: '广州', min: 7500, max: 12000 },
+      { name: '成都', min: 6000, max: 10000 },
+      { name: '武汉', min: 6000, max: 10000 },
+    ],
+  },
+
   // 模块 01
   '01-01': {
     type: 'flowchart',
@@ -103,20 +129,6 @@ export const INTERACTIVE_DATA = {
       { name: '缓存', children: ['改了配置但页面显示旧的', '清缓存后 Bug 消失 → 缓存引发', 'Ctrl+Shift+Delete 清浏览器缓存'] },
       { name: '日志', children: ['前端日志：F12 Console', '后端日志：Linux 服务器', '提 Bug 时附上日志截图'] },
     ],
-  },
-
-  '01-04': {
-    type: 'bar-chart',
-    title: '功能测试岗位薪资参考（2026 春季）',
-    subtitle: '帮助零基础学员建立阶段目标：先拿到入场薪资，再用工具与项目经验持续抬升。',
-    unit: '千元/月（税前）',
-    labels: ['三线 / 新一线', '二线核心城市', '一线普通公司', '一线头部团队'],
-    series: [
-      { name: '0-1 年（初级）', color: '#60a5fa', values: [7, 9, 12, 15] },
-      { name: '1-3 年（中级）', color: '#34d399', values: [10, 13, 17, 22] },
-      { name: '3-5 年（高级）', color: '#f59e0b', values: [14, 18, 24, 30] },
-    ],
-    footnote: '注：为课程样本区间，用于职业认知教学；真实薪资会受城市、行业、业务复杂度、项目经历与面试表现影响。',
   },
 
   // 模块 02

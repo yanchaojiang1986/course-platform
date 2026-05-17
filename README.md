@@ -112,3 +112,4 @@ curl -X POST https://<your-domain>/api/admin/invite-codes/generate \
 | `AUTH_MEMBERSHIP_SETUP.md` | 授权码与会员系统配置说明 |
 | `INTERACTIVE_MAP.md` | 全课程交互组件插入位置清单 |
 | `SEAL_RECORD.md` | 封板记录与校验哈希 |
+| `SEAL_PROCESS.md` | 封板标准流程（含自动推送 GitHub） |

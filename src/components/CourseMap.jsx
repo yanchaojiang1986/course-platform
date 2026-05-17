@@ -28,31 +28,44 @@ function getOverallProgress(modules) {
 
 function ProgressRing({ value, total, color, label }) {
   const pct = total ? Math.round((value / total) * 100) : 0
-  const r = 26
+  const r = 28
   const circ = 2 * Math.PI * r
   const offset = circ - (pct / 100) * circ
+
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="relative w-16 h-16">
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r={r} fill="none" stroke="#334155" strokeWidth="6" />
+    <div className="metric-panel flex items-center gap-4 min-w-[170px]">
+      <div className="relative w-16 h-16 shrink-0">
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 72 72">
+          <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(148,163,184,0.25)" strokeWidth="7" />
           <circle
-            cx="32" cy="32" r={r} fill="none"
-            stroke={color} strokeWidth="6"
+            cx="36"
+            cy="36"
+            r={r}
+            fill="none"
+            stroke={color}
+            strokeWidth="7"
             strokeDasharray={circ}
             strokeDashoffset={offset}
             strokeLinecap="round"
             className="transition-all duration-700"
           />
         </svg>
-        <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-100">
-          {pct}%
-        </span>
+        <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-100">{pct}%</span>
       </div>
-      <div className="text-center">
-        <div className="text-xs font-medium text-slate-300">{label}</div>
-        <div className="text-xs text-slate-500">{value}/{total} 完成</div>
+      <div>
+        <div className="text-xs uppercase tracking-[0.14em] text-slate-400">{label}</div>
+        <div className="mt-1 text-sm font-semibold text-slate-100">{value}/{total} 完成</div>
       </div>
+    </div>
+  )
+}
+
+function Metric({ title, value, hint, color }) {
+  return (
+    <div className="metric-panel">
+      <div className="text-[11px] uppercase tracking-[0.16em] text-slate-400">{title}</div>
+      <div className="mt-2 text-2xl font-semibold" style={{ color }}>{value}</div>
+      <div className="mt-1 text-xs text-slate-400">{hint}</div>
     </div>
   )
 }
@@ -60,7 +73,6 @@ function ProgressRing({ value, total, color, label }) {
 export default function CourseMap({ modules, onSelectModule, wrongbookCount, user, onLogout }) {
   const [progress, setProgress] = useState(() => getOverallProgress(modules))
 
-  // 挂载后订阅进度变化事件，避免渲染循环
   useEffect(() => {
     const syncProgress = () => setProgress(getOverallProgress(modules))
     window.addEventListener('storage', syncProgress)
@@ -74,73 +86,85 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
   }, [modules])
 
   const groups = [
-    { label: '01 基础课程', ids: ['00', '01', '02'] },
-    { label: '02 核心技能', ids: ['03', '04', '05'] },
-    { label: '03 工具与实操', ids: ['06', '07'] },
-    { label: '04 实战与求职', ids: ['08', '09', '10', '11'] },
+    { label: 'Stage 01 · 基础课程', ids: ['00', '01', '02'], desc: '计算机与测试认知的底层能力，建立统一语言和视角。' },
+    { label: 'Stage 02 · 核心技能', ids: ['03', '04', '05'], desc: '功能测试主线方法：流程、设计、缺陷管理与输出。' },
+    { label: 'Stage 03 · 工具实操', ids: ['06', '07'], desc: '接口与工具体系，形成真实可复用的执行能力。' },
+    { label: 'Stage 04 · 项目与求职', ids: ['08', '09', '10', '11'], desc: '企业级项目场景与岗位转化能力，完成闭环。' },
   ]
+
+  const doneModules = progress.p1Done + progress.p2Done
+  const totalUnits = progress.p1Total + progress.p2Total || 1
+  const doneRate = Math.round((doneModules / totalUnits) * 100)
 
   return (
     <div className="min-h-screen app-shell text-slate-100">
       <div className="absolute inset-0 app-grid-overlay pointer-events-none" />
 
-      <div className="relative px-8 py-10">
-        <div className="max-w-5xl mx-auto">
-          <div className="glass-panel rounded-3xl p-7 sm:p-8">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[11px] tracking-[0.24em] uppercase text-cyan-300/80">QA Bootcamp</p>
-                <h1 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
-                  功能测试训练营
-                </h1>
-                <p className="mt-2 text-sm text-slate-300">零基础转行 · 两阶段学习 · AI 教辅 + 苏格拉底实战</p>
-                <p className="mt-3 text-xs text-slate-400">当前账号：{user?.username} · 会员等级：{(user?.plan || '').toUpperCase()}</p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => onSelectModule('wrongbook')}
-                  className="relative flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-sm transition-colors border border-white/10"
-                >
-                  📕 错题本
-                  {wrongbookCount > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
-                      {wrongbookCount > 9 ? '9+' : wrongbookCount}
-                    </span>
-                  )}
-                </button>
-                <button
-                  onClick={onLogout}
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-sm transition-colors border border-white/10"
-                >
-                  退出登录
-                </button>
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-10 space-y-8">
+        <section className="glass-panel rounded-3xl p-6 sm:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+            <div className="max-w-3xl">
+              <p className="section-chip">Test Engineering Bootcamp</p>
+              <h1 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight bg-gradient-to-r from-slate-50 via-sky-100 to-emerald-100 bg-clip-text text-transparent">
+                功能测试训练营 · 任务地图
+              </h1>
+              <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
+                按“基础关卡 → 实战关卡”推进。每个模块都以可验证结果为目标，不是看完就算学完。
+              </p>
+              <div className="mt-5 flex flex-wrap items-center gap-2 text-xs">
+                <span className="px-3 py-1 rounded-full border border-slate-600/70 bg-slate-900/40">账号：{user?.username}</span>
+                <span className="px-3 py-1 rounded-full border border-sky-500/40 bg-sky-500/10 text-sky-200">计划：{(user?.plan || '').toUpperCase()}</span>
+                <span className="px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-200">总进度：{doneRate}%</span>
               </div>
             </div>
 
-            <div className="mt-8 flex items-center gap-10">
-              <ProgressRing value={progress.p1Done} total={progress.p1Total} color="#34d399" label="基础关卡" />
-              <ProgressRing value={progress.p2Done} total={progress.p2Total} color="#60a5fa" label="实战关卡" />
-              <div className="flex-1 hidden sm:block">
-                <div className="grid grid-cols-2 gap-3 text-sm text-slate-300">
-                  <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />练习题通关 ≥80% 解锁实战</div>
-                  <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />答错题自动进入错题本</div>
-                  <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-cyan-400 shrink-0" />苏格拉底 AI 引导，不直接给答案</div>
-                  <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-fuchsia-400 shrink-0" />接口测试模块可真实发请求</div>
-                </div>
-              </div>
+            <div className="flex items-center gap-2 shrink-0 self-start">
+              <button
+                onClick={() => onSelectModule('wrongbook')}
+                className="relative px-4 py-2.5 rounded-xl border border-rose-400/35 bg-rose-500/10 text-rose-100 hover:bg-rose-500/20 transition-colors"
+              >
+                错题本
+                {wrongbookCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-rose-500 text-white text-[11px] flex items-center justify-center font-semibold">
+                    {wrongbookCount > 9 ? '9+' : wrongbookCount}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={onLogout}
+                className="px-4 py-2.5 rounded-xl border border-slate-600/70 bg-slate-900/40 text-slate-200 hover:bg-slate-800/60 transition-colors"
+              >
+                退出登录
+              </button>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="relative max-w-5xl mx-auto px-8 pb-10 space-y-8">
+          <div className="mt-7 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="flex flex-wrap gap-3">
+              <ProgressRing value={progress.p1Done} total={progress.p1Total} color="#34d399" label="基础关卡" />
+              <ProgressRing value={progress.p2Done} total={progress.p2Total} color="#38bdf8" label="实战关卡" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <Metric title="可学模块" value={modules.length} hint="已按会员权限过滤" color="#7dd3fc" />
+              <Metric title="已完成单元" value={doneModules} hint="基础+实战累计" color="#6ee7b7" />
+            </div>
+          </div>
+        </section>
+
         {groups.map(group => {
           const mods = modules.filter(m => group.ids.includes(m.id))
           if (mods.length === 0) return null
           return (
-            <div key={group.label}>
-              <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-[0.18em] mb-3">{group.label}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <section key={group.label} className="glass-panel rounded-3xl p-5 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+                <div>
+                  <h2 className="text-sm font-semibold tracking-[0.12em] uppercase text-slate-200">{group.label}</h2>
+                  <p className="mt-1 text-sm text-slate-400">{group.desc}</p>
+                </div>
+                <span className="text-xs text-slate-400">{mods.length} 个模块</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {mods.map(m => (
                   <ModuleCard
                     key={m.id}
@@ -149,7 +173,7 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
                   />
                 ))}
               </div>
-            </div>
+            </section>
           )
         })}
       </div>
