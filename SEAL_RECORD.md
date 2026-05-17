@@ -1,6 +1,38 @@
 # 封板记录
 
-## v1.0.4 — 2026-05-17（当前版本）
+## v1.0.5 — 2026-05-17（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`） |
+| `npm run build` | ✅ 通过（78 modules，759ms） |
+
+### 本次变更摘要
+- 交互渲染链路增加可观测性：`InteractiveBlock` 对缺数据与非法 type 显示 `ErrorCard`，不再静默丢失。
+- 增加 `validateInteractiveData()` 启动期 schema 校验与开发态红条提示。
+- 增加 `scripts/validate-content.mjs`，建立 markdown 标记、interactive key、schema 三方一致性校验闸门。
+- `lint` 正式串联内容校验，封板前可直接阻断映射错误。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `7dba719472ed3e68e4ac2a38e209fa896a2202024aa964e748dc072c81863f96` |
+| `src/App.jsx` | `23d2b570b5e93222554ae871364359ea1fda9f70eec8039df537d17fa204d389` |
+| `src/components/interactive/InteractiveBlock.jsx` | `75d4871792d86d05205f52f9e088550f79efaf36df6e39cbf18106e2aa51835d` |
+| `src/components/interactive/ErrorCard.jsx` | `0917b02e051b5e07507f7716744a8ca05b529264c9eb9f321d8805735e7d84c7` |
+| `src/data/validateInteractive.js` | `74941a4db13d69f326d983d9c0c46912a536581698540142f87cb9a47d9a7991` |
+| `scripts/validate-content.mjs` | `137f050641b146bd70ad8925b708beeac643ec29a3a38210e1ce122427bafddc` |
+
+### 说明
+- 本次封板重点为“可观测性 + 校验闸门”增强，目标是提前暴露映射/结构问题，降低课程内容回归成本。
+
+---
+
+## v1.0.4 — 2026-05-17（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）

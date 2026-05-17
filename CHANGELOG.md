@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.0.5] - 2026-05-17
+
+### 新增
+- 新增交互错误可视化组件 `src/components/interactive/ErrorCard.jsx`。
+- 新增交互数据校验模块 `src/data/validateInteractive.js`（14 种 type schema + `validateInteractiveData()`）。
+- 新增内容交叉校验脚本 `scripts/validate-content.mjs`（扫描 markdown DEMO 标记、校验孤儿标记、未引用数据、schema 合法性）。
+
+### 变更
+- `src/components/interactive/InteractiveBlock.jsx`：将 `!data` 与未知 `type` 的静默 `return null` 改为可见错误卡。
+- `src/App.jsx`：启动时执行交互数据校验，开发环境顶部展示校验红条，生产环境保留控制台报错。
+- `package.json`：`lint` 串联 `lint:syntax + lint:content`，并将 `lint:syntax` 改为 `find` 兼容写法。
+
+### 修复
+- 修复 `input-demo` schema 误判：支持 `rules` 与 `boundary_table` 两种合法结构，覆盖 `04-03` 场景。
+
+### 质量校验
+- `npm run lint` 通过（含内容校验）。
+- `npm run build` 通过（78 modules，759ms）。
+
+---
+
 ## [1.0.4] - 2026-05-17
 
 ### 变更

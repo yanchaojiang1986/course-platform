@@ -1,13 +1,14 @@
 {
   "name": "course-platform",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "start": "node server.js",
-    "lint": "npm run lint:syntax",
-    "lint:syntax": "rg --files src -g '*.js' | xargs -n 1 node --check && node --check server.js && node --check vite.config.js && node --check tailwind.config.js && node --check postcss.config.js",
+    "lint": "npm run lint:syntax && npm run lint:content",
+    "lint:syntax": "find src -name '*.js' | xargs -n 1 node --check && node --check server.js && node --check vite.config.js && node --check tailwind.config.js && node --check postcss.config.js",
+    "lint:content": "node scripts/validate-content.mjs",
     "typecheck": "echo \"No TypeScript files to typecheck\"",
     "test": "echo \"No automated tests yet\""
   },

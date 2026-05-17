@@ -1,4 +1,6 @@
 import { INTERACTIVE_DATA } from '../../data/interactive.js'
+import { KNOWN_TYPES } from '../../data/validateInteractive.js'
+import ErrorCard from './ErrorCard.jsx'
 import Flowchart from './Flowchart.jsx'
 import Comparison from './Comparison.jsx'
 import Checklist from './Checklist.jsx'
@@ -16,7 +18,9 @@ import SalaryChart from './SalaryChart.jsx'
 
 export default function InteractiveBlock({ blockId }) {
   const data = INTERACTIVE_DATA[blockId]
-  if (!data) return null
+  if (!data) {
+    return <ErrorCard blockId={blockId} reason="在 interactive.js 中找不到对应数据" />
+  }
 
   switch (data.type) {
     case 'flowchart':   return <Flowchart data={data} />
@@ -33,6 +37,13 @@ export default function InteractiveBlock({ blockId }) {
     case 'devtools':    return <DevTools data={data} />
     case 'bar-chart':   return <BarChart data={data} />
     case 'salary-chart': return <SalaryChart data={data} />
-    default:            return null
+    default:
+      return (
+        <ErrorCard
+          blockId={blockId}
+          type={data.type || '(空)'}
+          reason={`未知 type，合法值：${KNOWN_TYPES.join(', ')}`}
+        />
+      )
   }
 }
