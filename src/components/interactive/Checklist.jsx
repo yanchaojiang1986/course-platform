@@ -19,14 +19,14 @@ export default function Checklist({ data, blockId }) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) return parsed;
       }
-    } catch {}
+    } catch { }
     return buildInitialState();
   });
 
   useEffect(() => {
     try {
       localStorage.setItem(storageKey, JSON.stringify(checked));
-    } catch {}
+    } catch { }
   }, [checked, storageKey]);
 
   const toggle = (idx) => {
@@ -67,8 +67,9 @@ export default function Checklist({ data, blockId }) {
           className="mt-0.5 h-4 w-4 accent-blue-500"
           checked={!!checked[idx]}
           onChange={() => toggle(idx)}
+          aria-label={label}
         />
-        <span className={`text-sm ${checked[idx] ? 'text-gray-400 line-through' : 'text-gray-700'}`}>
+        <span className={`text-sm ${checked[idx] ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-700 dark:text-gray-300'}`}>
           {label}
         </span>
       </li>
@@ -76,34 +77,36 @@ export default function Checklist({ data, blockId }) {
   };
 
   return (
-    <div className="my-6 rounded-xl border bg-white p-5 shadow-sm">
-      <div className="mb-1 flex items-center justify-between">
-        <span className="font-semibold text-gray-800">{title}</span>
-        <span className="text-sm text-gray-500">{done} / {total} 已完成</span>
+    <div className="interactive-card">
+      <div className="interactive-card-header justify-between">
+        <h3 className="interactive-card-title">{title}</h3>
+        <span className="interactive-card-badge">{done} / {total} 已完成</span>
       </div>
-      {description && <p className="mb-3 text-sm text-gray-500">{description}</p>}
+      <div className="interactive-card-body">
+        {description && <p className="mb-4 interactive-muted">{description}</p>}
 
-      {categories ? (
-        (() => {
-          let offset = 0;
-          return categories.map((cat, ci) => {
-            const start = offset;
-            offset += cat.items.length;
-            return (
-              <div key={ci} className="mb-4">
-                <h3 className="mb-1 text-sm font-semibold text-gray-600">{cat.name}</h3>
-                <ul>
-                  {cat.items.map((item, ii) => renderItem(item, start + ii))}
-                </ul>
-              </div>
-            );
-          });
-        })()
-      ) : (
-        <ul>
-          {(items || []).map((item, i) => renderItem(item, i))}
-        </ul>
-      )}
+        {categories ? (
+          (() => {
+            let offset = 0;
+            return categories.map((cat, ci) => {
+              const start = offset;
+              offset += cat.items.length;
+              return (
+                <div key={ci} className="mb-4 rounded-lg border border-gray-100 bg-gray-50/70 p-3 dark:border-slate-700/60 dark:bg-slate-800/35">
+                  <h3 className="mb-2 text-sm font-semibold text-gray-600 dark:text-gray-400">{cat.name}</h3>
+                  <ul>
+                    {cat.items.map((item, ii) => renderItem(item, start + ii))}
+                  </ul>
+                </div>
+              );
+            });
+          })()
+        ) : (
+          <ul>
+            {(items || []).map((item, i) => renderItem(item, i))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

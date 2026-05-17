@@ -62,11 +62,14 @@ export default function Terminal({ data }) {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div className="my-6 rounded-xl border border-gray-700 overflow-hidden shadow-lg">
+    <div className="interactive-card">
       {title && (
-        <div className="bg-gray-800 px-4 py-2 text-xs text-gray-400 border-b border-gray-700">{title}</div>
+        <div className="interactive-card-header">
+          <span aria-hidden>💻</span>
+          <h3 className="interactive-card-title">{title}</h3>
+        </div>
       )}
-      <div className="bg-gray-800 px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+      <div className="border-b border-gray-700 bg-gray-800 px-4 py-2 dark:border-gray-800 dark:bg-gray-900">
         <span className="w-3 h-3 rounded-full bg-red-500"></span>
         <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
         <span className="w-3 h-3 rounded-full bg-green-500"></span>

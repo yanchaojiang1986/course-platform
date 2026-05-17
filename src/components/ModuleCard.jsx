@@ -68,7 +68,6 @@ export default function ModuleCard({ module, onClick }) {
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] font-mono tracking-[0.08em] text-fg-muted">M-{module.id}</span>
               <span className={`text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r ${theme.line} text-slate-950 font-semibold`}>
                 {module.tag}
               </span>

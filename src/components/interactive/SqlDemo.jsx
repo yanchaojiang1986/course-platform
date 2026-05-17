@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 function parseSql(sql, tables) {
   const s = sql.trim();
-  const upper = s.toUpperCase();
 
   const selectAllMatch = s.match(/^\s*SELECT\s+\*\s+FROM\s+(\w+)\s*$/i);
   if (selectAllMatch) {
@@ -23,7 +22,7 @@ function parseSql(sql, tables) {
 
   const joinMatch = s.match(/^\s*SELECT\s+([\s\S]+?)\s+FROM\s+(\w+)\s+(\w+)\s+JOIN\s+(\w+)\s+(\w+)\s+ON\s+([\w.]+)\s*=\s*([\w.]+)(?:\s+WHERE\s+([\s\S]+?))?\s*$/i);
   if (joinMatch) {
-    const [, , t1, a1, t2, a2, on1, on2, whereClause] = joinMatch;
+    const [, , t1, , t2, , on1, on2, whereClause] = joinMatch;
     const table1 = tables[t1.toLowerCase()];
     const table2 = tables[t2.toLowerCase()];
     if (!table1) return { error: `表 "${t1}" 不存在` };
@@ -75,25 +74,25 @@ function parseSql(sql, tables) {
 }
 
 function ResultTable({ rows }) {
-  if (!rows || rows.length === 0) return <div className="text-sm text-gray-500 p-2">查询结果为空（0 行）</div>;
+  if (!rows || rows.length === 0) return <div className="p-2 text-sm text-gray-500 dark:text-gray-400">查询结果为空（0 行）</div>;
   const cols = Object.keys(rows[0]);
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-xs border-collapse">
+      <table className="w-full border-collapse text-xs">
         <thead>
-          <tr className="bg-gray-100 border-b">
-            {cols.map(c => <th key={c} className="text-left px-3 py-2 text-gray-600 font-medium whitespace-nowrap">{c}</th>)}
+          <tr className="interactive-table-head">
+            {cols.map(c => <th key={c} className="px-3 py-2 text-left font-medium whitespace-nowrap text-gray-600 dark:text-gray-400">{c}</th>)}
           </tr>
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i} className="border-b hover:bg-gray-50">
-              {cols.map(c => <td key={c} className="px-3 py-2 text-gray-700 whitespace-nowrap">{String(row[c] ?? '')}</td>)}
+            <tr key={i} className="interactive-table-row hover:bg-gray-50 dark:hover:bg-slate-800/40">
+              {cols.map(c => <td key={c} className="px-3 py-2 whitespace-nowrap text-gray-700 dark:text-gray-300">{String(row[c] ?? '')}</td>)}
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="text-xs text-gray-400 mt-1 px-1">{rows.length} 行结果</div>
+      <div className="mt-1 px-1 text-xs text-gray-400 dark:text-gray-500">{rows.length} 行结果</div>
     </div>
   );
 }
@@ -123,60 +122,69 @@ export default function SqlDemo({ data }) {
   };
 
   return (
-    <div className="my-6 rounded-xl border bg-white p-5 shadow-sm">
-      {title && <h3 className="text-base font-semibold text-gray-700 mb-1">{title}</h3>}
-      {description && <p className="text-sm text-gray-500 mb-3">{description}</p>}
-      <div className="flex gap-4">
-        {preset_queries.length > 0 && (
-          <div className="w-40 shrink-0">
-            <div className="text-xs font-medium text-gray-500 mb-2">预设查询</div>
-            <div className="space-y-1">
-              {preset_queries.map((q, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSelectQuery(q)}
-                  className={`w-full text-left text-xs px-2.5 py-2 rounded-lg border transition ${selectedQuery?.label === q.label ? 'bg-blue-50 border-blue-300 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
-                >
-                  {q.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        <div className="flex-1 min-w-0 space-y-3">
-          {selectedQuery?.purpose && (
-            <div className="text-xs text-gray-500 bg-blue-50 rounded p-2 border border-blue-100">
-              <span className="font-medium text-blue-700">目的：</span>{selectedQuery.purpose}
-            </div>
-          )}
-          <textarea
-            value={sql}
-            onChange={e => { setSql(e.target.value); setRan(false); setResult(null); }}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-y"
-            rows={4}
-            spellCheck={false}
-          />
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleRun}
-              className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition font-medium"
-            >
-              运行 ▶
-            </button>
-            {selectedQuery?.warning && (
-              <span className="text-xs text-orange-600 bg-orange-50 border border-orange-200 rounded px-2 py-1">⚠ {selectedQuery.warning}</span>
-            )}
-          </div>
-          {ran && result && (
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 border-b">执行结果</div>
-              <div className="p-2">
-                {result.error && <div className="text-sm text-red-600 p-2">{result.error}</div>}
-                {result.message && <div className="text-sm text-gray-600 p-2">{result.message}</div>}
-                {result.rows !== null && !result.error && <ResultTable rows={result.rows} />}
+    <div className="interactive-card">
+      {title && (
+        <div className="interactive-card-header">
+          <h3 className="interactive-card-title">{title}</h3>
+        </div>
+      )}
+      <div className="interactive-card-body">
+        {description && <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">{description}</p>}
+        <div className="flex gap-4">
+          {preset_queries.length > 0 && (
+            <div className="w-40 shrink-0">
+              <div className="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">预设查询</div>
+              <div className="space-y-1">
+                {preset_queries.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSelectQuery(q)}
+                    className={`w-full rounded-lg border px-2.5 py-2 text-left text-xs transition ${selectedQuery?.label === q.label
+                      ? 'border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
+                      : 'border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-slate-700 dark:text-gray-400 dark:hover:bg-slate-800'
+                      }`}
+                  >
+                    {q.label}
+                  </button>
+                ))}
               </div>
             </div>
           )}
+          <div className="flex-1 min-w-0 space-y-3">
+            {selectedQuery?.purpose && (
+              <div className="rounded border border-blue-100 bg-blue-50 p-2 text-xs text-gray-500 dark:border-blue-800/50 dark:bg-blue-900/20 dark:text-gray-300">
+                <span className="font-medium text-blue-700 dark:text-blue-300">目的：</span>{selectedQuery.purpose}
+              </div>
+            )}
+            <textarea
+              value={sql}
+              onChange={e => { setSql(e.target.value); setRan(false); setResult(null); }}
+              className="w-full resize-y rounded-lg border border-gray-300 bg-white px-3 py-2 font-mono text-sm text-gray-900 transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent dark:border-slate-700 dark:bg-slate-900 dark:text-gray-100"
+              rows={4}
+              spellCheck={false}
+            />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleRun}
+                className="rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
+              >
+                运行 ▶
+              </button>
+              {selectedQuery?.warning && (
+                <span className="rounded border border-orange-200 bg-orange-50 px-2 py-1 text-xs text-orange-600 dark:border-orange-800/60 dark:bg-orange-900/20 dark:text-orange-300">⚠ {selectedQuery.warning}</span>
+              )}
+            </div>
+            {ran && result && (
+              <div className="interactive-panel overflow-hidden">
+                <div className="interactive-table-head px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400">执行结果</div>
+                <div className="p-2">
+                  {result.error && <div className="p-2 text-sm text-red-600 dark:text-red-300">{result.error}</div>}
+                  {result.message && <div className="p-2 text-sm text-gray-600 dark:text-gray-400">{result.message}</div>}
+                  {result.rows !== null && !result.error && <ResultTable rows={result.rows} />}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

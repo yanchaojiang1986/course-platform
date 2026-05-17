@@ -28,11 +28,11 @@ function StandardTable({ data, rows, statuses, setStatuses, expanded, setExpande
   return (
     <table className="w-full text-sm border-collapse">
       <thead>
-        <tr className="bg-gray-50 border-b">
+        <tr className="interactive-table-head">
           {data.columns.map((col, i) => (
-            <th key={i} className="text-left px-3 py-2 text-gray-600 font-medium whitespace-nowrap">{col}</th>
+            <th key={i} className="px-3 py-2 text-left font-medium whitespace-nowrap text-gray-600 dark:text-gray-400">{col}</th>
           ))}
-          <th className="px-3 py-2 text-gray-600 font-medium text-left">详情</th>
+          <th className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-400">详情</th>
         </tr>
       </thead>
       <tbody>
@@ -42,12 +42,12 @@ function StandardTable({ data, rows, statuses, setStatuses, expanded, setExpande
           const pColor = priorityColors[row.priority] || PRIORITY_COLORS[row.priority] || 'bg-gray-100 text-gray-600';
           return (
             <>
-              <tr key={row.id} className="border-b hover:bg-gray-50">
-                <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{row.id}</td>
-                <td className="px-3 py-2 text-gray-800">{row.title}</td>
-                {data.columns.length > 2 && <td className="px-3 py-2 text-gray-600 max-w-xs truncate">{row.precondition}</td>}
-                {data.columns.length > 3 && <td className="px-3 py-2 text-gray-600 max-w-xs truncate">{row.steps}</td>}
-                {data.columns.length > 4 && <td className="px-3 py-2 text-gray-600 max-w-xs truncate">{row.expected}</td>}
+              <tr key={row.id} className="interactive-table-row hover:bg-gray-50 dark:hover:bg-slate-800/40">
+                <td className="px-3 py-2 whitespace-nowrap text-gray-500 dark:text-gray-400">{row.id}</td>
+                <td className="px-3 py-2 text-gray-800 dark:text-gray-200">{row.title}</td>
+                {data.columns.length > 2 && <td className="max-w-xs truncate px-3 py-2 text-gray-600 dark:text-gray-400">{row.precondition}</td>}
+                {data.columns.length > 3 && <td className="max-w-xs truncate px-3 py-2 text-gray-600 dark:text-gray-400">{row.steps}</td>}
+                {data.columns.length > 4 && <td className="max-w-xs truncate px-3 py-2 text-gray-600 dark:text-gray-400">{row.expected}</td>}
                 <td className="px-3 py-2 whitespace-nowrap">
                   <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${pColor}`}>{row.priority}</span>
                 </td>
@@ -62,27 +62,27 @@ function StandardTable({ data, rows, statuses, setStatuses, expanded, setExpande
                 <td className="px-3 py-2">
                   <button
                     onClick={() => setExpanded(prev => ({ ...prev, [row.id]: !prev[row.id] }))}
-                    className="text-blue-500 text-xs hover:underline"
+                    className="text-xs text-blue-500 hover:underline dark:text-blue-400"
                   >
                     {isExpanded ? '收起' : '展开'}
                   </button>
                 </td>
               </tr>
               {isExpanded && (
-                <tr key={`${row.id}-detail`} className="bg-blue-50 border-b">
+                <tr key={`${row.id}-detail`} className="interactive-table-row bg-blue-50/80 dark:bg-blue-900/15">
                   <td colSpan={data.columns.length + 1} className="px-4 py-3">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <div className="font-medium text-gray-700 mb-1">前置条件</div>
-                        <div className="text-gray-600 whitespace-pre-wrap">{row.precondition}</div>
+                        <div className="mb-1 font-medium text-gray-700 dark:text-gray-300">前置条件</div>
+                        <div className="whitespace-pre-wrap text-gray-600 dark:text-gray-400">{row.precondition}</div>
                       </div>
                       <div>
-                        <div className="font-medium text-gray-700 mb-1">测试步骤</div>
-                        <div className="text-gray-600 whitespace-pre-wrap">{row.steps}</div>
+                        <div className="mb-1 font-medium text-gray-700 dark:text-gray-300">测试步骤</div>
+                        <div className="whitespace-pre-wrap text-gray-600 dark:text-gray-400">{row.steps}</div>
                       </div>
                       <div className="col-span-2">
-                        <div className="font-medium text-gray-700 mb-1">预期结果</div>
-                        <div className="text-gray-600 whitespace-pre-wrap">{row.expected}</div>
+                        <div className="mb-1 font-medium text-gray-700 dark:text-gray-300">预期结果</div>
+                        <div className="whitespace-pre-wrap text-gray-600 dark:text-gray-400">{row.expected}</div>
                       </div>
                     </div>
                   </td>
@@ -100,11 +100,11 @@ function ChapterTable({ data, rows, expanded, setExpanded }) {
   return (
     <table className="w-full text-sm border-collapse">
       <thead>
-        <tr className="bg-gray-50 border-b">
+        <tr className="interactive-table-head">
           {data.columns.map((col, i) => (
-            <th key={i} className="text-left px-3 py-2 text-gray-600 font-medium">{col}</th>
+            <th key={i} className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-400">{col}</th>
           ))}
-          <th className="px-3 py-2 text-gray-600 font-medium text-left">详情</th>
+          <th className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-400">详情</th>
         </tr>
       </thead>
       <tbody>
@@ -112,27 +112,27 @@ function ChapterTable({ data, rows, expanded, setExpanded }) {
           const isExpanded = expanded[idx];
           return (
             <>
-              <tr key={idx} className="border-b hover:bg-gray-50">
-                <td className="px-3 py-2 text-gray-800 font-medium">{row.chapter}</td>
-                <td className="px-3 py-2 text-gray-600 max-w-xs truncate">{row.points}</td>
+              <tr key={idx} className="interactive-table-row hover:bg-gray-50 dark:hover:bg-slate-800/40">
+                <td className="px-3 py-2 font-medium text-gray-800 dark:text-gray-200">{row.chapter}</td>
+                <td className="max-w-xs truncate px-3 py-2 text-gray-600 dark:text-gray-400">{row.points}</td>
                 {row.example !== undefined && (
-                  <td className="px-3 py-2 text-gray-600 font-mono text-xs max-w-xs truncate">{row.example}</td>
+                  <td className="max-w-xs truncate px-3 py-2 font-mono text-xs text-gray-600 dark:text-gray-400">{row.example}</td>
                 )}
                 <td className="px-3 py-2">
                   <button
                     onClick={() => setExpanded(prev => ({ ...prev, [idx]: !prev[idx] }))}
-                    className="text-blue-500 text-xs hover:underline"
+                    className="text-xs text-blue-500 hover:underline dark:text-blue-400"
                   >
                     {isExpanded ? '收起' : '展开'}
                   </button>
                 </td>
               </tr>
               {isExpanded && (
-                <tr key={`${idx}-detail`} className="bg-blue-50 border-b">
+                <tr key={`${idx}-detail`} className="interactive-table-row bg-blue-50/80 dark:bg-blue-900/15">
                   <td colSpan={data.columns.length + 1} className="px-4 py-3">
                     <div className="text-sm space-y-2">
-                      <div><span className="font-medium text-gray-700">要点：</span><span className="text-gray-600 whitespace-pre-wrap">{row.points}</span></div>
-                      {row.example && <div><span className="font-medium text-gray-700">示例：</span><code className="text-gray-600 bg-gray-100 px-1 rounded font-mono text-xs whitespace-pre-wrap">{row.example}</code></div>}
+                      <div><span className="font-medium text-gray-700 dark:text-gray-300">要点：</span><span className="whitespace-pre-wrap text-gray-600 dark:text-gray-400">{row.points}</span></div>
+                      {row.example && <div><span className="font-medium text-gray-700 dark:text-gray-300">示例：</span><code className="rounded bg-gray-100 px-1 font-mono text-xs whitespace-pre-wrap text-gray-600 dark:bg-slate-800 dark:text-gray-300">{row.example}</code></div>}
                     </div>
                   </td>
                 </tr>
@@ -150,12 +150,12 @@ function GenericTable({ data, rows, expanded, setExpanded }) {
   return (
     <table className="w-full text-sm border-collapse">
       <thead>
-        <tr className="bg-gray-50 border-b">
+        <tr className="interactive-table-head">
           {data.columns && data.columns.length > 0
-            ? data.columns.map((col, i) => <th key={i} className="text-left px-3 py-2 text-gray-600 font-medium">{col}</th>)
-            : keys.map((k, i) => <th key={i} className="text-left px-3 py-2 text-gray-600 font-medium">{k}</th>)
+            ? data.columns.map((col, i) => <th key={i} className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-400">{col}</th>)
+            : keys.map((k, i) => <th key={i} className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-400">{k}</th>)
           }
-          <th className="px-3 py-2 text-gray-600 font-medium text-left">详情</th>
+          <th className="px-3 py-2 text-left font-medium text-gray-600 dark:text-gray-400">详情</th>
         </tr>
       </thead>
       <tbody>
@@ -164,25 +164,25 @@ function GenericTable({ data, rows, expanded, setExpanded }) {
           const vals = keys.map(k => row[k]);
           return (
             <>
-              <tr key={idx} className="border-b hover:bg-gray-50">
+              <tr key={idx} className="interactive-table-row hover:bg-gray-50 dark:hover:bg-slate-800/40">
                 {vals.map((v, i) => (
-                  <td key={i} className="px-3 py-2 text-gray-700 max-w-xs truncate">{String(v ?? '')}</td>
+                  <td key={i} className="max-w-xs truncate px-3 py-2 text-gray-700 dark:text-gray-300">{String(v ?? '')}</td>
                 ))}
                 <td className="px-3 py-2">
                   <button
                     onClick={() => setExpanded(prev => ({ ...prev, [idx]: !prev[idx] }))}
-                    className="text-blue-500 text-xs hover:underline"
+                    className="text-xs text-blue-500 hover:underline dark:text-blue-400"
                   >
                     {isExpanded ? '收起' : '展开'}
                   </button>
                 </td>
               </tr>
               {isExpanded && (
-                <tr key={`${idx}-detail`} className="bg-blue-50 border-b">
+                <tr key={`${idx}-detail`} className="interactive-table-row bg-blue-50/80 dark:bg-blue-900/15">
                   <td colSpan={keys.length + 1} className="px-4 py-3">
                     <div className="text-sm space-y-1">
                       {keys.map(k => (
-                        <div key={k}><span className="font-medium text-gray-700">{k}：</span><span className="text-gray-600 whitespace-pre-wrap">{String(row[k] ?? '')}</span></div>
+                        <div key={k}><span className="font-medium text-gray-700 dark:text-gray-300">{k}：</span><span className="whitespace-pre-wrap text-gray-600 dark:text-gray-400">{String(row[k] ?? '')}</span></div>
                       ))}
                     </div>
                   </td>
@@ -206,25 +206,31 @@ export default function TestCase({ data }) {
   const isChapter = 'chapter' in firstRow && 'points' in firstRow;
 
   return (
-    <div className="my-6 rounded-xl border bg-white p-5 shadow-sm overflow-x-auto">
-      {title && <h3 className="text-base font-semibold text-gray-700 mb-1">{title}</h3>}
-      {description && <p className="text-sm text-gray-500 mb-3">{description}</p>}
-      {isStandard && (
-        <StandardTable
-          data={data}
-          rows={rows}
-          statuses={statuses}
-          setStatuses={setStatuses}
-          expanded={expanded}
-          setExpanded={setExpanded}
-        />
+    <div className="interactive-card">
+      {title && (
+        <div className="interactive-card-header">
+          <h3 className="interactive-card-title">{title}</h3>
+        </div>
       )}
-      {!isStandard && isChapter && (
-        <ChapterTable data={data} rows={rows} expanded={expanded} setExpanded={setExpanded} />
-      )}
-      {!isStandard && !isChapter && rows.length > 0 && (
-        <GenericTable data={data} rows={rows} expanded={expanded} setExpanded={setExpanded} />
-      )}
+      <div className="p-0 overflow-x-auto">
+        {description && <p className="mb-3 px-5 pt-4 text-sm text-gray-500 dark:text-gray-400">{description}</p>}
+        {isStandard && (
+          <StandardTable
+            data={data}
+            rows={rows}
+            statuses={statuses}
+            setStatuses={setStatuses}
+            expanded={expanded}
+            setExpanded={setExpanded}
+          />
+        )}
+        {!isStandard && isChapter && (
+          <ChapterTable data={data} rows={rows} expanded={expanded} setExpanded={setExpanded} />
+        )}
+        {!isStandard && !isChapter && rows.length > 0 && (
+          <GenericTable data={data} rows={rows} expanded={expanded} setExpanded={setExpanded} />
+        )}
+      </div>
     </div>
   );
 }

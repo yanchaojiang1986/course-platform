@@ -1,6 +1,52 @@
 # 封板记录
 
-## v1.0.7 — 2026-05-17（当前版本）
+## v1.0.8 — 2026-05-17（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`，39 个 blockId） |
+| `npm run build` | ✅ 通过（79 modules） |
+
+### 本次变更摘要
+- Trae 完成交互组件 UI 统一优化，覆盖图表、清单、对比、DevTools、流程图、导图、HTTP、输入演示、薪资图、SQL、终端、用例表与时间线组件。
+- `src/index.css` 新增/扩展交互组件通用视觉样式，提升浅色/深色模式一致性。
+- 课程侧栏与详情页去除“模块 00 / Module 00 / M-00”等编号前缀，标题展示更友好。
+- `Mindmap.jsx` 更新为新版树状导图布局，支持分支折叠、深浅色与多层节点连线。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `224fe37d9a5f68dc7a46906ec0ac450b5ef740952e604f0af6316659ceaf059f` |
+| `package-lock.json` | `194938d85764c094574c8b0d4175cfadee3560638c869a670a7a9814528eab59` |
+| `src/App.jsx` | `017be70cef77d5f27f6252d4d1cea9d12eae91e842c74fd185403c47e7f48b55` |
+| `src/components/ModuleCard.jsx` | `6602389f430cd994f654a75bf7ea427e954471077867fb146fd17b4db4f3d6e3` |
+| `src/components/ModuleDetail.jsx` | `bae60fa158679107647d78ba92eb42a369782ce27ee3552098daa2c43991f152` |
+| `src/index.css` | `282c3891823fd16f017538f5e29ec2a7abc2844040af36aee220704bda82cefc` |
+| `src/components/interactive/BarChart.jsx` | `a38be059dda6b623f9c1624124969630fecb332b04c414928685f1d9cb4e63d2` |
+| `src/components/interactive/Checklist.jsx` | `fa75aaccef9d6b7de5557cbd687074096dae34619a54c1338fae931074c5af5d` |
+| `src/components/interactive/Comparison.jsx` | `81635dc151098a676a2cb590293194af8cb331d30cb38d40bd08e99b5212e746` |
+| `src/components/interactive/DevTools.jsx` | `d937276d3448b030375c2fcb8a19cad197c94dbd43a688198eb33fb053946cc1` |
+| `src/components/interactive/Flashcard.jsx` | `98d6b3bd8ad69f5d8b17d3a81dcac484138f6e41b532a76377bece3c91f5973d` |
+| `src/components/interactive/Flowchart.jsx` | `7f22047baae1cd1b486d212fedf0d4ef12fc2f2eea546f529ccbf3982a2bad08` |
+| `src/components/interactive/HttpDemo.jsx` | `c03e76a1dbbddb3a822c9d2efdc06179869923325869608e74a71197b91e7854` |
+| `src/components/interactive/InputDemo.jsx` | `2bc55cd605877d1498cca03d056745c3be703b6f0ece2f978a04998cba87cb2d` |
+| `src/components/interactive/Mindmap.jsx` | `8364656f83ac3fc7a4f2a549a3fd9279e5744800a6228e9b4e5f82d1c02e9229` |
+| `src/components/interactive/SalaryChart.jsx` | `86593d7fb49b405239f8898f3599515197591444c3cd59bfd86c68ceb3a9cbac` |
+| `src/components/interactive/SqlDemo.jsx` | `03b864d15c0ff7ccb57b1465988105684cbe1f6e26fd799225ff8d4c91e8a125` |
+| `src/components/interactive/Terminal.jsx` | `5781a806d279fa87b32590869b572f3ac51e93a6f14b3ab1677fa4640e0c70b4` |
+| `src/components/interactive/TestCase.jsx` | `45096efa5b027f9a4e004e834235856578adec292ab2c058b66dbca556df22fc` |
+| `src/components/interactive/Timeline.jsx` | `19871418032806a8f653fb43007dbbdce106df525a907e45d2c9da400e817094` |
+
+### 说明
+- 本次封板为“交互组件视觉优化 + 标题友好化”的综合更新，已通过构建与内容校验闸门。
+
+---
+
+## v1.0.7 — 2026-05-17（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）

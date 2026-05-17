@@ -430,6 +430,62 @@
   .card-accent-rose     { background: rgba(244, 63, 94, 0.10);  border-color: rgba(251, 113, 133, 0.40); }
   .card-accent-fuchsia  { background: rgba(217, 70, 239, 0.10); border-color: rgba(232, 121, 249, 0.40); }
   .card-accent-violet   { background: rgba(139, 92, 246, 0.10); border-color: rgba(167, 139, 250, 0.40); }
+
+  .interactive-card {
+    @apply my-6 overflow-hidden rounded-xl border shadow-sm;
+    @apply border-blue-100 bg-white dark:border-slate-800 dark:bg-slate-900/50;
+  }
+
+  .interactive-card-header {
+    @apply flex items-center gap-2 border-b px-5 py-3;
+    @apply border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50;
+    @apply dark:border-slate-800 dark:from-slate-800 dark:to-slate-800/80;
+  }
+
+  .interactive-card-title {
+    @apply text-sm font-semibold text-blue-900 dark:text-gray-200;
+  }
+
+  .interactive-card-body {
+    @apply p-5;
+  }
+
+  .interactive-card-badge {
+    @apply rounded-full border px-2 py-0.5 text-xs font-medium;
+    @apply border-blue-100 bg-white text-blue-600;
+    @apply dark:border-slate-700 dark:bg-slate-800 dark:text-blue-400;
+  }
+
+  .interactive-panel {
+    @apply rounded-lg border border-gray-200 bg-white;
+    @apply dark:border-slate-700 dark:bg-slate-900/60;
+  }
+
+  .interactive-panel-soft {
+    @apply rounded-lg border border-gray-200 bg-gray-50;
+    @apply dark:border-slate-700 dark:bg-slate-800/55;
+  }
+
+  .interactive-table-head {
+    @apply bg-gray-50 border-b border-gray-200;
+    @apply dark:border-slate-700 dark:bg-slate-800/70;
+  }
+
+  .interactive-table-row {
+    @apply border-b border-gray-100 dark:border-slate-700/60;
+  }
+
+  .interactive-muted {
+    @apply text-sm text-gray-500 dark:text-gray-400;
+  }
+
+  .interactive-faint {
+    @apply text-xs text-gray-400 dark:text-gray-500;
+  }
+
+  .interactive-strong {
+    @apply text-gray-800 dark:text-gray-200;
+  }
 }
 
 @layer utilities {

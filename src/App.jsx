@@ -149,7 +149,7 @@ export default function App() {
         items.push({
           kind: 'item',
           id: m.id,
-          label: `模块 ${m.id} · ${m.title}`,
+          label: m.title,
           icon: m.emoji,
           hint: m.tag,
         })

@@ -41,13 +41,13 @@ function EquivalenceMode({ data }) {
     <div className="space-y-4">
       {scenario && <p className="text-sm text-gray-600">{scenario}</p>}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{input_label || '请输入'}</label>
+        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">{input_label || '请输入'}</label>
         <input
           type={input_type || 'text'}
           value={value}
           onChange={e => setValue(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
-          placeholder="输入内容以查看等价类分析..."
+          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent dark:border-slate-700 dark:bg-slate-900 dark:text-gray-100"
+          placeholder="输入内容以查看等价类分析…"
         />
       </div>
       {value && result && (
@@ -57,42 +57,42 @@ function EquivalenceMode({ data }) {
         </div>
       )}
       {value && !result && (
-        <div className="flex items-center gap-2 p-3 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
+        <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-50 p-3 text-sm text-gray-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-gray-400">
           未匹配到任何等价类
         </div>
       )}
-      <div className="rounded-lg border border-gray-200 overflow-hidden">
-        <div className="bg-gray-50 px-3 py-2 text-xs font-medium text-gray-600 border-b">等价类参考表</div>
+      <div className="interactive-panel overflow-hidden">
+        <div className="interactive-table-head px-3 py-2 text-xs font-medium text-gray-600 dark:text-gray-400">等价类参考表</div>
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b bg-gray-50">
-              <th className="text-left px-3 py-2 text-gray-500">类型</th>
-              <th className="text-left px-3 py-2 text-gray-500">标签</th>
-              <th className="text-left px-3 py-2 text-gray-500">条件</th>
-              <th className="text-left px-3 py-2 text-gray-500">示例</th>
+            <tr className="interactive-table-head">
+              <th className="px-3 py-2 text-left text-gray-500 dark:text-gray-400">类型</th>
+              <th className="px-3 py-2 text-left text-gray-500 dark:text-gray-400">标签</th>
+              <th className="px-3 py-2 text-left text-gray-500 dark:text-gray-400">条件</th>
+              <th className="px-3 py-2 text-left text-gray-500 dark:text-gray-400">示例</th>
             </tr>
           </thead>
           <tbody>
             {valid_class && (
-              <tr className="border-b">
+              <tr className="interactive-table-row">
                 <td className="px-3 py-2"><span className="px-1.5 py-0.5 rounded text-white text-xs" style={{ backgroundColor: valid_class.color }}>有效</span></td>
-                <td className="px-3 py-2 text-gray-700">{valid_class.label}</td>
-                <td className="px-3 py-2 text-gray-600">{valid_class.condition}</td>
-                <td className="px-3 py-2 text-gray-500 font-mono">{valid_class.example}</td>
+                <td className="px-3 py-2 text-gray-700 dark:text-gray-300">{valid_class.label}</td>
+                <td className="px-3 py-2 text-gray-600 dark:text-gray-400">{valid_class.condition}</td>
+                <td className="px-3 py-2 font-mono text-gray-500 dark:text-gray-400">{valid_class.example}</td>
               </tr>
             )}
             {invalid_classes.map((cls, i) => (
-              <tr key={i} className="border-b last:border-0">
+              <tr key={i} className="interactive-table-row last:border-0">
                 <td className="px-3 py-2"><span className="px-1.5 py-0.5 rounded text-white text-xs" style={{ backgroundColor: cls.color }}>无效</span></td>
-                <td className="px-3 py-2 text-gray-700">{cls.label}</td>
-                <td className="px-3 py-2 text-gray-600">{cls.condition}</td>
-                <td className="px-3 py-2 text-gray-500 font-mono">{cls.example}</td>
+                <td className="px-3 py-2 text-gray-700 dark:text-gray-300">{cls.label}</td>
+                <td className="px-3 py-2 text-gray-600 dark:text-gray-400">{cls.condition}</td>
+                <td className="px-3 py-2 font-mono text-gray-500 dark:text-gray-400">{cls.example}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {tip && <p className="text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 rounded p-2">{tip}</p>}
+      {tip && <p className="rounded border border-yellow-200 bg-yellow-50 p-2 text-xs text-yellow-700 dark:border-yellow-800/60 dark:bg-yellow-900/20 dark:text-yellow-300">{tip}</p>}
     </div>
   );
 }
@@ -119,17 +119,17 @@ function BoundaryMode({ data }) {
     <div className="space-y-4">
       {scenario && <p className="text-sm text-gray-600">{scenario}</p>}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{input_label || '请输入'}</label>
+        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">{input_label || '请输入'}</label>
         <div className="relative">
           <input
             type={input_type || 'text'}
             value={value}
             onChange={e => setValue(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm pr-16 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
-            placeholder="输入内容以查看边界值分析..."
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 pr-16 text-sm text-gray-900 transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent dark:border-slate-700 dark:bg-slate-900 dark:text-gray-100"
+            placeholder="输入内容以查看边界值分析…"
           />
           {show_length_counter && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{len} 字符</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 dark:text-gray-500">{len} 字符</span>
           )}
         </div>
       </div>
@@ -139,31 +139,31 @@ function BoundaryMode({ data }) {
           当前长度 {len}：{matched.desc} — {matched.expected}
         </div>
       )}
-      <div className="rounded-lg border border-gray-200 overflow-hidden">
-        <div className="bg-gray-50 px-3 py-2 text-xs font-medium text-gray-600 border-b">边界值测试点</div>
+      <div className="interactive-panel overflow-hidden">
+        <div className="interactive-table-head px-3 py-2 text-xs font-medium text-gray-600 dark:text-gray-400">边界值测试点</div>
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b bg-gray-50">
-              <th className="text-left px-3 py-2 text-gray-500">长度</th>
-              <th className="text-left px-3 py-2 text-gray-500">描述</th>
-              <th className="text-left px-3 py-2 text-gray-500">预期结果</th>
+            <tr className="interactive-table-head">
+              <th className="px-3 py-2 text-left text-gray-500 dark:text-gray-400">长度</th>
+              <th className="px-3 py-2 text-left text-gray-500 dark:text-gray-400">描述</th>
+              <th className="px-3 py-2 text-left text-gray-500 dark:text-gray-400">预期结果</th>
             </tr>
           </thead>
           <tbody>
             {boundary_table.map((row, i) => (
-              <tr key={i} className={`border-b last:border-0 ${len === row.length ? 'font-semibold' : ''}`}
+              <tr key={i} className={`interactive-table-row last:border-0 ${len === row.length ? 'font-semibold' : ''}`}
                 style={len === row.length ? { backgroundColor: row.color + '15' } : {}}>
                 <td className="px-3 py-2">
                   <span className="px-1.5 py-0.5 rounded text-white text-xs" style={{ backgroundColor: row.color }}>{row.length}</span>
                 </td>
-                <td className="px-3 py-2 text-gray-700">{row.desc}</td>
-                <td className="px-3 py-2 text-gray-600">{row.expected}</td>
+                <td className="px-3 py-2 text-gray-700 dark:text-gray-300">{row.desc}</td>
+                <td className="px-3 py-2 text-gray-600 dark:text-gray-400">{row.expected}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {tip && <p className="text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 rounded p-2">{tip}</p>}
+      {tip && <p className="rounded border border-yellow-200 bg-yellow-50 p-2 text-xs text-yellow-700 dark:border-yellow-800/60 dark:bg-yellow-900/20 dark:text-yellow-300">{tip}</p>}
     </div>
   );
 }
@@ -173,9 +173,16 @@ export default function InputDemo({ data }) {
   const isEquivalence = !!data.rules;
 
   return (
-    <div className="my-6 rounded-xl border bg-white p-5 shadow-sm">
-      {title && <h3 className="text-base font-semibold text-gray-700 mb-4">{title}</h3>}
-      {isEquivalence ? <EquivalenceMode data={data} /> : <BoundaryMode data={data} />}
+    <div className="interactive-card">
+      {title && (
+        <div className="interactive-card-header">
+          <span aria-hidden>⌨️</span>
+          <h3 className="interactive-card-title">{title}</h3>
+        </div>
+      )}
+      <div className="interactive-card-body">
+        {isEquivalence ? <EquivalenceMode data={data} /> : <BoundaryMode data={data} />}
+      </div>
     </div>
   );
 }

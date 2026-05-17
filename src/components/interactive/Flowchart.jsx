@@ -8,78 +8,82 @@ export default function Flowchart({ data }) {
   const loopEdge = edges.find(e => e.type === 'loop')
 
   return (
-    <div className="my-6 rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-5">
-      <div className="text-sm font-semibold text-blue-800 mb-4 flex items-center gap-2">
-        <span>🗺️</span> {title}
+    <div className="interactive-card">
+      <div className="interactive-card-header">
+        <span aria-hidden>🗺️</span>
+        <h3 className="interactive-card-title">{title}</h3>
       </div>
+      <div className="interactive-card-body bg-gradient-to-br from-blue-50/70 to-indigo-50/70 dark:from-slate-900/40 dark:to-slate-800/30">
+        <div className={`flex ${isVertical ? 'flex-col' : 'flex-row'} items-center gap-0 overflow-x-auto`}>
+          {nodes.map((node, i) => {
+            const edge = edges.find(e => e.from === nodes[i - 1]?.id && e.to === node.id && e.type !== 'loop')
 
-      <div className={`flex ${isVertical ? 'flex-col' : 'flex-row'} items-center gap-0 overflow-x-auto`}>
-        {nodes.map((node, i) => {
-          const edge = edges.find(e => e.from === nodes[i - 1]?.id && e.to === node.id && e.type !== 'loop')
-          const isLast = i === nodes.length - 1
-
-          return (
-            <div key={node.id} className={`flex ${isVertical ? 'flex-col' : 'flex-row'} items-center`}>
-              {/* Arrow + edge label between nodes */}
-              {i > 0 && edge && (
-                <div className={`flex ${isVertical ? 'flex-col' : 'flex-row'} items-center`}>
-                  {isVertical ? (
-                    <div className="flex flex-col items-center my-1">
-                      <div className="text-xs text-gray-500 text-center max-w-[180px] leading-tight px-2 py-1 bg-white rounded border border-gray-200 mb-1">
-                        {edge.label}
+            return (
+              <div key={node.id} className={`flex ${isVertical ? 'flex-col' : 'flex-row'} items-center`}>
+                {i > 0 && edge && (
+                  <div className={`flex ${isVertical ? 'flex-col' : 'flex-row'} items-center`}>
+                    {isVertical ? (
+                      <div className="my-1 flex flex-col items-center">
+                        <div className="interactive-panel px-2 py-1 text-center text-xs leading-tight text-gray-500 dark:text-gray-400 max-w-[180px] mb-1">
+                          {edge.label}
+                        </div>
+                        <span className="text-lg text-gray-400 dark:text-slate-500">↓</span>
                       </div>
-                      <span className="text-gray-400 text-lg">↓</span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center mx-1">
-                      <div className="text-xs text-gray-500 text-center whitespace-pre-line mb-0.5 max-w-[90px] leading-tight">
-                        {edge.label}
+                    ) : (
+                      <div className="mx-1 flex flex-col items-center">
+                        <div className="max-w-[90px] whitespace-pre-line text-center text-xs leading-tight text-gray-500 dark:text-gray-400 mb-0.5">
+                          {edge.label}
+                        </div>
+                        <span className="text-lg text-gray-400 dark:text-slate-500">→</span>
                       </div>
-                      <span className="text-gray-400 text-lg">→</span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Node card */}
-              <div className="relative">
-                <div
-                  className="rounded-xl p-4 text-center shadow-sm border-2 border-white"
-                  style={{ backgroundColor: node.color + '18', borderColor: node.color + '40', minWidth: isVertical ? 280 : 120, maxWidth: isVertical ? 'none' : 150 }}
-                >
-                  <div className="text-2xl mb-1">{node.icon}</div>
-                  <div className="text-sm font-semibold whitespace-pre-line leading-snug" style={{ color: node.color }}>
-                    {node.label}
-                  </div>
-                  {node.sublabel && (
-                    <div className="text-xs text-gray-500 mt-1 leading-tight">{node.sublabel}</div>
-                  )}
-                  {node.desc && (
-                    <div className="text-xs text-gray-600 mt-1 leading-tight">{node.desc}</div>
-                  )}
-                  {node.role && (
-                    <div className="text-xs mt-1.5 px-2 py-0.5 rounded-full inline-block" style={{ backgroundColor: node.color + '20', color: node.color }}>
-                      {node.role}
-                    </div>
-                  )}
-                </div>
-                {warningMap[node.id] && (
-                  <div className="mt-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-2 py-1.5 text-center">
-                    {warningMap[node.id]}
+                    )}
                   </div>
                 )}
-              </div>
-            </div>
-          )
-        })}
-      </div>
 
-      {/* Loop edge note */}
-      {loopEdge && (
-        <div className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-center gap-2">
-          <span>🔄</span> {loopEdge.label}
+                <div className="relative">
+                  <div
+                    className="rounded-xl border-2 p-4 text-center shadow-sm backdrop-blur-sm"
+                    style={{
+                      backgroundColor: `${node.color}18`,
+                      borderColor: `${node.color}40`,
+                      minWidth: isVertical ? 280 : 120,
+                      maxWidth: isVertical ? 'none' : 150,
+                    }}
+                  >
+                    <div className="mb-1 text-2xl">{node.icon}</div>
+                    <div className="whitespace-pre-line text-sm font-semibold leading-snug" style={{ color: node.color }}>
+                      {node.label}
+                    </div>
+                    {node.sublabel && (
+                      <div className="mt-1 text-xs leading-tight text-gray-500 dark:text-gray-400">{node.sublabel}</div>
+                    )}
+                    {node.desc && (
+                      <div className="mt-1 text-xs leading-tight text-gray-600 dark:text-gray-300">{node.desc}</div>
+                    )}
+                    {node.role && (
+                      <div className="mt-1.5 inline-block rounded-full px-2 py-0.5 text-xs" style={{ backgroundColor: `${node.color}20`, color: node.color }}>
+                        {node.role}
+                      </div>
+                    )}
+                  </div>
+                  {warningMap[node.id] && (
+                    <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-2 py-1.5 text-center text-xs text-red-600 dark:border-red-800/60 dark:bg-red-900/20 dark:text-red-300">
+                      {warningMap[node.id]}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
         </div>
-      )}
+
+        {loopEdge && (
+          <div className="mt-4 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:border-amber-800/60 dark:bg-amber-900/20 dark:text-amber-300">
+            <span aria-hidden>🔄</span>
+            <span>{loopEdge.label}</span>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

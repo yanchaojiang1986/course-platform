@@ -82,7 +82,7 @@ export default function ModuleDetail({ module }) {
         <header className="glass-panel rounded-2xl px-4 sm:px-6 py-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
             <div className="min-w-0">
-              <p className="ws-eyebrow">Module {module.id}</p>
+              <p className="ws-eyebrow">{module.tag}</p>
               <h1 className="ws-title text-xl sm:text-2xl font-extrabold truncate mt-1">{module.emoji} {module.title}</h1>
             </div>
             <span className="self-start lg:self-auto text-xs px-2.5 py-1 rounded-full border border-themed bg-surface-soft text-fg">

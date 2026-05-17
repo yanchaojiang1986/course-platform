@@ -28,7 +28,7 @@ function JsonBlock({ obj }) {
   if (!obj || typeof obj !== 'object') return null;
   return (
     <pre
-      className="bg-gray-50 rounded-lg p-3 text-xs font-mono overflow-x-auto border border-gray-100"
+      className="interactive-panel-soft p-3 text-xs font-mono overflow-x-auto"
       dangerouslySetInnerHTML={{ __html: syntaxHighlight(obj) }}
     />
   );
@@ -38,11 +38,11 @@ function AnnotatedField({ label, value, annotation }) {
   return (
     <div className="mb-2">
       <div className="flex items-start gap-2">
-        <span className="text-xs font-mono text-gray-500 min-w-max">{label}:</span>
-        <span className="text-xs font-mono text-gray-800 break-all">{value}</span>
+        <span className="min-w-max text-xs font-mono text-gray-500 dark:text-gray-400">{label}:</span>
+        <span className="break-all text-xs font-mono text-gray-800 dark:text-gray-200">{value}</span>
       </div>
       {annotation && (
-        <div className="ml-4 mt-0.5 text-xs text-blue-600 italic"># {annotation}</div>
+        <div className="ml-4 mt-0.5 text-xs italic text-blue-600 dark:text-blue-400"># {annotation}</div>
       )}
     </div>
   );
@@ -63,12 +63,12 @@ function RequestPanel({ request, annotations = {} }) {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <span className={`px-2 py-1 rounded font-mono text-xs font-bold ${methodColor}`}>{method}</span>
-        <span className="text-sm font-mono text-gray-700 break-all">{url}</span>
+        <span className="break-all text-sm font-mono text-gray-700 dark:text-gray-300">{url}</span>
       </div>
       {Object.keys(headers).length > 0 && (
         <div>
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Headers</div>
-          <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+          <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Headers</div>
+          <div className="interactive-panel-soft p-3">
             {Object.entries(headers).map(([k, v]) => (
               <AnnotatedField key={k} label={k} value={v} annotation={annotations[k]} />
             ))}
@@ -77,10 +77,10 @@ function RequestPanel({ request, annotations = {} }) {
       )}
       {body && (
         <div>
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Body</div>
+          <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Body</div>
           <JsonBlock obj={body} />
           {annotations.body && (
-            <div className="mt-1 text-xs text-blue-600 italic"># {annotations.body}</div>
+            <div className="mt-1 text-xs italic text-blue-600 dark:text-blue-400"># {annotations.body}</div>
           )}
         </div>
       )}
@@ -94,12 +94,12 @@ function ResponsePanel({ response, annotations = {} }) {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <StatusBadge code={status_code} />
-        <span className="text-sm text-gray-600">{status_text}</span>
+        <span className="text-sm text-gray-600 dark:text-gray-300">{status_text}</span>
       </div>
       {Object.keys(headers).length > 0 && (
         <div>
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Headers</div>
-          <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+          <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Headers</div>
+          <div className="interactive-panel-soft p-3">
             {Object.entries(headers).map(([k, v]) => (
               <AnnotatedField key={k} label={k} value={v} annotation={annotations[k]} />
             ))}
@@ -108,9 +108,9 @@ function ResponsePanel({ response, annotations = {} }) {
       )}
       {body !== undefined && (
         <div>
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Body</div>
+          <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Body</div>
           {typeof body === 'object' ? <JsonBlock obj={body} /> : (
-            <pre className="bg-gray-50 rounded-lg p-3 text-xs font-mono border border-gray-100">{String(body)}</pre>
+            <pre className="interactive-panel-soft p-3 text-xs font-mono">{String(body)}</pre>
           )}
         </div>
       )}
@@ -119,29 +119,40 @@ function ResponsePanel({ response, annotations = {} }) {
 }
 
 export default function HttpDemo({ data }) {
-  const { title, tabs = ['请求（Request）', '响应（Response）'], request, response } = data;
+  const { title, description, tabs = ['请求（Request）', '响应（Response）'], request, response } = data;
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div className="my-6 rounded-xl border bg-white p-5 shadow-sm">
-      {title && <h3 className="text-base font-semibold text-gray-700 mb-4">{title}</h3>}
-      <div className="flex gap-1 border-b mb-4">
-        {tabs.map((tab, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveTab(i)}
-            className={`px-4 py-2 text-sm font-medium rounded-t transition ${activeTab === i ? 'bg-white border border-b-white border-gray-200 text-blue-600 -mb-px' : 'text-gray-500 hover:text-gray-700'}`}
-          >
-            {tab}
-          </button>
-        ))}
+    <div className="interactive-card">
+      {title && (
+        <div className="interactive-card-header">
+          <h3 className="interactive-card-title">{title}</h3>
+        </div>
+      )}
+      <div className="interactive-card-body">
+        {description && <p className="mb-4 interactive-muted">{description}</p>}
+        <div className="mb-4 flex gap-1 border-b border-gray-200 dark:border-slate-700">
+          {tabs.map((tab, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveTab(i)}
+              className={`rounded-t px-4 py-2 text-sm font-medium transition ${
+                activeTab === i
+                  ? 'border border-gray-200 border-b-white bg-white text-blue-600 -mb-px dark:border-slate-700 dark:border-b-slate-900 dark:bg-slate-900/80 dark:text-blue-400'
+                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        {activeTab === 0 && request && (
+          <RequestPanel request={request} annotations={request.annotations || {}} />
+        )}
+        {activeTab === 1 && response && (
+          <ResponsePanel response={response} annotations={response.annotations || {}} />
+        )}
       </div>
-      {activeTab === 0 && request && (
-        <RequestPanel request={request} annotations={request.annotations || {}} />
-      )}
-      {activeTab === 1 && response && (
-        <ResponsePanel response={response} annotations={response.annotations || {}} />
-      )}
     </div>
   );
 }
