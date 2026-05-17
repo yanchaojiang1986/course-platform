@@ -73,7 +73,7 @@ export default function ModuleCard({ module, onClick }) {
                 {module.tag}
               </span>
             </div>
-            <h3 className="text-sm font-semibold leading-snug text-fg-strong group-hover:text-sky-600 dark:group-hover:text-sky-200 transition-colors">
+            <h3 className="text-sm font-semibold leading-snug text-fg-strong group-hover:text-[#7c6af7] dark:group-hover:text-[#a78bfa] transition-colors">
               {module.title}
             </h3>
           </div>

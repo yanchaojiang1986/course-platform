@@ -1,6 +1,42 @@
 # 封板记录
 
-## v1.0.6 — 2026-05-17（当前版本）
+## v1.0.7 — 2026-05-17（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`） |
+| `npm run build` | ✅ 通过（79 modules） |
+
+### 本次变更摘要
+- 引入工作台式侧栏布局（`WorkbenchSidebar`），课程导航改为阶段分组 + 模块条目切换。
+- `App/CourseMap/ModuleDetail/WrongBook` 视图路由与容器重构，错题本并入主工作区。
+- 端口配置更新：后端默认端口调整为 `4321`，前端开发端口策略同步更新。
+- 全局样式扩展 `ws-*` 主题与卡片语义层，统一版面层次与交互态。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `1739b70c2387370bf7ba927c47ea207d774e818057398e7b7c195ea8995c58f2` |
+| `src/App.jsx` | `f39f7282e0f0d6390f3b945f85e8bf1a1a60e7d1bdccc2667831ff337289f8e9` |
+| `src/components/WorkbenchSidebar.jsx` | `55107598cb0990009763eb407dffcb8b137069ef52c11dbaf47860a7b5d8783a` |
+| `src/components/CourseMap.jsx` | `2a2d1e9ed37818159c709479dc0a9f9b7b591dab75dd2abbcd36e4a50d6417cb` |
+| `src/components/ModuleDetail.jsx` | `d0bd0b026d197697cfc21580f72c48b808188824ec5947ef0b326e954aa6b773` |
+| `src/components/WrongBook.jsx` | `dd356ac7c7674a67c2d7d556c756fe90a378d333028dbc1d0c3f1a6148bce0ae` |
+| `src/index.css` | `c992219c3bcb8d93c3f7b01d61854ab574529837a765ed343b8136a332a21db1` |
+| `server.js` | `85323da7bb8af6400272314e65f9c9e65fc68f87f79e5c73a8c35206c1de9d8a` |
+| `vite.config.js` | `f703d2179f48179baa9dc354823b9fc4a09f9f40cbbeabb789332b253b96274e` |
+| `tailwind.config.js` | `21f1c3ca965f92d7c51e63712b9d5c1a24bff1781f6c69a9331555282b720df7` |
+
+### 说明
+- 本次封板为“工作台布局 + 端口配置 + 视觉细化”的综合更新，已通过构建与内容校验闸门。
+
+---
+
+## v1.0.6 — 2026-05-17（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）

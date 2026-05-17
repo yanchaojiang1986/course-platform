@@ -1,11 +1,20 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import CourseMap from './components/CourseMap.jsx'
 import ModuleDetail from './components/ModuleDetail.jsx'
 import WrongBook from './components/WrongBook.jsx'
 import AuthPage from './components/AuthPage.jsx'
+import WorkbenchSidebar from './components/WorkbenchSidebar.jsx'
 import { MODULES } from './data/modules.js'
 import { hasPlanAccess } from './utils/access.js'
 import { validateInteractiveData } from './data/validateInteractive.js'
+
+// 侧栏分组：4 个阶段
+const STAGE_GROUPS = [
+  { label: 'Stage 01 · 基础课程', ids: ['00', '01', '02'] },
+  { label: 'Stage 02 · 核心技能', ids: ['03', '04', '05'] },
+  { label: 'Stage 03 · 工具实操', ids: ['06', '07'] },
+  { label: 'Stage 04 · 项目与求职', ids: ['08', '09', '10', '11'] },
+]
 
 const BYPASS_LOGIN = true
 const DEMO_USER = { id: 0, username: 'demo', plan: 'svip', status: 'active', memberExpiresAt: null }
@@ -67,8 +76,7 @@ function getWrongbookCount() {
 }
 
 export default function App() {
-  const [view, setView] = useState('map') // 'map' | moduleId
-  const [showWrongBook, setShowWrongBook] = useState(false)
+  const [view, setView] = useState('map') // 'map' | 'wrongbook' | moduleId
   const [wrongbookCount, setWrongbookCount] = useState(getWrongbookCount)
   const [authLoading, setAuthLoading] = useState(true)
   const [user, setUser] = useState(null)
@@ -103,7 +111,7 @@ export default function App() {
 
   useEffect(() => {
     setWrongbookCount(getWrongbookCount())
-  }, [view, showWrongBook])
+  }, [view])
 
   const effectiveUser = user || (BYPASS_LOGIN ? DEMO_USER : null)
 
@@ -111,10 +119,8 @@ export default function App() {
   const visibleIds = new Set(visibleModules.map(m => m.id))
 
   const handleSelectModule = (id) => {
-    if (id === 'wrongbook') {
-      setShowWrongBook(true)
-    } else if (visibleIds.has(id)) {
-      setView(id)
+    if (id === 'overview' || id === 'wrongbook' || visibleIds.has(id)) {
+      setView(id === 'overview' ? 'map' : id)
     } else {
       setView('map')
     }
@@ -128,43 +134,94 @@ export default function App() {
     } catch { /* ignore */ }
     setUser(null)
     setView('map')
-    setShowWrongBook(false)
   }
 
+  // 构建侧栏项目列表（含分组分割）
+  const sidebarItems = useMemo(() => {
+    const items = [
+      { kind: 'item', id: 'overview', label: '总览', icon: '🧭', hint: '任务地图与进度' },
+    ]
+    STAGE_GROUPS.forEach(group => {
+      const groupMods = visibleModules.filter(m => group.ids.includes(m.id))
+      if (groupMods.length === 0) return
+      items.push({ kind: 'section', label: group.label })
+      groupMods.forEach(m => {
+        items.push({
+          kind: 'item',
+          id: m.id,
+          label: `模块 ${m.id} · ${m.title}`,
+          icon: m.emoji,
+          hint: m.tag,
+        })
+      })
+    })
+    items.push({ kind: 'section', label: 'Tools' })
+    items.push({
+      kind: 'item',
+      id: 'wrongbook',
+      label: '错题本',
+      icon: '📕',
+      hint: wrongbookCount > 0 ? `${wrongbookCount} 题待复习` : '集中复习薄弱点',
+    })
+    return items
+  }, [visibleModules, wrongbookCount])
+
+  // 侧栏激活态：当 view 是 'map' 时高亮 overview
+  const activeId = view === 'map' ? 'overview' : view
+
   if (authLoading && !BYPASS_LOGIN) {
-    return <div className="min-h-screen grid place-items-center text-gray-500">加载中...</div>
+    return <div className="min-h-screen grid place-items-center text-fg-muted">加载中...</div>
   }
 
   if (!effectiveUser) {
     return <AuthPage onAuthed={(u) => setUser(u)} />
   }
 
+  let mainView
+  if (view === 'wrongbook') {
+    mainView = <WrongBook onNavigate={(moduleId) => handleSelectModule(moduleId)} />
+  } else if (activeModule) {
+    mainView = <ModuleDetail module={activeModule} />
+  } else {
+    mainView = (
+      <CourseMap
+        user={effectiveUser}
+        modules={visibleModules}
+        onSelectModule={handleSelectModule}
+        wrongbookCount={wrongbookCount}
+      />
+    )
+  }
+
   return (
     <>
       {import.meta.env.DEV && <ValidationBanner errors={INTERACTIVE_ERRORS} />}
-      {view === 'map' || !activeModule ? (
-        <CourseMap
-          user={effectiveUser}
-          modules={visibleModules}
-          onSelectModule={handleSelectModule}
-          wrongbookCount={wrongbookCount}
-          onLogout={handleLogout}
-          theme={theme}
-          onToggleTheme={toggleTheme}
+      <div className="ws-shell">
+        <WorkbenchSidebar
+          items={sidebarItems}
+          activeId={activeId}
+          onChange={handleSelectModule}
+          brandTitle="功能测试训练营"
+          brandTag="QA Bootcamp"
+          footer={
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                <div>账号 <span style={{ color: 'var(--text)', fontWeight: 600 }}>{effectiveUser?.username}</span></div>
+                <div style={{ marginTop: 2 }}>计划 <span style={{ color: 'var(--secondary)', fontWeight: 700, textTransform: 'uppercase' }}>{effectiveUser?.plan}</span></div>
+              </div>
+              <button onClick={toggleTheme} className="glass-btn" style={{ fontSize: 12, padding: '8px 12px' }}>
+                {theme === 'light' ? '🌙 切换深色' : '☀️ 切换浅色'}
+              </button>
+              <button onClick={handleLogout} className="glass-btn" style={{ fontSize: 12, padding: '8px 12px' }}>
+                退出登录
+              </button>
+            </div>
+          }
         />
-      ) : (
-        <ModuleDetail
-          module={activeModule}
-          onBack={() => setView('map')}
-        />
-      )}
-
-      {showWrongBook && (
-        <WrongBook
-          onClose={() => { setShowWrongBook(false); setWrongbookCount(getWrongbookCount()) }}
-          onNavigate={(moduleId) => { setShowWrongBook(false); handleSelectModule(moduleId) }}
-        />
-      )}
+        <main className="ws-main">
+          {mainView}
+        </main>
+      </div>
     </>
   )
 }

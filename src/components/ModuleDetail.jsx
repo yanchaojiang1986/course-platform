@@ -45,7 +45,7 @@ function TabButton({ active, locked, icon, label, hint, onClick }) {
   )
 }
 
-export default function ModuleDetail({ module, onBack }) {
+export default function ModuleDetail({ module }) {
   const exercises = EXERCISES[module.id] || []
   const scenario = SCENARIOS[module.id] || null
 
@@ -78,25 +78,14 @@ export default function ModuleDetail({ module, onBack }) {
   const scenarioContext = scenario ? `${scenario.title}\n\n${scenario.context}\n\n任务：${scenario.tasks.join('；')}` : ''
 
   return (
-    <div className="min-h-screen app-shell text-fg">
-      <div className="absolute inset-0 app-grid-overlay pointer-events-none" />
-
-      <div className="relative max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-4">
+    <div className="ws-main-inner">
         <header className="glass-panel rounded-2xl px-4 sm:px-6 py-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <button
-                onClick={onBack}
-                className="px-3 py-1.5 rounded-lg border border-themed bg-surface text-fg hover:bg-elevated transition-colors"
-              >
-                ← 返回地图
-              </button>
-              <div className="min-w-0">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-fg-muted">Module {module.id}</p>
-                <h1 className="text-base sm:text-lg font-semibold truncate text-fg-strong">{module.emoji} {module.title}</h1>
-              </div>
+            <div className="min-w-0">
+              <p className="ws-eyebrow">Module {module.id}</p>
+              <h1 className="ws-title text-xl sm:text-2xl font-extrabold truncate mt-1">{module.emoji} {module.title}</h1>
             </div>
-            <span className="self-start lg:self-auto text-xs px-2.5 py-1 rounded-full border border-themed bg-surface text-fg">
+            <span className="self-start lg:self-auto text-xs px-2.5 py-1 rounded-full border border-themed bg-surface-soft text-fg">
               {module.tag}
             </span>
           </div>
@@ -169,7 +158,6 @@ export default function ModuleDetail({ module, onBack }) {
             </div>
           </div>
         )}
-      </div>
     </div>
   )
 }

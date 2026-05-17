@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.0.7] - 2026-05-17
+
+### 变更
+- 引入工作台式布局：新增 `src/components/WorkbenchSidebar.jsx`，主界面改为「左侧分组导航 + 右侧内容区」结构。
+- `src/App.jsx` 统一路由视图状态：`map / wrongbook / moduleId`，侧栏驱动模块切换，错题本并入主视图。
+- `src/components/CourseMap.jsx` 与 `src/components/ModuleDetail.jsx` 适配新工作台容器，移除原页面级返回/退出入口耦合。
+- `src/index.css` 扩展工作台视觉体系（`ws-*`），并继续统一卡片语义样式细节。
+
+### 配置
+- 端口策略调整：
+  - `server.js` 默认后端端口由 `3001` 调整为 `4321`（仍可通过 `PORT` 覆盖）。
+  - `vite.config.js` 更新开发端口配置，避免与现有本地进程冲突。
+- `tailwind.config.js` 同步扫描路径，覆盖新增组件文件。
+
+### 质量校验
+- `npm run lint` 通过（含 `lint:content`，39 个 blockId 校验通过）。
+- `npm run build` 通过（79 modules）。
+
+---
+
 ## [1.0.6] - 2026-05-17
 
 ### 变更

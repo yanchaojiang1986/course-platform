@@ -12,7 +12,7 @@ import { MODULES } from './src/data/modules.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 4321
 
 const AUTH_REQUIRED = process.env.AUTH_REQUIRED !== 'false'
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret-change-me'

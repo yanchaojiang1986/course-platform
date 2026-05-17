@@ -1,0 +1,125 @@
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+
+/**
+ * 工作台侧栏 —— 对齐 flywheel-engine/src/components/WorkbenchSidebar.tsx
+ * - 288px 默认 / 108px 紧凑（窗口 < 1360px）
+ * - 选中态用绝对定位的渐变滑块跟随，cubic-bezier 280ms 过渡
+ * - 悬停 90ms 延迟触发切换，避免快速划过抖动
+ * - 在侧栏滚轮可前后切换条目
+ *
+ * items: Array<{ kind: 'section' | 'item', id?, label, hint?, icon? }>
+ */
+export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle = '功能测试训练营', brandTag = 'QA Bootcamp', footer }) {
+  const itemRefs = useRef({})
+  const hoverTimer = useRef(null)
+  const navRef = useRef(null)
+  const [slider, setSlider] = useState({ top: 0, height: 0, opacity: 0 })
+  const [compact, setCompact] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 1360 : false)
+
+  const onlyItems = items.filter(i => i.kind !== 'section')
+  const indexOf = (id) => onlyItems.findIndex(i => i.id === id)
+
+  useLayoutEffect(() => {
+    const el = itemRefs.current[activeId]
+    if (!el) return
+    setSlider({ top: el.offsetTop, height: el.offsetHeight, opacity: 1 })
+  }, [activeId, items, compact])
+
+  useEffect(() => {
+    const update = () => {
+      setCompact(window.innerWidth < 1360)
+      const el = itemRefs.current[activeId]
+      if (el) setSlider({ top: el.offsetTop, height: el.offsetHeight, opacity: 1 })
+    }
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('resize', update)
+      if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+    }
+  }, [activeId])
+
+  const scheduleHover = (id) => {
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current)
+    hoverTimer.current = window.setTimeout(() => onChange(id), 90)
+  }
+  const cancelHover = () => {
+    if (hoverTimer.current) { window.clearTimeout(hoverTimer.current); hoverTimer.current = null }
+  }
+
+  const handleWheel = (e) => {
+    if (Math.abs(e.deltaY) < 18) return
+    const idx = indexOf(activeId)
+    if (idx < 0) return
+    const dir = e.deltaY > 0 ? 1 : -1
+    const next = onlyItems[idx + dir]
+    if (next) {
+      e.preventDefault()
+      onChange(next.id)
+    }
+  }
+
+  return (
+    <aside
+      className={`ws-sidebar ${compact ? 'compact' : ''}`}
+      onWheel={handleWheel}
+      onMouseLeave={cancelHover}
+    >
+      {!compact && (
+        <div className="ws-brand">
+          <div className="ws-brand-badge">{brandTag}</div>
+          <div style={{ fontSize: 16, fontWeight: 800, lineHeight: 1.2, color: 'var(--text-strong)' }}>
+            {brandTitle}
+          </div>
+        </div>
+      )}
+      {compact && (
+        <div
+          title={`${brandTag} · ${brandTitle}`}
+          style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, rgba(124,106,247,0.45), rgba(78,205,196,0.32))', display: 'grid', placeItems: 'center', alignSelf: 'center', fontSize: 22 }}
+        >
+          🧪
+        </div>
+      )}
+
+      <nav className="ws-nav" ref={navRef}>
+        <div
+          className="ws-nav-slider"
+          style={{ top: slider.top, height: slider.height, opacity: slider.opacity }}
+        />
+        {items.map((item, idx) => {
+          if (item.kind === 'section') {
+            if (compact) return null
+            return (
+              <div key={`sec-${idx}`} className="ws-nav-section">{item.label}</div>
+            )
+          }
+          const active = item.id === activeId
+          return (
+            <button
+              key={item.id}
+              ref={node => { itemRefs.current[item.id] = node }}
+              onClick={() => onChange(item.id)}
+              onMouseEnter={() => scheduleHover(item.id)}
+              className={`ws-nav-btn ${active ? 'active' : ''} ${compact ? 'compact' : ''}`}
+              title={compact ? `${item.label}${item.hint ? ` · ${item.hint}` : ''}` : undefined}
+            >
+              <span className="ws-nav-icon">{item.icon || item.label?.slice(0, 1) || '·'}</span>
+              {!compact && (
+                <span className="ws-nav-label">
+                  <span className="ws-nav-label-main">{item.label}</span>
+                  {item.hint && <span className="ws-nav-label-hint">{item.hint}</span>}
+                </span>
+              )}
+            </button>
+          )
+        })}
+      </nav>
+
+      {footer && !compact && (
+        <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid var(--border)' }}>
+          {footer}
+        </div>
+      )}
+    </aside>
+  )
+}

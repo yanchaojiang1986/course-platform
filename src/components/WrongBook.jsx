@@ -94,7 +94,7 @@ function QuizItem({ entry, qData, onReview }) {
   )
 }
 
-export default function WrongBook({ onClose, onNavigate }) {
+export default function WrongBook({ onNavigate }) {
   const allEx = useMemo(getAllExercises, [])
   const [wb, setWb] = useState(getWrongBook)
 
@@ -116,41 +116,51 @@ export default function WrongBook({ onClose, onNavigate }) {
     const next = wb.map(e => e.qId === qId ? { ...e, mastered: true, reviewedAt: Date.now() } : e)
     setWb(next)
     saveWrongBook(next)
+    window.dispatchEvent(new Event('progress-updated'))
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      <div className="flex-1 bg-black/50" onClick={onClose} />
-      <div className="w-full max-w-lg bg-surface text-fg shadow-2xl flex flex-col border-l border-themed">
+    <div className="ws-main-inner">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-themed bg-surface-soft">
-          <div>
-            <h2 className="font-semibold text-fg-strong">📕 错题本</h2>
-            <p className="text-xs text-fg-muted mt-0.5">
-              待复习 {pending.length} 题 · 已掌握 {mastered.length} 题
-            </p>
-          </div>
-          <button onClick={onClose} className="text-fg-muted hover:text-fg text-xl">×</button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-5 space-y-6">
-          {pending.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-4xl mb-3">🎉</div>
-              <p className="text-fg-strong font-medium">没有待复习的错题</p>
-              <p className="text-sm text-fg-faint mt-1">答错的题会自动出现在这里</p>
+        <section className="glass-panel rounded-3xl p-6 sm:p-7">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="min-w-0">
+              <p className="ws-eyebrow">Review</p>
+              <h1 className="ws-title text-xl sm:text-2xl font-extrabold mt-1 truncate">📕 错题本</h1>
             </div>
-          ) : (
-            grouped.map(({ module, entries }) => (
-              <div key={module?.id}>
-                <div className="flex items-center gap-2 mb-3">
-                  <span>{module?.emoji}</span>
-                  <span className="text-sm font-semibold text-fg-strong">{module?.title}</span>
-                  <span className="text-xs text-fg-muted">({entries.length} 题)</span>
+
+            <div className="flex items-center gap-2 text-xs sm:text-sm flex-wrap">
+              <span className="px-3 py-1.5 rounded-full border border-rose-400/40 bg-rose-500/10 text-rose-600 dark:text-rose-200">
+                待复习 {pending.length} 题
+              </span>
+              <span className="px-3 py-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-200">
+                已掌握 {mastered.length} 题
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* 待复习题区 */}
+        {pending.length === 0 ? (
+          <section className="glass-panel rounded-3xl p-12 text-center">
+            <div className="text-5xl mb-4">🎉</div>
+            <p className="text-fg-strong font-medium text-lg">没有待复习的错题</p>
+            <p className="text-sm text-fg-muted mt-2">答错的题会自动出现在这里，复习后标记为已掌握。</p>
+          </section>
+        ) : (
+          <div className="space-y-5">
+            {grouped.map(({ module, entries }) => (
+              <section key={module?.id} className="glass-panel rounded-3xl p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-2xl">{module?.emoji}</span>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-sm font-semibold text-fg-strong truncate">{module?.title}</h2>
+                    <p className="text-xs text-fg-muted mt-0.5">{entries.length} 题待复习</p>
+                  </div>
                   {onNavigate && module && (
                     <button
-                      onClick={() => { onNavigate(module.id); onClose() }}
-                      className="ml-auto text-xs text-sky-600 dark:text-sky-300 hover:underline shrink-0"
+                      onClick={() => onNavigate(module.id)}
+                      className="px-3 py-1.5 text-xs rounded-lg border border-themed bg-surface text-fg-muted hover:text-fg hover:bg-elevated transition-colors shrink-0"
                     >
                       → 去该模块
                     </button>
@@ -166,25 +176,25 @@ export default function WrongBook({ onClose, onNavigate }) {
                     />
                   ))}
                 </div>
-              </div>
-            ))
-          )}
+              </section>
+            ))}
+          </div>
+        )}
 
-          {mastered.length > 0 && (
-            <div className="border-t border-themed pt-4">
-              <p className="text-xs text-fg-muted mb-2">✓ 已掌握（{mastered.length} 题）</p>
-              <div className="space-y-1">
-                {mastered.map(e => {
-                  const q = allEx[e.qId]
-                  return q ? (
-                    <div key={e.qId} className="text-xs text-fg-faint line-through px-2">{q.question}</div>
-                  ) : null
-                })}
-              </div>
+        {/* 已掌握折叠区 */}
+        {mastered.length > 0 && (
+          <section className="glass-panel rounded-3xl p-5 sm:p-6">
+            <h2 className="text-xs uppercase tracking-[0.18em] text-fg-muted mb-3">✓ 已掌握（{mastered.length} 题）</h2>
+            <div className="space-y-1.5">
+              {mastered.map(e => {
+                const q = allEx[e.qId]
+                return q ? (
+                  <div key={e.qId} className="text-xs text-fg-faint line-through px-2 leading-relaxed">{q.question}</div>
+                ) : null
+              })}
             </div>
-          )}
-        </div>
-      </div>
+          </section>
+        )}
     </div>
   )
 }
