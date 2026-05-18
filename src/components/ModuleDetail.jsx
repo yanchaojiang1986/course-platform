@@ -117,7 +117,7 @@ export default function ModuleDetail({ module }) {
 
         {activeTab === 'phase1' && (
           <div className="content-surface overflow-hidden">
-            <div className="max-h-[calc(100vh-220px)] overflow-y-auto">
+            <div className="md:max-h-[calc(100vh-220px)] md:overflow-y-auto">
               <ContentViewer module={module} />
               {hasExercises && (
                 <div className="max-w-3xl mx-auto px-6 pb-10">
@@ -133,15 +133,15 @@ export default function ModuleDetail({ module }) {
         )}
 
         {activeTab === 'phase2' && hasScenario && (
-          <div className="content-surface overflow-hidden">
-            <div className="flex h-[calc(100vh-220px)] overflow-hidden">
+          <div className="content-surface overflow-visible md:overflow-hidden">
+            <div className="flex flex-col md:flex-row md:h-[calc(100vh-220px)] md:overflow-hidden">
               <ScenarioPanel
                 scenario={scenario}
                 phase2State={phase2State}
                 onStart={handlePhase2Start}
                 onComplete={handlePhase2Complete}
               />
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 min-h-[420px] md:min-h-0 md:overflow-hidden">
                 {phase2State.started ? (
                   <AIPanel
                     mode={aiMode}

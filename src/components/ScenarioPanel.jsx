@@ -4,7 +4,7 @@ export default function ScenarioPanel({ scenario, phase2State, onStart, onComple
   const { started, completed } = phase2State
 
   return (
-    <div className="w-[350px] shrink-0 border-r border-themed bg-surface flex flex-col overflow-y-auto">
+    <div className="w-full md:w-[350px] md:shrink-0 border-b md:border-b-0 md:border-r border-themed bg-surface flex flex-col overflow-visible md:overflow-y-auto">
       <div className="p-5 border-b border-themed bg-surface backdrop-blur">
         <div className="flex items-center gap-2 mb-1">
           <span className="text-lg">🎯</span>
