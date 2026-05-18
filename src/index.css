@@ -363,6 +363,20 @@
     border-color: rgba(124, 106, 247, 0.52);
     box-shadow: 0 14px 28px rgba(124, 106, 247, 0.28);
   }
+  .ws-nav-btn[data-state='in_progress'] .ws-nav-icon {
+    border-color: rgba(251, 191, 36, 0.52);
+    box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.26), 0 10px 24px rgba(245, 158, 11, 0.18);
+  }
+  .ws-nav-btn[data-state='completed'] .ws-nav-icon {
+    border-color: rgba(16, 185, 129, 0.68);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.28), rgba(52, 211, 153, 0.2));
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3), 0 0 20px rgba(16, 185, 129, 0.28);
+  }
+  .ws-nav-btn.active[data-state='completed'] .ws-nav-icon {
+    border-color: rgba(16, 185, 129, 0.78);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.45), rgba(52, 211, 153, 0.34));
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.36), 0 14px 30px rgba(16, 185, 129, 0.34);
+  }
   .ws-nav-btn.compact .ws-nav-icon { width: 48px; height: 48px; border-radius: 14px; font-size: 20px; }
   .ws-nav-label {
     display: flex; flex-direction: column; gap: 2px; min-width: 0;

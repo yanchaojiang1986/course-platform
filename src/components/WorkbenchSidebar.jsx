@@ -7,7 +7,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
  * - 悬停 90ms 延迟触发切换，避免快速划过抖动
  * - 在侧栏滚轮可前后切换条目
  *
- * items: Array<{ kind: 'section' | 'item', id?, label, hint?, icon? }>
+ * items: Array<{ kind: 'section' | 'item', id?, label, hint?, icon?, state?: 'default' | 'in_progress' | 'completed' }>
  */
 export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle = '功能测试训练营', brandTag = 'QA Bootcamp', footer }) {
   const itemRefs = useRef({})
@@ -94,6 +94,7 @@ export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle
             )
           }
           const active = item.id === activeId
+          const state = item.state || 'default'
           return (
             <button
               key={item.id}
@@ -101,6 +102,7 @@ export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle
               onClick={() => onChange(item.id)}
               onMouseEnter={() => scheduleHover(item.id)}
               className={`ws-nav-btn ${active ? 'active' : ''} ${compact ? 'compact' : ''}`}
+              data-state={state}
               title={compact ? `${item.label}${item.hint ? ` · ${item.hint}` : ''}` : undefined}
             >
               <span className="ws-nav-icon">{item.icon || item.label?.slice(0, 1) || '·'}</span>

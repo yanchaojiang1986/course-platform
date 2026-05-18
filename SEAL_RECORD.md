@@ -1,6 +1,36 @@
 # 封板记录
 
-## v1.1.0 — 2026-05-18（当前版本）
+## v1.1.1 — 2026-05-18（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`，52 个 blockId） |
+| `npm run build` | ✅ 通过（84 modules） |
+
+### 本次变更摘要
+- 新增“模块通关态”导航反馈：侧栏图标外框按 `default / in_progress / completed` 进行三态展示。
+- 模块完成判定统一复用既有学习进度：`phase1.passed` 与 `phase2.completed` 组合计算，不引入新存储结构。
+- 样式层新增状态色语义：进行中琥珀边框、已完成绿色高亮边框，激活态下进一步强化可见性。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `5bf9eb40f4c2fb615e7b7236d2e5f43ff00a81dddb98e0806e0d87dd857c5a77` |
+| `package-lock.json` | `a10cd052ecc754f01763e646a833f3952a25ed8dcb2c2282c26b900f11c022ee` |
+| `src/App.jsx` | `ada0e1fcf7cdadb72f71c37888ff2a2a7925406b809b5665fb53187e87c8ec93` |
+| `src/components/WorkbenchSidebar.jsx` | `a84b14fb576d05f71ea9ac8d78a56a8d53cc3c9ef7f0ee0803967c25a19ae6ee` |
+| `src/index.css` | `9c2ed202c4a6fbc00c9b969eb014e1e3e1b4773f9a4a777155b5762546967386` |
+
+### 说明
+- 本次封板聚焦“学习结果可视反馈”增强，未改变课程数据与权限模型。
+
+---
+
+## v1.1.0 — 2026-05-18（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）

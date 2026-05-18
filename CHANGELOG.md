@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.1] - 2026-05-18
+
+### 新增
+- 侧栏导航新增模块通关外框状态：`default / in_progress / completed` 三态可视化。
+
+### 变更
+- `App.jsx` 新增模块完成态计算逻辑，基于 `phase1_/phase2_` 本地进度实时汇总并透传到侧栏项。
+- `WorkbenchSidebar.jsx` 支持 `item.state` 渲染与 `data-state` 标识，保持现有交互逻辑不变。
+- `index.css` 增加导航图标三态样式：进行中（琥珀外框）、已完成（绿色高亮外框+发光）、已完成且激活态强化。
+
+### 质量校验
+- `npm run lint` 通过（含 `lint:content`，52 个 blockId 校验通过）。
+- `npm run build` 通过（84 modules）。
+
+---
+
 ## [1.1.0] - 2026-05-18
 
 ### 新增

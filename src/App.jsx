@@ -5,6 +5,8 @@ import WrongBook from './components/WrongBook.jsx'
 import AuthPage from './components/AuthPage.jsx'
 import WorkbenchSidebar from './components/WorkbenchSidebar.jsx'
 import { MODULES } from './data/modules.js'
+import { EXERCISES } from './data/exercises.js'
+import { SCENARIOS } from './data/scenarios.js'
 import { hasPlanAccess } from './utils/access.js'
 import { validateInteractiveData } from './data/validateInteractive.js'
 import { logClient } from './utils/clientLogger.js'
@@ -79,9 +81,42 @@ function getWrongbookCount() {
   } catch { return 0 }
 }
 
+function readPhase1(moduleId) {
+  try { return JSON.parse(localStorage.getItem(`phase1_${moduleId}`) || 'null') || {} }
+  catch { return {} }
+}
+
+function readPhase2(moduleId) {
+  try { return JSON.parse(localStorage.getItem(`phase2_${moduleId}`) || 'null') || {} }
+  catch { return {} }
+}
+
+function computeModuleNavState(module) {
+  const hasExercises = (EXERCISES[module.id] || []).length > 0
+  const hasScenario = !!SCENARIOS[module.id]
+  if (!hasExercises && !hasScenario) return 'default'
+
+  const p1 = readPhase1(module.id)
+  const p2 = readPhase2(module.id)
+
+  const p1Passed = p1.passed === true
+  const p2Completed = p2.completed === true
+  const completed = hasExercises && hasScenario
+    ? (p1Passed && p2Completed)
+    : hasExercises
+      ? p1Passed
+      : p2Completed
+
+  if (completed) return 'completed'
+
+  const inProgress = (p1.attempts || 0) > 0 || p1Passed || p2.started === true
+  return inProgress ? 'in_progress' : 'default'
+}
+
 export default function App() {
   const [view, setView] = useState('map') // 'map' | 'wrongbook' | moduleId
   const [wrongbookCount, setWrongbookCount] = useState(getWrongbookCount)
+  const [moduleNavStateMap, setModuleNavStateMap] = useState(() => ({}))
   const [authLoading, setAuthLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [theme, setTheme] = useState(readInitialTheme)
@@ -140,6 +175,25 @@ export default function App() {
     setWrongbookCount(getWrongbookCount())
   }, [view])
 
+  useEffect(() => {
+    const sync = () => {
+      const next = {}
+      MODULES.forEach((m) => {
+        next[m.id] = computeModuleNavState(m)
+      })
+      setModuleNavStateMap(next)
+    }
+    sync()
+    window.addEventListener('storage', sync)
+    window.addEventListener('progress-updated', sync)
+    window.addEventListener('focus', sync)
+    return () => {
+      window.removeEventListener('storage', sync)
+      window.removeEventListener('progress-updated', sync)
+      window.removeEventListener('focus', sync)
+    }
+  }, [])
+
   const effectiveUser = user || (BYPASS_LOGIN ? DEMO_USER : null)
 
   const visibleModules = MODULES.filter(m => hasPlanAccess(effectiveUser?.plan, m.requiredPlan))
@@ -183,6 +237,7 @@ export default function App() {
           label: m.title,
           icon: m.emoji,
           hint: m.tag,
+          state: moduleNavStateMap[m.id] || 'default',
         })
       })
     })
@@ -195,7 +250,7 @@ export default function App() {
       hint: wrongbookCount > 0 ? `${wrongbookCount} 题待复习` : '集中复习薄弱点',
     })
     return items
-  }, [visibleModules, wrongbookCount])
+  }, [visibleModules, wrongbookCount, moduleNavStateMap])
 
   // 侧栏激活态：当 view 是 'map' 时高亮 overview
   const activeId = view === 'map' ? 'overview' : view
