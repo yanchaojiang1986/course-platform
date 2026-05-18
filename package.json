@@ -1,16 +1,19 @@
 {
   "name": "course-platform",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:local": "bash scripts/dev-local.sh",
+    "stop:local": "bash scripts/stop-local.sh",
     "build": "vite build",
     "start": "node server.js",
     "lint": "npm run lint:syntax && npm run lint:content",
     "lint:syntax": "find src -name '*.js' | xargs -n 1 node --check && node --check server.js && node --check vite.config.js && node --check tailwind.config.js && node --check postcss.config.js",
     "lint:content": "node scripts/validate-content.mjs",
     "typecheck": "echo \"No TypeScript files to typecheck\"",
-    "test": "echo \"No automated tests yet\""
+    "test": "echo \"No automated tests yet\"",
+    "status:local": "bash scripts/status-local.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3",

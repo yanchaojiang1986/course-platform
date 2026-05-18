@@ -50,6 +50,26 @@ export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle
   }, [mobile, drawerOpen])
 
   useEffect(() => {
+    const body = document.body
+    const lock = mobile && drawerOpen
+    body.classList.toggle('ws-drawer-open', lock)
+    body.classList.toggle('ws-lock-scroll', lock)
+    return () => {
+      body.classList.remove('ws-drawer-open')
+      body.classList.remove('ws-lock-scroll')
+    }
+  }, [mobile, drawerOpen])
+
+  useEffect(() => {
+    if (!drawerOpen) return
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setDrawerOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [drawerOpen])
+
+  useEffect(() => {
     setDrawerOpen(false)
   }, [activeId])
 
@@ -112,7 +132,10 @@ export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle
                     key={item.id}
                     className={`ws-mobile-drawer-item ${active ? 'active' : ''}`}
                     data-state={state}
-                    onClick={() => onChange(item.id)}
+                    onClick={() => {
+                      onChange(item.id)
+                      setDrawerOpen(false)
+                    }}
                   >
                     <span className="ws-nav-icon">{item.icon || item.label?.slice(0, 1) || '·'}</span>
                     <span className="ws-nav-label">
@@ -127,7 +150,7 @@ export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle
           </div>
         </aside>
 
-        <div className="ws-bottom-nav">
+        <div className={`ws-bottom-nav ${drawerOpen ? 'is-hidden' : ''}`}>
           {quickItems.map((item) => {
             const active = item.id === activeId
             return (

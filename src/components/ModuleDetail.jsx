@@ -120,7 +120,7 @@ export default function ModuleDetail({ module }) {
             <div className="xl:max-h-[calc(100vh-220px)] xl:overflow-y-auto">
               <ContentViewer module={module} />
               {hasExercises && (
-                <div className="max-w-3xl mx-auto px-6 pb-10">
+                <div className="w-full px-4 sm:px-6 lg:px-8 pb-10">
                   <Exercise
                     exercises={exercises}
                     moduleId={module.id}

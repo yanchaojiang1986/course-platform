@@ -1,6 +1,42 @@
 # 封板记录
 
-## v1.1.4 — 2026-05-19（当前版本）
+## v1.1.5 — 2026-05-19（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`，52 个 blockId） |
+| `npm run build` | ✅ 通过（84 modules） |
+
+### 本次变更摘要
+- 课程正文与知识关卡区域取消桌面端窄列限制，改为随窗口宽度自适应展示，减少左右大留白。
+- 移动端菜单升级为全屏抽屉 Overlay：打开时隐藏底部导航、锁定页面滚动，解决遮挡与占用正文空间问题。
+- 移动端隐藏滚动条样式，保留触控滑动手势，提升可视空间利用率。
+- 新增本地运行脚本：`dev-local/stop-local/status-local`，支持端口自动释放、健康检查与状态巡检。
+- 修复本地 `Failed to fetch` 调试链路：恢复并固定 `9527 -> 4321` 可用链路。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `98d835b82506353a1718fd114392cff0ea97c736b715ea0c76eb671c422705d5` |
+| `package-lock.json` | `919685f5103e9f5e2a7a5ebf84642b891337511bb870374b3ebcb8f77470c9aa` |
+| `src/components/ContentViewer.jsx` | `568902391e0cfb2f0e883632dfc69ea7cb64d12f12f994b5491893c4abf3398b` |
+| `src/components/ModuleDetail.jsx` | `e125de0205e7cb5eb1af1dcf7e7fe4cba7695b030ac13a43a49e0858337121c0` |
+| `src/components/WorkbenchSidebar.jsx` | `29881f3d4bb833b98eb9973df2b07ae69db4b9bb894f4a3ffa25dbfdbec1e496` |
+| `src/index.css` | `6abce2f644eb94230a33ae4767fcc9df3097fe23e391b9a5456ded626fe09b61` |
+| `scripts/dev-local.sh` | `4ada00091d835397c3176b591b0ae8d0ba954207f123f217ab5a8ac2ca4a1ed0` |
+| `scripts/stop-local.sh` | `35a1fd6598219b5c25a38bcbfb228016644dcd9ec7b8637a53ebdec58ce34aaa` |
+| `scripts/status-local.sh` | `556fcad0372dbbbf563fd3b6ac5df447c3052bc92596b8a5ac9963f4b8151e00` |
+
+### 说明
+- 本次封板为本地封板，不执行远程推送（按当前需求保留本地使用）。
+
+---
+
+## v1.1.4 — 2026-05-19（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
