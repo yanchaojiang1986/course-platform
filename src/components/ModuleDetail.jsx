@@ -78,7 +78,7 @@ export default function ModuleDetail({ module }) {
   const scenarioContext = scenario ? `${scenario.title}\n\n${scenario.context}\n\n任务：${scenario.tasks.join('；')}` : ''
 
   return (
-    <div className="ws-main-inner">
+    <div className="ws-main-inner module-page-flow">
         <header className="glass-panel rounded-2xl px-4 sm:px-6 py-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
             <div className="min-w-0">
@@ -116,8 +116,8 @@ export default function ModuleDetail({ module }) {
         </div>
 
         {activeTab === 'phase1' && (
-          <div className="content-surface overflow-hidden">
-            <div className="md:max-h-[calc(100vh-220px)] md:overflow-y-auto">
+          <div className="content-surface module-reader-shell overflow-visible xl:overflow-hidden">
+            <div className="xl:max-h-[calc(100vh-220px)] xl:overflow-y-auto">
               <ContentViewer module={module} />
               {hasExercises && (
                 <div className="max-w-3xl mx-auto px-6 pb-10">
@@ -133,15 +133,15 @@ export default function ModuleDetail({ module }) {
         )}
 
         {activeTab === 'phase2' && hasScenario && (
-          <div className="content-surface overflow-visible md:overflow-hidden">
-            <div className="flex flex-col md:flex-row md:h-[calc(100vh-220px)] md:overflow-hidden">
+          <div className="content-surface module-reader-shell overflow-visible xl:overflow-hidden">
+            <div className="flex flex-col xl:flex-row xl:h-[calc(100vh-220px)] xl:overflow-hidden">
               <ScenarioPanel
                 scenario={scenario}
                 phase2State={phase2State}
                 onStart={handlePhase2Start}
                 onComplete={handlePhase2Complete}
               />
-              <div className="flex-1 min-h-[420px] md:min-h-0 md:overflow-hidden">
+              <div className="flex-1 min-h-[420px] xl:min-h-0 xl:overflow-hidden">
                 {phase2State.started ? (
                   <AIPanel
                     mode={aiMode}

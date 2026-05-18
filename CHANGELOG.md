@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.4] - 2026-05-19
+
+### 修复
+- 优化触控端（手机/平板）课程阅读体验：正文从“卡片内滚动”切换为“整页流式滚动”。
+- `ModuleDetail.jsx` 将 `Phase1/Phase2` 的内部滚动断点由 `md` 提升为 `xl`，避免移动端被固定容器限制。
+- `ScenarioPanel.jsx` 与 `AIPanel.jsx` 同步将侧栏/面板固定布局断点由 `md` 提升为 `xl`，小屏不再强制双栏挤压。
+- `index.css` 新增触控端阅读模式样式（`module-page-flow/module-reader-shell`），解除卡片边框与背景包裹，提升连续阅读体验。
+
+### 质量校验
+- `npm run lint` 通过（含 `lint:content`，52 个 blockId 校验通过）。
+- `npm run build` 通过（84 modules）。
+
+---
+
 ## [1.1.3] - 2026-05-19
 
 ### 修复

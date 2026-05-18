@@ -570,6 +570,19 @@
     }
   }
 
+  /* 触控端阅读模式：正文区域脱离卡片容器，按整页流式阅读 */
+  @media (hover: none) and (pointer: coarse) and (max-width: 1200px) {
+    .module-page-flow {
+      display: block;
+    }
+    .module-reader-shell {
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+  }
+
   .section-chip {
     @apply text-[11px] font-semibold uppercase tracking-[0.22em];
     color: var(--text-muted);

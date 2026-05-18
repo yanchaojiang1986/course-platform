@@ -165,7 +165,7 @@ export default function AIPanel({ mode = 'tutor', moduleContext, scenarioContext
   const hc = headerConfig[mode] || headerConfig.tutor
 
   return (
-    <div className="flex flex-col md:h-full border-t md:border-t-0 md:border-l border-themed bg-surface w-full max-w-full min-w-0 md:max-w-[460px] md:min-w-[320px]">
+    <div className="flex flex-col xl:h-full border-t xl:border-t-0 xl:border-l border-themed bg-surface w-full max-w-full min-w-0 xl:max-w-[460px] xl:min-w-[320px]">
       <div className={`flex items-center justify-between px-4 py-3 border-b border-themed ${hc.bg} shrink-0`}>
         <div className="flex items-center gap-2">
           <span className="text-lg">{hc.icon}</span>

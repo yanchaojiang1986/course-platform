@@ -1,6 +1,38 @@
 # 封板记录
 
-## v1.1.3 — 2026-05-19（当前版本）
+## v1.1.4 — 2026-05-19（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`，52 个 blockId） |
+| `npm run build` | ✅ 通过（84 modules） |
+
+### 本次变更摘要
+- 优化触控端课程阅读：章节正文从“卡片内滚动”切换为“整页流式滚动”。
+- `Phase1/Phase2` 内部滚动断点统一调整为 `xl`，移动端不再被固定高度容器限制。
+- `ScenarioPanel` 与 `AIPanel` 同步断点策略，避免小屏强制双栏导致阅读区域过窄。
+- 新增触控端阅读样式，移动端自动解除正文卡片边框/背景包裹。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `b7dc987fc51baa18ee8a24e1e9b3f92502067c3ec174389402525dcec648f3bc` |
+| `package-lock.json` | `a0e49a5843545d8c610094979f00913e97f3a74c1785987b5075b5c8dc1ed260` |
+| `src/components/ModuleDetail.jsx` | `881d0039966800314f6e5beccffcaaff38123edef1405bdf4e33c98edab7ee20` |
+| `src/components/ScenarioPanel.jsx` | `17286770b42a63ce32e5ab145b1740d875d7a673437dab7c616d3c88cfabd0d2` |
+| `src/components/AIPanel.jsx` | `5f56bac16c9f6ad3ff6cf4142b67ee3e8b4ee367b5630c2b24161a86c8663429` |
+| `src/index.css` | `59ebf237f85fcb93c5dab1d5db0e8a86f848b2c62f700a3893d8d7ecc0e7a2d7` |
+
+### 说明
+- 本次封板仅覆盖移动端阅读与布局体验，不涉及课程数据与权限逻辑变更。
+
+---
+
+## v1.1.3 — 2026-05-19（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
