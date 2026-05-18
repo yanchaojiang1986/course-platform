@@ -22,4 +22,30 @@ export const INLINE_CHECKS_10 = {
     answer: false,
     explanation: '测试工作必须留痕并走流程，口头许可不能替代正式验证和记录。',
   },
+  q10_4: {
+    id: 'q10_4',
+    type: 'choice',
+    question: '从功能测试转自动化测试，最有效的第一步是？',
+    options: [
+      '直接辞职去培训班',
+      '在本职工作中"抠"出实践机会（如 Postman Runner、Newman 接入 Jenkins）',
+      '等公司主动给你转岗',
+      '只看书学语法'
+    ],
+    answer: 1,
+    explanation: '在工作中找机会落地是最快的成长方式。等机会不如造机会。',
+  },
+  q10_5: {
+    id: 'q10_5',
+    type: 'choice',
+    question: '中级测试工程师 vs 初级，最核心的差距是？',
+    options: [
+      '工龄长短',
+      '能独立设计测试方案、用代码搭框架、识别系统性风险',
+      '会用更多工具',
+      '加班时间更长'
+    ],
+    answer: 1,
+    explanation: '中级是"会设计方案+会写自动化+有系统思维"。光会用工具不算中级。',
+  },
 }

@@ -661,4 +661,197 @@ export const INTERACTIVE_DATA = {
       { id: 'P3', chapter: 'P3 轻微', points: '不影响任何业务逻辑，如界面排版错位、文字错误、建议性要求', example: '字号应为 14px 但实际是 12px；"登录"被写成"登陆"', priority: 'P3', status: '可带病上线' },
     ],
   },
+
+  // ===== 新增模块互动数据 =====
+
+  // 模块 00 真实学员案例
+  '00-05': {
+    type: 'timeline',
+    title: '3 位 0 基础学员真实转型时间线',
+    items: [
+      { stage: '第 1 个月 · 学员 A（会计转测试）', modules: [{ name: '完成模块 00-05，跑通基础概念和用例设计' }] },
+      { stage: '第 2 个月 · 学员 A 持续', modules: [{ name: '完成接口测试、工具学习，独立做 3 个实战项目' }] },
+      { stage: '第 3 个月 · 学员 A 拿 offer', modules: [{ name: '上海某外包公司功能测试岗，薪资 9k' }] },
+      { stage: '第 2 个月 · 学员 B（客服转测试）', modules: [{ name: '边工作边学，每天 2 小时，完成全部基础课' }] },
+      { stage: '第 4 个月 · 学员 B 拿 offer', modules: [{ name: '杭州某电商公司测试岗，薪资 11k' }] },
+      { stage: '第 6 周 · 学员 C（应届生）', modules: [{ name: '全职学习，完成所有模块 + 100 道面试题' }] },
+      { stage: '第 8 周 · 学员 C 拿 offer', modules: [{ name: '深圳某互联网公司测试岗，薪资 12k' }] },
+    ],
+  },
+
+  // 模块 03 测试计划核心章节
+  '03-05': {
+    type: 'mindmap',
+    title: '测试计划核心 7 章',
+    root: '测试计划',
+    branches: [
+      { name: '1. 项目背景与目标', children: ['本次测试要解决什么问题'] },
+      { name: '2. 测试范围', children: ['必测', '不测', '后续测'] },
+      { name: '3. 测试策略', children: ['功能测试方法', '接口/性能/兼容性策略'] },
+      { name: '4. 资源与排期', children: ['人员分工', '环境/工具', '时间节点'] },
+      { name: '5. 进入/退出标准', children: ['什么时候开始', '什么时候结束'] },
+      { name: '6. 风险与应对', children: ['技术风险', '资源风险', '进度风险'] },
+      { name: '7. 交付物清单', children: ['测试用例', 'Bug 单', '测试报告'] },
+    ],
+  },
+
+  // 模块 04 移动端测试 Checklist
+  '04-06': {
+    type: 'checklist',
+    title: '移动端测试专项 Checklist',
+    description: '8 大维度共 32 个必查项',
+    categories: [
+      { name: '安装/卸载/升级', items: ['全新安装功能正常', '覆盖安装数据保留', '卸载重装登录态清除', '低存储空间下安装提示'] },
+      { name: '横竖屏切换', items: ['横屏布局正常', '输入到一半切屏内容不丢失', '视频自动全屏', '后台再回前台保持当前屏向'] },
+      { name: '权限管理', items: ['首次权限弹窗时机合理', '拒绝后降级体验良好', '手动关闭权限可感知', '权限说明文案清晰'] },
+      { name: '弱网/断网', items: ['2G 下功能可用或友好提示', '断网时正确提示', '幂等性保证（不重复创建）', '重连后能恢复操作'] },
+      { name: '前后台切换', items: ['后台 10 分钟回前台正常', '后台暂停媒体播放', 'Push 跳转到正确页面', '后台被杀重启状态恢复'] },
+      { name: '设备兼容', items: ['主流机型测试', '老机型性能测试', '异形屏适配', '不同 DPI 不变形'] },
+      { name: '系统差异', items: ['iOS / Android 表现一致', '不同系统版本兼容', '深色模式适配', '系统字体大小适配'] },
+      { name: '中断场景', items: ['来电中断后恢复', '低电量提示中断', '系统通知遮挡', '锁屏后再解锁'] },
+    ],
+  },
+
+  // 模块 05 提 Bug 7 步法
+  '05-05': {
+    type: 'flowchart',
+    title: '提 Bug 的标准 7 步操作',
+    nodes: [
+      { id: 's1', label: '1. 复现确认', desc: '至少复现 2 次', color: '#3B82F6' },
+      { id: 's2', label: '2. 截图/录屏', desc: '关键现象抓取', color: '#3B82F6' },
+      { id: 's3', label: '3. 写标题', desc: '环境+操作+错误格式', color: '#8B5CF6' },
+      { id: 's4', label: '4. 写步骤', desc: '前置条件+逐步操作', color: '#8B5CF6' },
+      { id: 's5', label: '5. 写预期', desc: '引用 PRD 依据', color: '#8B5CF6' },
+      { id: 's6', label: '6. 评估优先级', desc: 'P0-P3 严格判定', color: '#F59E0B' },
+      { id: 's7', label: '7. 指派 + 提交', desc: '指给模块负责人', color: '#10B981' },
+    ],
+    edges: [
+      { from: 's1', to: 's2' },
+      { from: 's2', to: 's3' },
+      { from: 's3', to: 's4' },
+      { from: 's4', to: 's5' },
+      { from: 's5', to: 's6' },
+      { from: 's6', to: 's7' },
+    ],
+  },
+
+  // 模块 06 接口用例 6 维度
+  '06-05': {
+    type: 'mindmap',
+    title: '接口测试用例 6 大维度',
+    root: '一个接口要测什么',
+    branches: [
+      { name: '1. 正向场景', children: ['正确参数返回成功'] },
+      { name: '2. 参数校验', children: ['必填缺失', '类型错误', '长度越界', '特殊字符'] },
+      { name: '3. 鉴权', children: ['无 token', 'token 过期', '越权访问'] },
+      { name: '4. 业务逻辑', children: ['状态机', '幂等性', '业务规则'] },
+      { name: '5. 异常容错', children: ['上游接口失败', '超时', '部分成功'] },
+      { name: '6. 数据一致性', children: ['数据库写入', '缓存更新', '消息推送'] },
+    ],
+  },
+
+  // 模块 12 性能测试核心指标
+  '12-01': {
+    type: 'comparison',
+    title: '性能测试 4 大核心指标',
+    items: [
+      { id: 'tps', label: 'TPS', desc: '每秒处理事务数', good: '> 500（列表查询）', bad: '< 50（接口慢）', color: '#3B82F6' },
+      { id: 'rt', label: '响应时间', desc: '请求耗时', good: '95% < 1 秒', bad: 'P99 > 5 秒', color: '#8B5CF6' },
+      { id: 'concurrent', label: '并发数', desc: '同时操作人数', good: '业务峰值 2 倍', bad: '只够支撑日常', color: '#F59E0B' },
+      { id: 'error', label: '错误率', desc: '失败/总请求', good: '< 0.1%', bad: '> 1% 不可上线', color: '#EF4444' },
+    ],
+  },
+
+  // 模块 13 Web 兼容性矩阵
+  '13-01': {
+    type: 'testcase',
+    title: 'Web 兼容性测试矩阵',
+    columns: ['浏览器', '版本范围', '主要 OS', '优先级', '覆盖率'],
+    priority_colors: { P0: '#EF4444', P1: '#F97316', P2: '#3B82F6' },
+    rows: [
+      { id: 'chrome', chapter: 'Chrome', points: '最新 3 个大版本', example: 'Windows / macOS / Linux', priority: 'P0', status: '~65%' },
+      { id: 'edge', chapter: 'Edge', points: '最新 2 个大版本', example: 'Windows 11 / 10', priority: 'P1', status: '~12%' },
+      { id: 'safari', chapter: 'Safari', points: '最新 2 个大版本', example: 'macOS / iOS', priority: 'P1', status: '~10%' },
+      { id: 'firefox', chapter: 'Firefox', points: '最新版本', example: 'Windows / macOS', priority: 'P2', status: '~5%' },
+      { id: 'cn', chapter: '国产浏览器', points: '360 / QQ / 搜狗', example: 'Windows 主要', priority: 'P2', status: '~8%' },
+    ],
+  },
+
+  // 模块 13 安全漏洞 6 大类
+  '13-02': {
+    type: 'mindmap',
+    title: '6 大常见安全漏洞（功能测试可发现）',
+    root: '安全测试入门',
+    branches: [
+      { name: '越权（最高频）', children: ['水平越权：A 看 B 数据', '垂直越权：普通调管理员接口'] },
+      { name: 'SQL 注入', children: ["测试: ' OR 1=1--", '危险：拖库'] },
+      { name: 'XSS 跨站脚本', children: ['测试：<script>alert()</script>', '危险：盗号'] },
+      { name: '敏感信息泄露', children: ['密码明文', '手机号未脱敏', '堆栈暴露'] },
+      { name: '文件路径穿越', children: ['测试：../../etc/passwd'] },
+      { name: '验证码爆破', children: ['无频次限制', '验证码可复用'] },
+    ],
+  },
+
+  // 模块 14 提 Bug 5 大坑速查
+  '14-01': {
+    type: 'comparison',
+    title: '提 Bug 阶段 5 大坑速查',
+    items: [
+      { id: 'p1', label: '截图缺失', desc: '开发问 3 次才知道现象', good: '所有 UI Bug 必附截图', bad: '凭文字描述', color: '#EF4444' },
+      { id: 'p2', label: '复现步骤跳步', desc: '开发复现不出来', good: '逐步明确，含前置', bad: '"登录就报错"', color: '#F59E0B' },
+      { id: 'p3', label: '需求变更当 Bug', desc: '被产品当面批评', good: '走变更流程', bad: '直接提 Bug', color: '#F59E0B' },
+      { id: 'p4', label: '一单多 Bug', desc: '修了 2 个漏 3 个', good: '一个 Bug 一张单', bad: '5 个问题写一起', color: '#EF4444' },
+      { id: 'p5', label: '开发不认就妥协', desc: '上线后被追责', good: '走 Rejected 状态留痕', bad: '默默关单', color: '#EF4444' },
+    ],
+  },
+
+  // 模块 14 入职 3 天检查清单
+  '14-02': {
+    type: 'checklist',
+    title: '入职前 3 天硬核检查清单',
+    description: '快速融入、建立专业形象',
+    categories: [
+      { name: 'Day 1：环境与人', items: ['领工牌、电脑、座位', '加入团队 IM 群、邮件组', '认识直系上级和导师', '了解打卡、报销、餐饮等基础流程', '获取测试环境账号、JIRA / 禅道权限'] },
+      { name: 'Day 2：业务与系统', items: ['听导师讲核心业务（录音）', '把公司产品当用户用一遍', '阅读最近 3 个版本的 PRD', '看历史 Bug 库前 50 条', '画出系统模块图（自己理解）'] },
+      { name: 'Day 3：工具与规范', items: ['熟练公司用的测试管理工具', '熟悉公司的 Bug 提单规范', '看公司测试用例库的格式', '准备一份"30天工作计划"给上级', '主动找 1 个开发认识、聊 30 分钟'] },
+    ],
+  },
+
+  // 模块 15 题型分布
+  '15-01': {
+    type: 'comparison',
+    title: '面试题 100 问题型分布',
+    items: [
+      { id: 't1', label: '基础概念', desc: '30 题', good: '测试定义、用例要素、Bug 流程', bad: '答错=暴露不专业', color: '#3B82F6' },
+      { id: 't2', label: '方法实操', desc: '30 题', good: '给场景设计用例、用方法分析', bad: '只会背理论不会用', color: '#8B5CF6' },
+      { id: 't3', label: '情景处理', desc: '20 题', good: '冲突处理、风险管理、时间紧迫', bad: '没有真实经验只能编', color: '#F59E0B' },
+      { id: 't4', label: '职业规划', desc: '20 题', good: '为什么选测试、未来规划、加班观', bad: '回答机械、没诚意', color: '#10B981' },
+    ],
+  },
+
+  // 模块 09 简历诊断 20 点
+  '09-04': {
+    type: 'checklist',
+    title: '简历诊断 20 个自查点',
+    description: '逐项过一遍，发出去前自查',
+    categories: [
+      { name: '基础信息（4 项）', items: ['姓名+手机+邮箱+城市齐全', '没有生活照/卡通头像', '没有写身份证号', '邮箱用 Gmail / QQ 邮箱（不要太搞怪）'] },
+      { name: '求职意向（3 项）', items: ['明确"软件测试工程师"', '期望薪资符合实际', '期望城市与现居一致'] },
+      { name: '项目经验（5 项）', items: ['时间倒序', '用 STAR 法则描述', '有具体数字（Bug 数、用例数）', '关键词与 JD 匹配', '不夸大未做过的项目'] },
+      { name: '技能清单（4 项）', items: ['按类别分组', '不写完全不会的', '熟练度分级标注', '与 JD 关键词对齐'] },
+      { name: '整体观感（4 项）', items: ['PDF 格式', '1 页内', '字体统一', '零错别字'] },
+    ],
+  },
+
+  // 模块 10 入职 1 年成长 4 阶段
+  '10-03': {
+    type: 'timeline',
+    title: '入职 1 年硬核成长 4 阶段',
+    items: [
+      { stage: '0-1 月 · 生存期', modules: [{ name: '能独立跑完一个版本测试' }] },
+      { stage: '2-3 月 · 建立资产期', modules: [{ name: '产出测试规范、模块知识库' }] },
+      { stage: '4-6 月 · 能力深化期', modules: [{ name: '成为 1-2 模块专家，学习 Python' }] },
+      { stage: '7-12 月 · 突破期', modules: [{ name: 'Selenium 自动化 + Jenkins，向中级转型' }] },
+    ],
+  },
 }

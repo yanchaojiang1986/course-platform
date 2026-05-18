@@ -7,13 +7,17 @@ import WorkbenchSidebar from './components/WorkbenchSidebar.jsx'
 import { MODULES } from './data/modules.js'
 import { hasPlanAccess } from './utils/access.js'
 import { validateInteractiveData } from './data/validateInteractive.js'
+import { logClient } from './utils/clientLogger.js'
 
 // 侧栏分组：4 个阶段
 const STAGE_GROUPS = [
   { label: 'Stage 01 · 基础课程', ids: ['00', '01', '02'] },
   { label: 'Stage 02 · 核心技能', ids: ['03', '04', '05'] },
   { label: 'Stage 03 · 工具实操', ids: ['06', '07'] },
-  { label: 'Stage 04 · 项目与求职', ids: ['08', '09', '10', '11'] },
+  { label: 'Stage 04 · 进阶专项', ids: ['12', '13'] },
+  { label: 'Stage 05 · 实战演练', ids: ['08', '14'] },
+  { label: 'Stage 06 · 求职冲刺', ids: ['15', '09', '10'] },
+  { label: 'Stage 07 · 资料附录', ids: ['11'] },
 ]
 
 const BYPASS_LOGIN = true
@@ -43,7 +47,7 @@ applyTheme(readInitialTheme())
 
 const INTERACTIVE_ERRORS = validateInteractiveData()
 if (INTERACTIVE_ERRORS.length > 0) {
-  console.error('[interactive.js] 校验失败：', INTERACTIVE_ERRORS)
+  logClient('error', 'interactive_schema_failed', { count: INTERACTIVE_ERRORS.length, errors: INTERACTIVE_ERRORS })
 }
 
 function ValidationBanner({ errors }) {
@@ -92,6 +96,28 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    const onError = (event) => {
+      logClient('error', 'window_error', {
+        message: event?.message || '',
+        source: event?.filename || '',
+        line: event?.lineno || 0,
+        col: event?.colno || 0,
+      })
+    }
+    const onRejection = (event) => {
+      logClient('error', 'unhandled_rejection', {
+        reason: String(event?.reason || ''),
+      })
+    }
+    window.addEventListener('error', onError)
+    window.addEventListener('unhandledrejection', onRejection)
+    return () => {
+      window.removeEventListener('error', onError)
+      window.removeEventListener('unhandledrejection', onRejection)
+    }
+  }, [])
+
+  useEffect(() => {
     let mounted = true
     const bootstrap = async () => {
       try {
@@ -101,6 +127,7 @@ export default function App() {
         if (mounted) setUser(data.user || null)
       } catch {
         if (mounted) setUser(null)
+        logClient('warn', 'auth_me_failed')
       } finally {
         if (mounted) setAuthLoading(false)
       }
@@ -122,11 +149,15 @@ export default function App() {
     if (id === 'overview' || id === 'wrongbook' || visibleIds.has(id)) {
       setView(id === 'overview' ? 'map' : id)
     } else {
+      const target = MODULES.find(m => m.id === id)
+      if (target) {
+        window.alert(`此课程需要 ${target.requiredPlan?.toUpperCase()} 权限解锁。\n\n请联系课程管理员升级后继续学习。`)
+      }
       setView('map')
     }
   }
 
-  const activeModule = visibleModules.find(m => m.id === view)
+  const activeModule = MODULES.find(m => m.id === view && visibleIds.has(m.id))
 
   const handleLogout = async () => {
     try {
@@ -186,7 +217,7 @@ export default function App() {
     mainView = (
       <CourseMap
         user={effectiveUser}
-        modules={visibleModules}
+        modules={MODULES}
         onSelectModule={handleSelectModule}
         wrongbookCount={wrongbookCount}
       />

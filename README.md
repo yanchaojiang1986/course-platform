@@ -34,8 +34,8 @@ DATABASE_URL=postgres://user:pass@host:5432/dbname   # 生产环境必填
 ### 本地开发
 
 ```bash
-npm run dev        # 启动 Vite 前端开发服务器（端口 5173）
-node server.js     # 启动后端服务（端口 3001）
+AUTH_REQUIRED=false npm run start  # 启动后端服务（端口 4321，本地无数据库时跳过鉴权）
+npm run dev                        # 启动 Vite 前端开发服务器（端口 9527）
 ```
 
 ### 生产构建

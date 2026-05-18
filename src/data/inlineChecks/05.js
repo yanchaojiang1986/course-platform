@@ -30,4 +30,25 @@ export const INLINE_CHECKS_05 = {
     answer: false,
     explanation: '严重程度看影响本身，优先级看修复顺序，两者经常相关但不总是相同。',
   },
+  q05_5: {
+    id: 'q05_5',
+    type: 'choice',
+    question: '开发将 Bug 状态改为 Fixed 后，测试人员复测通过应该把状态改为？',
+    options: ['New', 'Open', 'Closed', 'Reopened'],
+    answer: 2,
+    explanation: 'Fixed → 复测通过 → Closed。复测不通过才是 Reopen。',
+  },
+  q05_6: {
+    id: 'q05_6',
+    type: 'choice',
+    question: '测试报告的结论"建议上线"应该写在哪种情况？',
+    options: [
+      'P0 仍存在',
+      'P0=0 + P1 全关闭 + P2 关闭率 > 80%',
+      '所有 Bug 都修复',
+      '产品经理说可以上'
+    ],
+    answer: 1,
+    explanation: '"建议上线"的标准三档：P0=0、P1 全关、P2 关闭率高于 80%。否则只能是"有条件上线"或"不建议上线"。',
+  },
 }

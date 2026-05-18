@@ -7,7 +7,7 @@ import { Pool } from 'pg'
 import Anthropic from '@anthropic-ai/sdk'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
-import { readFileSync, existsSync } from 'fs'
+import { readFileSync, existsSync, mkdirSync, appendFile } from 'fs'
 import { MODULES } from './src/data/modules.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -31,6 +31,9 @@ const MODULE_BY_ID = new Map(MODULES.map(m => [m.id, m]))
 
 const distPath = join(__dirname, 'dist')
 const contentRoot = join(__dirname, 'public', 'content')
+const logsDir = join(__dirname, 'logs')
+const backendLogFile = join(logsDir, 'backend.log')
+mkdirSync(logsDir, { recursive: true })
 
 const pool = process.env.DATABASE_URL ? new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -247,6 +250,17 @@ function toPublicUser(user) {
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
+function writeBackendLog(level, event, meta = {}) {
+  const payload = {
+    ts: new Date().toISOString(),
+    level,
+    event,
+    meta,
+  }
+  const line = `${JSON.stringify(payload)}\n`
+  appendFile(backendLogFile, line, () => {})
+}
+
 const TUTOR_SYSTEM = `你是一位专业的功能测试课程教辅助手，帮助正在学习软件测试的零基础转行学员。
 你的职责：
 - 解释软件测试的概念、方法、工具
@@ -284,6 +298,22 @@ if (existsSync(distPath)) {
 app.use(express.static(join(__dirname, 'public')))
 
 app.use(authOptional)
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/api/')) return next()
+  const start = Date.now()
+  res.on('finish', () => {
+    writeBackendLog('info', 'api_request', {
+      method: req.method,
+      path: req.originalUrl,
+      status: res.statusCode,
+      durationMs: Date.now() - start,
+      user: req.user?.username || null,
+      plan: req.user?.plan || null,
+      ip: req.ip,
+    })
+  })
+  next()
+})
 
 app.get('/api/auth/me', async (req, res) => {
   if (!AUTH_REQUIRED) {
@@ -433,14 +463,33 @@ app.get('/api/modules', requireAuth, (req, res) => {
 app.get('/api/content/:moduleId', requireAuth, (req, res) => {
   const moduleId = String(req.params.moduleId || '')
   const moduleDef = MODULE_BY_ID.get(moduleId)
-  if (!moduleDef) return res.status(404).json({ error: '模块不存在' })
+  if (!moduleDef) {
+    writeBackendLog('warn', 'module_not_found', {
+      moduleId,
+      user: req.user?.username || null,
+      plan: req.user?.plan || null,
+    })
+    return res.status(404).json({ error: '模块不存在' })
+  }
 
   if (!hasPlanAccess(req.user.plan, moduleDef.requiredPlan)) {
+    writeBackendLog('warn', 'module_forbidden', {
+      moduleId,
+      requiredPlan: moduleDef.requiredPlan,
+      user: req.user?.username || null,
+      plan: req.user?.plan || null,
+    })
     return res.status(403).json({ error: `当前会员无权限访问该模块（需要 ${moduleDef.requiredPlan.toUpperCase()}）` })
   }
 
   const filePath = join(contentRoot, moduleDef.file)
-  if (!existsSync(filePath)) return res.status(404).json({ error: '课程内容不存在' })
+  if (!existsSync(filePath)) {
+    writeBackendLog('error', 'module_content_file_missing', {
+      moduleId,
+      file: moduleDef.file,
+    })
+    return res.status(404).json({ error: '课程内容不存在' })
+  }
 
   const content = readFileSync(filePath, 'utf-8')
   res.json({ moduleId: moduleDef.id, content })
@@ -575,6 +624,12 @@ app.post('/api/chat', requireAuth, async (req, res) => {
     res.end()
   } catch (err) {
     const message = err instanceof Error ? err.message : '服务端异常'
+    writeBackendLog('error', 'chat_stream_failed', {
+      message,
+      mode: mode || 'tutor',
+      user: req.user?.username || null,
+      moduleContext: moduleContext || null,
+    })
     if (res.headersSent) {
       try {
         res.write(`data: ${JSON.stringify({ error: message })}\n\n`)
@@ -599,9 +654,17 @@ async function bootstrap() {
     app.listen(port, () => {
       console.log(`Server running on port ${port}`)
       console.log(`Auth mode: ${AUTH_REQUIRED ? 'enabled' : 'disabled'}`)
+      writeBackendLog('info', 'server_started', {
+        port,
+        authRequired: AUTH_REQUIRED,
+        nodeEnv: process.env.NODE_ENV || 'development',
+      })
     })
   } catch (err) {
     console.error('Server bootstrap failed:', err)
+    writeBackendLog('error', 'server_bootstrap_failed', {
+      message: err instanceof Error ? err.message : String(err),
+    })
     process.exit(1)
   }
 }

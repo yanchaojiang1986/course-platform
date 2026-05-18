@@ -1,6 +1,53 @@
 # 封板记录
 
-## v1.0.9 — 2026-05-17（当前版本）
+## v1.1.0 — 2026-05-18（当前版本）
+
+### 封板模式
+`git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）
+
+### 质量校验
+| 检查项 | 结果 |
+|--------|------|
+| `npm run lint` | ✅ 通过（含 `lint:content`，52 个 blockId） |
+| `npm run build` | ✅ 通过（84 modules） |
+| 模块巡检 | ✅ 通过（`/api/content/:moduleId` 共 16 个模块全部可访问） |
+
+### 本次变更摘要
+- 课程体系扩展到 16 模块，新增模块 12/13/14/15 及配套课程内容、检测题、场景数据。
+- 会员分层展示保持当前项目架构：地图显示全部模块，锁定态与权限提示统一。
+- Claude 引入内容按本项目规范完成数据收敛，统一到既有交互 schema（不反向改造组件契约）。
+- 新增前后端可追踪日志：
+- 前端：`src/utils/clientLogger.js`，记录加载失败/未处理异常到 `cp_frontend_logs`。
+- 后端：`logs/backend.log`，记录 API 请求与模块访问异常。
+- 修复“模块不存在”排查链路，确认当前标准端口为前端 `9527`、后端 `4321`。
+
+### 关键文件 SHA-256
+| 文件 | SHA-256 |
+|------|---------|
+| `package.json` | `0a3439eb3a706d1a46484ffbb39803b91a7879efbf361d441445a4e7edb815bf` |
+| `package-lock.json` | `f9b68e3bf88e6e45af43ddb5dfffa56c3b1e592f62d0344568571f12b045ec13` |
+| `server.js` | `b244a28048c27190a4a125c1a1ddd02ab8d1380fa987afa9a7ed5ff4e5580163` |
+| `src/App.jsx` | `1176bc4f2d589ed1ddd433c1ff8fd98e44a09dce8593ca82b6ee296c991946bd` |
+| `src/components/CourseMap.jsx` | `2bd0e6fa0bffd9746493f98e79c910c46efd3d41230ba22b407469320ecff020` |
+| `src/components/ModuleCard.jsx` | `ed58e6e74366e529485cc7cae56bc8ff2e27b6dc73a17adb473a7e56abff81f4` |
+| `src/components/ContentViewer.jsx` | `b1a8ba7fd5e6f2f6af835e17a6900e6fc44751c942c87a7cca8d2e2a9e714152` |
+| `src/data/modules.js` | `633f8bbefd2b57985be77b5e89efb2c016210fe20773d4eeebadd37e5fa9f254` |
+| `src/data/interactive.js` | `5877127e728cbf5807b100f739888d8dd216cb5306f7d7a51c5d34f01d46fe08` |
+| `src/data/exercises.js` | `71ee5a8f0bed0a8999e2fb88c12b2a7513e195f779feb613b2ec5aad70a3ca82` |
+| `src/data/scenarios.js` | `ffb3b50143c2067dff719ca6e639e471f04747035bf3449b6e83c5a6c1f33b27` |
+| `src/data/inlineChecks/index.js` | `0ed83251d19d586adb5605add416089590ce86cc21164d1fe95c28dcd2a9c5c6` |
+| `src/utils/clientLogger.js` | `f9521b8065a1159e7146372c76040ddf50c13100f96937168554c1d0171bcbc9` |
+| `public/content/12_性能与专项测试扫盲.md` | `e0c0b4d21b9a541111a2e5ef37302456ff145443969225f0b0c4c37542ec623c` |
+| `public/content/13_兼容性与安全测试.md` | `e5ca60872ee84ef596a56532f7adb35336c1ddaf370e63d0caf66134905af973` |
+| `public/content/14_避坑手册25条.md` | `bae995c3fc5b1a6b689bf8a52c10d493bafe7f654b60093659af77fec58fd251` |
+| `public/content/15_面试题精讲100问.md` | `a40d79d046b0778632c11af2bc5363e3ce0dbfe65f57c21af2baad0a11f943eb` |
+
+### 说明
+- 本次封板为“课程扩展 + 架构规范收敛 + 可观测性补齐”，已通过构建与内容校验闸门。
+
+---
+
+## v1.0.9 — 2026-05-17（已归档）
 
 ### 封板模式
 `git-seal`（项目目录已含 `.git`，以 commit 快照 + 构建校验为基线）

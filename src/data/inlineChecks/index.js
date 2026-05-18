@@ -10,6 +10,10 @@ import { INLINE_CHECKS_08 } from './08.js'
 import { INLINE_CHECKS_09 } from './09.js'
 import { INLINE_CHECKS_10 } from './10.js'
 import { INLINE_CHECKS_11 } from './11.js'
+import { INLINE_CHECKS_12 } from './12.js'
+import { INLINE_CHECKS_13 } from './13.js'
+import { INLINE_CHECKS_14 } from './14.js'
+import { INLINE_CHECKS_15 } from './15.js'
 
 export const INLINE_CHECKS = {
   ...INLINE_CHECKS_00,
@@ -24,4 +28,8 @@ export const INLINE_CHECKS = {
   ...INLINE_CHECKS_09,
   ...INLINE_CHECKS_10,
   ...INLINE_CHECKS_11,
+  ...INLINE_CHECKS_12,
+  ...INLINE_CHECKS_13,
+  ...INLINE_CHECKS_14,
+  ...INLINE_CHECKS_15,
 }

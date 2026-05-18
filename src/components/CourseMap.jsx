@@ -104,7 +104,10 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
     { label: 'Stage 01 · 基础课程', ids: ['00', '01', '02'], desc: '计算机与测试认知的底层能力，建立统一语言和视角。' },
     { label: 'Stage 02 · 核心技能', ids: ['03', '04', '05'], desc: '功能测试主线方法：流程、设计、缺陷管理与输出。' },
     { label: 'Stage 03 · 工具实操', ids: ['06', '07'], desc: '接口与工具体系，形成真实可复用的执行能力。' },
-    { label: 'Stage 04 · 项目与求职', ids: ['08', '09', '10', '11'], desc: '企业级项目场景与岗位转化能力，完成闭环。' },
+    { label: 'Stage 04 · 进阶专项', ids: ['12', '13'], desc: '性能、兼容性与安全专项扫盲，补齐企业测试常见边界。' },
+    { label: 'Stage 05 · 实战演练', ids: ['08', '14'], desc: '企业级项目实战与测试避坑清单，强化交付和协作能力。' },
+    { label: 'Stage 06 · 求职冲刺', ids: ['15', '09', '10'], desc: '面试题、简历作品集与入职成长路径，完成就业闭环。' },
+    { label: 'Stage 07 · 资料附录', ids: ['11'], desc: '常用模板、速查表与工作资料库。' },
   ]
 
   const doneModules = progress.p1Done + progress.p2Done
@@ -147,7 +150,7 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
               <ProgressRing value={progress.p2Done} total={progress.p2Total} color="#7c6af7" label="实战关卡" />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <Metric title="可学模块" value={modules.length} hint="已按会员权限过滤" color="#a78bfa" />
+              <Metric title="课程模块" value={modules.length} hint="含锁定课程" color="#a78bfa" />
               <Metric title="已完成单元" value={doneModules} hint="基础+实战累计" color="#4ecdc4" />
             </div>
           </div>
@@ -172,6 +175,7 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
                     key={m.id}
                     module={m}
                     onClick={() => onSelectModule(m.id)}
+                    userPlan={user?.plan || 'free'}
                   />
                 ))}
               </div>

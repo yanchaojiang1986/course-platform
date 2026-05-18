@@ -29,4 +29,17 @@ export const INLINE_CHECKS_08 = {
     answer: false,
     explanation: '漏测本身就是风险，应该在报告里明确记录和说明。',
   },
+  q08_5: {
+    id: 'q08_5',
+    type: 'choice',
+    question: '电商购物车结算实战中，最容易漏测的场景是？',
+    options: [
+      '单商品添加',
+      '并发下单导致库存超卖',
+      '修改商品数量',
+      '删除商品'
+    ],
+    answer: 1,
+    explanation: '并发场景测试是新人最容易漏的高风险点。库存幂等性失败会造成线上事故。',
+  },
 }

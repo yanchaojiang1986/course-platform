@@ -30,4 +30,30 @@ export const INLINE_CHECKS_07 = {
     answer: 0,
     explanation: '`grep` 就是按关键词搜索文本内容的常用命令。',
   },
+  q07_5: {
+    id: 'q07_5',
+    type: 'choice',
+    question: '作为测试人员，最实用的 Git 操作是？',
+    options: [
+      'git push 提交代码',
+      'git pull 拉最新代码 + git log 看开发改了什么',
+      'git rebase 解决冲突',
+      'git merge 合并分支'
+    ],
+    answer: 1,
+    explanation: '测试人员不写代码，但要拉取代码、看开发提交记录。push/rebase/merge 是开发的事。',
+  },
+  q07_6: {
+    id: 'q07_6',
+    type: 'choice',
+    question: '关于测试账号体系的维护，以下哪个做法最专业？',
+    options: [
+      '每次手动新建账号',
+      '建立账号矩阵表，专属用途 + 维护人 + 状态',
+      '所有测试共用一个账号',
+      '密码都设为 123456 方便记忆'
+    ],
+    answer: 1,
+    explanation: '账号矩阵表是测试人员的核心硬技能。专属用途 + 维护人能防止账号被覆盖。',
+  },
 }

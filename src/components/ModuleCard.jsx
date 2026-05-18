@@ -1,6 +1,9 @@
 import { EXERCISES } from '../data/exercises.js'
 import { SCENARIOS } from '../data/scenarios.js'
 import SpotlightCard from './ui/SpotlightCard.jsx'
+import { hasPlanAccess } from '../utils/access.js'
+
+const PLAN_LABEL = { free: '免费', vip: 'VIP', svip: 'SVIP' }
 
 const TAG_COLORS = {
   '导航': { line: 'from-slate-300 to-slate-500', spot: 'rgba(203,213,225,0.28)' },
@@ -40,11 +43,13 @@ function StageBadge({ ok, label }) {
   )
 }
 
-export default function ModuleCard({ module, onClick }) {
+export default function ModuleCard({ module, onClick, userPlan = 'free' }) {
   const exercises = EXERCISES[module.id] || []
   const hasScenario = !!SCENARIOS[module.id]
   const phase1 = getPhase1State(module.id)
   const phase2 = getPhase2State(module.id)
+  const requiredPlan = module.requiredPlan || 'free'
+  const locked = !hasPlanAccess(userPlan, requiredPlan)
 
   const p1Passed = phase1.passed === true
   const p1Score = phase1.score || 0
@@ -57,7 +62,7 @@ export default function ModuleCard({ module, onClick }) {
       as="button"
       onClick={onClick}
       spotlightColor={theme.spot}
-      className="group w-full text-left elevated-card text-fg hover:-translate-y-1.5 hover:border-themed-strong transition-all duration-300"
+      className={`group w-full text-left elevated-card text-fg hover:-translate-y-1.5 hover:border-themed-strong transition-all duration-300 ${locked ? 'opacity-75' : ''}`}
     >
       <div className={`h-1.5 bg-gradient-to-r ${theme.line} rounded-t-2xl`} />
 
@@ -71,6 +76,15 @@ export default function ModuleCard({ module, onClick }) {
               <span className={`text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r ${theme.line} text-slate-950 font-semibold`}>
                 {module.tag}
               </span>
+              {locked ? (
+                <span className="text-[10px] px-2 py-0.5 rounded-full border border-amber-400/40 bg-amber-500/10 text-amber-700 dark:text-amber-200 font-semibold">
+                  🔒 {PLAN_LABEL[requiredPlan] || requiredPlan}
+                </span>
+              ) : requiredPlan !== 'free' ? (
+                <span className="text-[10px] px-2 py-0.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200 font-semibold">
+                  ✓ {PLAN_LABEL[requiredPlan] || requiredPlan}
+                </span>
+              ) : null}
             </div>
             <h3 className="text-sm font-semibold leading-snug text-fg-strong group-hover:text-[#7c6af7] dark:group-hover:text-[#a78bfa] transition-colors">
               {module.title}

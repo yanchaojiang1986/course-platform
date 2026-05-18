@@ -3,6 +3,7 @@ import { marked } from 'marked'
 import InteractiveBlock from './interactive/InteractiveBlock.jsx'
 import { INLINE_CHECKS } from '../data/inlineChecks/index.js'
 import { EXERCISES } from '../data/exercises.js'
+import { logClient } from '../utils/clientLogger.js'
 
 marked.setOptions({ breaks: true, gfm: true })
 
@@ -235,7 +236,13 @@ export default function ContentViewer({ module }) {
         setSegments(parseSegments(data.content || ''))
       } catch (err) {
         if (aborted) return
-        setLoadError(err.message || '内容加载失败')
+        const message = err?.message || '内容加载失败'
+        setLoadError(message)
+        logClient('error', 'module_content_load_failed', {
+          moduleId: module?.id || '',
+          moduleTitle: module?.title || '',
+          message,
+        })
         setSegments([{ type: 'markdown', content: '<p>内容加载失败，请刷新重试。</p>' }])
       } finally {
         if (!aborted) setLoading(false)
@@ -276,6 +283,9 @@ export default function ContentViewer({ module }) {
     const fromInline = INLINE_CHECKS[checkId]
     if (fromInline) return fromInline
     const fromExercise = (EXERCISES[module.id] || []).find(q => q.id === checkId)
+    if (!fromExercise) {
+      logClient('warn', 'inline_check_not_found', { moduleId: module?.id || '', checkId })
+    }
     return fromExercise || null
   }
 
