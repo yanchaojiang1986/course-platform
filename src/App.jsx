@@ -27,6 +27,9 @@ const DEMO_USER = { id: 0, username: 'demo', plan: 'svip', status: 'active', mem
 
 const THEME_KEY = 'cp_theme'
 const THEMES = ['dark', 'light']
+const BASIC_MODULE_IDS = new Set(['00', '01', '02'])
+const SCREENING_KEY = 'cp_entry_screening_v1'
+const SCREENING_PASS_SCORE = 60
 
 function readInitialTheme() {
   try {
@@ -42,6 +45,67 @@ function readInitialTheme() {
 function applyTheme(theme) {
   if (typeof document === 'undefined') return
   document.documentElement.dataset.theme = theme
+}
+
+function defaultScreeningAnswers() {
+  return {
+    education: '',
+    major: '',
+    experience: '',
+  }
+}
+
+function readScreeningResult() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(SCREENING_KEY) || 'null')
+    if (!raw || typeof raw !== 'object') return null
+    return raw
+  } catch {
+    return null
+  }
+}
+
+function scoreScreening(answers) {
+  const scoreMap = {
+    education: {
+      fulltime_college: 8,
+      bachelor: 12,
+      master_plus: 15,
+      non_fulltime_college: -10,
+      below_college: -20,
+    },
+    major: {
+      computer: 10,
+      stem: 6,
+      non_stem: 0,
+      arts: -8,
+    },
+    experience: {
+      none: -6,
+      one_three_related: 10,
+      one_three_unrelated: 4,
+      four_eight_related: 8,
+      four_eight_unrelated: -2,
+      nine_plus_related: 3,
+      nine_plus_unrelated: -10,
+    }
+  }
+
+  const base = 50
+  const score = base
+    + (scoreMap.education[answers.education] || 0)
+    + (scoreMap.major[answers.major] || 0)
+    + (scoreMap.experience[answers.experience] || 0)
+
+  const hardFailed = answers.education === 'non_fulltime_college' || answers.education === 'below_college'
+  const passed = !hardFailed && score >= SCREENING_PASS_SCORE
+
+  return {
+    score,
+    passed,
+    hardFailed,
+    threshold: SCREENING_PASS_SCORE,
+  }
 }
 
 // 初始化主题（在 React 渲染前同步执行，避免一闪烁）
@@ -70,6 +134,110 @@ function ValidationBanner({ errors }) {
           ))}
         </div>
       )}
+    </div>
+  )
+}
+
+function ScreeningModal({
+  open,
+  answers,
+  onChange,
+  onSubmit,
+  onClose,
+  result,
+  targetModuleTitle,
+}) {
+  if (!open) return null
+  const showResult = !!result
+
+  return (
+    <div className="fixed inset-0 z-[80] bg-black/55 backdrop-blur-sm px-4 py-6 flex items-center justify-center">
+      <div className="w-full max-w-2xl rounded-2xl border border-themed bg-surface p-5 sm:p-6 shadow-2xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.16em] text-fg-muted">前置筛选</p>
+            <h3 className="mt-1 text-xl font-bold text-fg-strong">进入基础教程前评估</h3>
+            <p className="mt-2 text-sm text-fg-muted leading-relaxed">
+              为保证学习效果，进入 <span className="text-fg-strong font-semibold">{targetModuleTitle || '基础教程'}</span> 前需要先完成基础筛选。
+              及格分为 {SCREENING_PASS_SCORE} 分。
+            </p>
+          </div>
+          <button className="glass-btn text-xs px-3 py-1.5" onClick={onClose}>关闭</button>
+        </div>
+
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label className="text-sm text-fg">
+            <div className="mb-1.5 text-fg-muted">学历</div>
+            <select
+              className="w-full rounded-xl border border-themed bg-surface-soft px-3 py-2 text-fg"
+              value={answers.education}
+              onChange={(e) => onChange('education', e.target.value)}
+            >
+              <option value="">请选择</option>
+              <option value="fulltime_college">全日制大专</option>
+              <option value="bachelor">本科</option>
+              <option value="master_plus">硕士及以上</option>
+              <option value="non_fulltime_college">非全日制大专/本科</option>
+              <option value="below_college">大专以下</option>
+            </select>
+          </label>
+
+          <label className="text-sm text-fg">
+            <div className="mb-1.5 text-fg-muted">专业</div>
+            <select
+              className="w-full rounded-xl border border-themed bg-surface-soft px-3 py-2 text-fg"
+              value={answers.major}
+              onChange={(e) => onChange('major', e.target.value)}
+            >
+              <option value="">请选择</option>
+              <option value="computer">计算机类</option>
+              <option value="stem">理工科（非计算机）</option>
+              <option value="non_stem">其他专业</option>
+              <option value="arts">文科类</option>
+            </select>
+          </label>
+
+          <label className="text-sm text-fg sm:col-span-2">
+            <div className="mb-1.5 text-fg-muted">工作经验</div>
+            <select
+              className="w-full rounded-xl border border-themed bg-surface-soft px-3 py-2 text-fg"
+              value={answers.experience}
+              onChange={(e) => onChange('experience', e.target.value)}
+            >
+              <option value="">请选择</option>
+              <option value="none">0 年工作经验</option>
+              <option value="one_three_related">1-3 年相关经验</option>
+              <option value="one_three_unrelated">1-3 年非相关经验</option>
+              <option value="four_eight_related">4-8 年相关经验</option>
+              <option value="four_eight_unrelated">4-8 年非相关经验</option>
+              <option value="nine_plus_related">9 年以上相关经验</option>
+              <option value="nine_plus_unrelated">9 年以上且不相关经验</option>
+            </select>
+          </label>
+        </div>
+
+        {showResult && (
+          <div className={`mt-4 rounded-xl border px-4 py-3 text-sm ${result.passed
+            ? 'border-emerald-400/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200'
+            : 'border-rose-400/40 bg-rose-500/10 text-rose-700 dark:text-rose-200'}`}>
+            <div className="font-semibold">评估得分：{result.score} / 100</div>
+            {result.passed ? (
+              <div className="mt-1">已达到进入条件，正在进入基础教程。</div>
+            ) : result.hardFailed ? (
+              <div className="mt-1">当前学历条件不满足“全日制大专及以上”要求，暂不满足学习条件。</div>
+            ) : (
+              <div className="mt-1">未达到及格线（{result.threshold} 分），暂不满足学习条件。</div>
+            )}
+          </div>
+        )}
+
+        <div className="mt-5 flex items-center justify-end gap-2">
+          <button className="glass-btn text-sm px-4 py-2" onClick={onClose}>取消</button>
+          <button className="glass-btn text-sm px-4 py-2 border-emerald-400/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200" onClick={onSubmit}>
+            提交评估
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -120,6 +288,11 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [theme, setTheme] = useState(readInitialTheme)
+  const [screeningResult, setScreeningResult] = useState(() => readScreeningResult())
+  const [screeningOpen, setScreeningOpen] = useState(false)
+  const [screeningTargetId, setScreeningTargetId] = useState(null)
+  const [screeningAnswers, setScreeningAnswers] = useState(defaultScreeningAnswers)
+  const [screeningAttemptResult, setScreeningAttemptResult] = useState(null)
 
   const toggleTheme = useCallback(() => {
     setTheme(prev => {
@@ -199,7 +372,24 @@ export default function App() {
   const visibleModules = MODULES.filter(m => hasPlanAccess(effectiveUser?.plan, m.requiredPlan))
   const visibleIds = new Set(visibleModules.map(m => m.id))
 
+  const openScreening = (targetId) => {
+    setScreeningTargetId(targetId)
+    setScreeningOpen(true)
+    setScreeningAttemptResult(null)
+    const previous = screeningResult?.answers
+    setScreeningAnswers(previous ? {
+      education: previous.education || '',
+      major: previous.major || '',
+      experience: previous.experience || '',
+    } : defaultScreeningAnswers())
+  }
+
   const handleSelectModule = (id) => {
+    if (BASIC_MODULE_IDS.has(id) && !screeningResult?.passed) {
+      openScreening(id)
+      return
+    }
+
     if (id === 'overview' || id === 'wrongbook' || visibleIds.has(id)) {
       setView(id === 'overview' ? 'map' : id)
     } else {
@@ -212,6 +402,32 @@ export default function App() {
   }
 
   const activeModule = MODULES.find(m => m.id === view && visibleIds.has(m.id))
+  const screeningTargetModule = MODULES.find(m => m.id === screeningTargetId)
+
+  const submitScreening = () => {
+    if (!screeningAnswers.education || !screeningAnswers.major || !screeningAnswers.experience) {
+      window.alert('请先完成全部筛选项后再提交。')
+      return
+    }
+    const scored = scoreScreening(screeningAnswers)
+    const payload = {
+      ...scored,
+      answers: { ...screeningAnswers },
+      updatedAt: new Date().toISOString(),
+    }
+    try {
+      localStorage.setItem(SCREENING_KEY, JSON.stringify(payload))
+    } catch { /* ignore */ }
+    setScreeningResult(payload)
+    setScreeningAttemptResult(payload)
+
+    if (payload.passed && screeningTargetId) {
+      setScreeningOpen(false)
+      setView(screeningTargetId)
+      return
+    }
+    window.alert('未达到进入基础教程条件，当前不可进入基础教程。')
+  }
 
   const handleLogout = async () => {
     try {
@@ -309,6 +525,15 @@ export default function App() {
           {mainView}
         </main>
       </div>
+      <ScreeningModal
+        open={screeningOpen}
+        answers={screeningAnswers}
+        result={screeningAttemptResult}
+        targetModuleTitle={screeningTargetModule?.title}
+        onClose={() => setScreeningOpen(false)}
+        onChange={(key, value) => setScreeningAnswers(prev => ({ ...prev, [key]: value }))}
+        onSubmit={submitScreening}
+      />
     </>
   )
 }
