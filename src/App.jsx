@@ -287,6 +287,7 @@ export default function App() {
           items={sidebarItems}
           activeId={activeId}
           onChange={handleSelectModule}
+          mobileNavCompact={view !== 'map'}
           brandTitle="功能测试训练营"
           brandTag="QA Bootcamp"
           footer={

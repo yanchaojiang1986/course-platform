@@ -11,7 +11,15 @@ const MOBILE_BREAKPOINT = 900
  *
  * items: Array<{ kind: 'section' | 'item', id?, label, hint?, icon?, state?: 'default' | 'in_progress' | 'completed' }>
  */
-export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle = '功能测试训练营', brandTag = 'QA Bootcamp', footer }) {
+export default function WorkbenchSidebar({
+  items,
+  activeId,
+  onChange,
+  mobileNavCompact = false,
+  brandTitle = '功能测试训练营',
+  brandTag = 'QA Bootcamp',
+  footer
+}) {
   const itemRefs = useRef({})
   const hoverTimer = useRef(null)
   const navRef = useRef(null)
@@ -54,11 +62,13 @@ export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle
     const lock = mobile && drawerOpen
     body.classList.toggle('ws-drawer-open', lock)
     body.classList.toggle('ws-lock-scroll', lock)
+    body.classList.toggle('ws-mobile-nav-compact', mobile && mobileNavCompact)
     return () => {
       body.classList.remove('ws-drawer-open')
       body.classList.remove('ws-lock-scroll')
+      body.classList.remove('ws-mobile-nav-compact')
     }
-  }, [mobile, drawerOpen])
+  }, [mobile, drawerOpen, mobileNavCompact])
 
   useEffect(() => {
     if (!drawerOpen) return
@@ -150,7 +160,7 @@ export default function WorkbenchSidebar({ items, activeId, onChange, brandTitle
           </div>
         </aside>
 
-        <div className={`ws-bottom-nav ${drawerOpen ? 'is-hidden' : ''}`}>
+        <div className={`ws-bottom-nav ${mobileNavCompact ? 'compact' : ''} ${drawerOpen ? 'is-hidden' : ''}`}>
           {quickItems.map((item) => {
             const active = item.id === activeId
             return (
