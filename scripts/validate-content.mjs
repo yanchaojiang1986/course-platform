@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 课程内容与交互组件数据交叉校验：
+// 教程内容与交互组件数据交叉校验：
 // 1. 扫描 public/content/*.md 中所有 <!-- DEMO:xxx --> 标记
 // 2. 与 src/data/interactive.js 的 keys 比对
 // 3. 跑 schema 校验（validateInteractive.js）

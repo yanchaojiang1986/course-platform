@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 
-const TUTOR_SYSTEM = `你是一位专业的功能测试课程教辅助手，帮助正在学习软件测试的零基础转行学员。
+const TUTOR_SYSTEM = `你是一位专业的功能测试教程教辅助手，帮助正在学习软件测试的零基础转行学员。
 职责：解释软件测试概念、结合实例回答问题、鼓励学员、只回答测试和IT职场相关问题。
-课程覆盖：计算机基础、测试流程、用例设计、Bug管理、接口测试、Postman、MySQL、Linux、JIRA/禅道、求职面试。
+教程覆盖：计算机基础、测试流程、用例设计、Bug管理、接口测试、Postman、MySQL、Linux、JIRA/禅道、求职面试。
 回答要简洁友好，多用例子，用中文回答。`
 
-const SOCRATIC_SYSTEM = `你是一位专业的软件测试课程教练，正在辅导一位零基础转行学员完成实战任务。
+const SOCRATIC_SYSTEM = `你是一位专业的软件测试教程教练，正在辅导一位零基础转行学员完成实战任务。
 
 核心规则——苏格拉底教学法：
 1. 永远不直接给出答案或完整解决方案

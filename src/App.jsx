@@ -13,7 +13,7 @@ import { logClient } from './utils/clientLogger.js'
 
 // 侧栏分组：4 个阶段
 const STAGE_GROUPS = [
-  { label: 'Stage 01 · 基础课程', ids: ['00', '01', '02'] },
+  { label: 'Stage 01 · 基础教程', ids: ['00', '01', '02'] },
   { label: 'Stage 02 · 核心技能', ids: ['03', '04', '05'] },
   { label: 'Stage 03 · 工具实操', ids: ['06', '07'] },
   { label: 'Stage 04 · 进阶专项', ids: ['12', '13'] },
@@ -205,7 +205,7 @@ export default function App() {
     } else {
       const target = MODULES.find(m => m.id === id)
       if (target) {
-        window.alert(`此课程需要 ${target.requiredPlan?.toUpperCase()} 权限解锁。\n\n请联系课程管理员升级后继续学习。`)
+        window.alert(`此教程需要 ${target.requiredPlan?.toUpperCase()} 权限解锁。\n\n请联系教程管理员升级后继续学习。`)
       }
       setView('map')
     }

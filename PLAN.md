@@ -17,7 +17,7 @@ _最后更新：2026-05-17_
 ## 二、整体架构（已实现）
 
 ```
-主界面：Scrimba 风格课程地图（12 个模块卡片）
+主界面：Scrimba 风格教程地图（12 个模块卡片）
   └── 模块详情页（两 Tab）
         ├── Tab 1：基础关卡（Phase 1）
         │     ├── 富媒体内容（Markdown + 交互组件）← 待实现
@@ -38,14 +38,14 @@ _最后更新：2026-05-17_
 
 | 组件 | 说明 |
 |---|---|
-| CourseMap.jsx | Scrimba 风格课程地图主页 |
+| CourseMap.jsx | Scrimba 风格教程地图主页 |
 | ModuleCard.jsx | 模块卡片（两阶段状态显示） |
 | ModuleDetail.jsx | 两 Tab 详情页 |
 | Exercise.jsx | 80% 通关门槛 + 错题写入 |
 | WrongBook.jsx | 跨模块错题本抽屉 |
 | ScenarioPanel.jsx | Phase 2 情境任务面板 |
 | AIPanel.jsx | 三模式 AI（教辅/苏格拉底/面试官） |
-| App.jsx | 课程地图/模块详情路由 |
+| App.jsx | 教程地图/模块详情路由 |
 | server.js | Mock API（login/products/orders/weather） |
 | DemoFrame.jsx | Demo 应用内嵌组件 |
 | data/scenarios.js | 11 个模块实战情境 |
@@ -137,9 +137,9 @@ _最后更新：2026-05-17_
 | 文件 | 说明 |
 |---|---|
 | `PLAN.md` | 本文件，完整实施计划 |
-| `INTERACTIVE_MAP.md` | 全课程交互组件插入清单（Agent 生成） |
+| `INTERACTIVE_MAP.md` | 全教程交互组件插入清单（Agent 生成） |
 | `CURRENT_TASK.md` | 当前任务进度快照（自动更新） |
-| `public/content/*.md` | 课程内容文件 |
+| `public/content/*.md` | 教程内容文件 |
 | `public/demo/*.html` | 可测试 Demo 应用 |
 | `src/components/` | React 组件 |
 | `src/data/` | 静态数据（模块、练习题、情境） |

@@ -1,5 +1,5 @@
 export const MODULES = [
-  { id: '00', file: '00_课程介绍与学习说明.md', title: '课程介绍与学习说明', emoji: '🗺️', tag: '导航', requiredPlan: 'free' },
+  { id: '00', file: '00_教程介绍与学习说明.md', title: '教程介绍与学习说明', emoji: '🗺️', tag: '导航', requiredPlan: 'free' },
   { id: '01', file: '01_测试前的计算机基础扫盲.md', title: '计算机基础扫盲', emoji: '💻', tag: '基础', requiredPlan: 'free' },
   { id: '02', file: '02_软件测试行业认知与岗位理解.md', title: '行业认知与岗位理解', emoji: '🏢', tag: '认知', requiredPlan: 'free' },
   { id: '03', file: '03_软件测试流程与团队协作.md', title: '测试流程与团队协作', emoji: '🔄', tag: '流程', requiredPlan: 'vip' },

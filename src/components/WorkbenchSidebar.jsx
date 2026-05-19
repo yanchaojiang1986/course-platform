@@ -16,6 +16,7 @@ export default function WorkbenchSidebar({
   activeId,
   onChange,
   mobileNavCompact = false,
+  mobileAutoCollapseMs = 3200,
   brandTitle = '功能测试训练营',
   brandTag = 'QA Bootcamp',
   footer
@@ -27,6 +28,7 @@ export default function WorkbenchSidebar({
   const [mobile, setMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= MOBILE_BREAKPOINT : false)
   const [compact, setCompact] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 1360 && window.innerWidth > MOBILE_BREAKPOINT : false)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [mobileNavCollapsed, setMobileNavCollapsed] = useState(false)
 
   const onlyItems = items.filter(i => i.kind !== 'section')
   const indexOf = (id) => onlyItems.findIndex(i => i.id === id)
@@ -58,17 +60,33 @@ export default function WorkbenchSidebar({
   }, [mobile, drawerOpen])
 
   useEffect(() => {
+    if (!mobile) {
+      setMobileNavCollapsed(false)
+      return
+    }
+    setMobileNavCollapsed(false)
+  }, [mobile, activeId])
+
+  useEffect(() => {
+    if (!mobile || drawerOpen || mobileAutoCollapseMs <= 0 || mobileNavCollapsed) return
+    const timer = window.setTimeout(() => setMobileNavCollapsed(true), mobileAutoCollapseMs)
+    return () => window.clearTimeout(timer)
+  }, [mobile, drawerOpen, activeId, mobileAutoCollapseMs, mobileNavCollapsed])
+
+  useEffect(() => {
     const body = document.body
     const lock = mobile && drawerOpen
     body.classList.toggle('ws-drawer-open', lock)
     body.classList.toggle('ws-lock-scroll', lock)
-    body.classList.toggle('ws-mobile-nav-compact', mobile && mobileNavCompact)
+    body.classList.toggle('ws-mobile-nav-compact', mobile && mobileNavCompact && !mobileNavCollapsed)
+    body.classList.toggle('ws-mobile-nav-collapsed', mobile && mobileNavCollapsed)
     return () => {
       body.classList.remove('ws-drawer-open')
       body.classList.remove('ws-lock-scroll')
       body.classList.remove('ws-mobile-nav-compact')
+      body.classList.remove('ws-mobile-nav-collapsed')
     }
-  }, [mobile, drawerOpen, mobileNavCompact])
+  }, [mobile, drawerOpen, mobileNavCompact, mobileNavCollapsed])
 
   useEffect(() => {
     if (!drawerOpen) return
@@ -160,7 +178,7 @@ export default function WorkbenchSidebar({
           </div>
         </aside>
 
-        <div className={`ws-bottom-nav ${mobileNavCompact ? 'compact' : ''} ${drawerOpen ? 'is-hidden' : ''}`}>
+        <div className={`ws-bottom-nav ${mobileNavCompact ? 'compact' : ''} ${drawerOpen || mobileNavCollapsed ? 'is-hidden' : ''}`}>
           {quickItems.map((item) => {
             const active = item.id === activeId
             return (
@@ -180,6 +198,13 @@ export default function WorkbenchSidebar({
             <span className="ws-bottom-nav-label">菜单</span>
           </button>
         </div>
+        <button
+          className={`ws-nav-fab ${mobileNavCollapsed && !drawerOpen ? '' : 'is-hidden'}`}
+          onClick={() => setMobileNavCollapsed(false)}
+          aria-label="展开导航"
+        >
+          ☰
+        </button>
       </>
     )
   }

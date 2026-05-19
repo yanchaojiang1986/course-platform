@@ -101,7 +101,7 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
   }, [modules])
 
   const groups = [
-    { label: 'Stage 01 · 基础课程', ids: ['00', '01', '02'], desc: '计算机与测试认知的底层能力，建立统一语言和视角。' },
+    { label: 'Stage 01 · 基础教程', ids: ['00', '01', '02'], desc: '计算机与测试认知的底层能力，建立统一语言和视角。' },
     { label: 'Stage 02 · 核心技能', ids: ['03', '04', '05'], desc: '功能测试主线方法：流程、设计、缺陷管理与输出。' },
     { label: 'Stage 03 · 工具实操', ids: ['06', '07'], desc: '接口与工具体系，形成真实可复用的执行能力。' },
     { label: 'Stage 04 · 进阶专项', ids: ['12', '13'], desc: '性能、兼容性与安全专项扫盲，补齐企业测试常见边界。' },
@@ -150,7 +150,7 @@ export default function CourseMap({ modules, onSelectModule, wrongbookCount, use
               <ProgressRing value={progress.p2Done} total={progress.p2Total} color="#7c6af7" label="实战关卡" />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <Metric title="课程模块" value={modules.length} hint="含锁定课程" color="#a78bfa" />
+              <Metric title="教程模块" value={modules.length} hint="含锁定教程" color="#a78bfa" />
               <Metric title="已完成单元" value={doneModules} hint="基础+实战累计" color="#4ecdc4" />
             </div>
           </div>

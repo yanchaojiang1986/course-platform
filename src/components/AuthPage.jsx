@@ -55,7 +55,7 @@ export default function AuthPage({ onAuthed }) {
         <div className="p-6 border-b border-white/10">
           <p className="text-[11px] tracking-[0.22em] uppercase text-cyan-300/80">QA Bootcamp</p>
           <h1 className="text-2xl font-semibold mt-2 bg-gradient-to-r from-white via-cyan-100 to-blue-200 bg-clip-text text-transparent">
-            课程平台登录
+            教程平台登录
           </h1>
           <p className="text-sm text-slate-300 mt-1">先激活账号，再开始学习</p>
         </div>

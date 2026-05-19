@@ -2,11 +2,11 @@ export const INTERACTIVE_DATA = {
   // 模块 00
   '00-01': {
     type: 'timeline',
-    title: '课程学习路线图',
+    title: '教程学习路线图',
     start_label: '零基础',
     end_label: '拿到第一份功能测试工作',
     items: [
-      { stage: '阶段一：基础课程', color: '#6B7280', modules: [
+      { stage: '阶段一：基础教程', color: '#6B7280', modules: [
         { id: '01', name: '计算机基础扫盲', desc: '环境 / 前后端 / 接口的概念' },
         { id: '02', name: '行业认知与岗位理解', desc: '测试是什么 / 每天干什么' },
       ]},
@@ -70,7 +70,7 @@ export const INTERACTIVE_DATA = {
       { icon: '🚀', value: '可进阶', label: '接口/自动化/性能能力可持续抬升薪资' },
     ],
     levels: [
-      { title: '初级（0-1 年）', badge: '本课程目标', min: 6000, max: 12000, note: '先拿到入场岗位，再做能力升级' },
+      { title: '初级（0-1 年）', badge: '本教程目标', min: 6000, max: 12000, note: '先拿到入场岗位，再做能力升级' },
       { title: '中级（1-3 年）', min: 10000, max: 20000, note: '接口测试、SQL、日志定位能力形成差异化' },
       { title: '高级（3-5 年）', min: 18000, max: 30000, note: '具备自动化或性能能力后区间提升明显' },
       { title: '资深/测试开发（5 年+）', min: 25000, max: 50000, note: '走测试架构或测试开发路线' },
@@ -149,7 +149,7 @@ export const INTERACTIVE_DATA = {
     layout: 'side-by-side',
     left: {
       name: '黑盒测试（Black-box）',
-      badge: '本课程重点',
+      badge: '本教程重点',
       badge_color: '#3B82F6',
       items: ['不需要看代码', '只关注：输入什么 → 输出是否符合需求', '测试依据：产品需求文档（PRD）', '工具：Postman、F12、Excel 用例表', '适合：功能测试工程师（入门首选）'],
     },
@@ -617,7 +617,7 @@ export const INTERACTIVE_DATA = {
     description: '点击卡片翻转查看参考答案',
     cards: [
       { question: '软件测试的目的是什么？', answer: '①发现软件中的缺陷；②验证软件符合需求；③为上线提供质量评估依据，让团队有信心发布产品。' },
-      { question: '黑盒测试和白盒测试的区别？', answer: '黑盒：不关注代码内部，只关注输入和输出是否符合需求，本课程重点。\n白盒：需要阅读代码结构，针对代码逻辑分支进行测试，要求有编程能力。' },
+      { question: '黑盒测试和白盒测试的区别？', answer: '黑盒：不关注代码内部，只关注输入和输出是否符合需求，本教程重点。\n白盒：需要阅读代码结构，针对代码逻辑分支进行测试，要求有编程能力。' },
       { question: '等价类划分法和边界值分析法的区别？', answer: '等价类：将输入数据分成有效/无效的类，每类只测一个代表值，减少重复测试。\n边界值：专门测边界上的特殊值（最小值-1、最小值、最大值、最大值+1）。两者通常配合使用。' },
       { question: '开发不认 Bug 怎么办？（满分思路）', answer: '①先自我排查，确保复现步骤没问题；②拿 PRD 或接口文档中的约定作为客观依据；③如果 PRD 没写清楚，立刻拉上产品经理三方碰头确认，以产品最终认定为准并更新文档。不要主观争吵。' },
       { question: '明天上线，今天发现难修的 Bug，同意上线吗？', answer: '不能一概而论，评估严重程度和影响范围：\n• P0（主链路崩溃/资金异常）：坚决拦截，紧急修复后再发；\n• P3（文案错误/非核心UI）：可提延期修复单，由产品和项目经理评估认可后带病上线。\n无论哪种情况，绝不私自隐瞒，必须有书面留痕。' },
@@ -639,7 +639,7 @@ export const INTERACTIVE_DATA = {
   '10-02': {
     type: 'timeline',
     title: '软件测试职业进阶路径',
-    base_stage: { label: '初级功能测试工程师', desc: '本课程出发点', duration: '0-1年', color: '#6B7280' },
+    base_stage: { label: '初级功能测试工程师', desc: '本教程出发点', duration: '0-1年', color: '#6B7280' },
     fork_point: '1-2 年后，根据个人兴趣选择方向',
     paths: [
       { name: '路径一：全栈自动化工程师', tag: '技术方向（最主流）', tag_color: '#3B82F6', stages: [{ duration: '1-2年', label: 'Python/Java 编程基础 + Selenium' }, { duration: '2-3年', label: 'Appium（移动端）+ Pytest + Jenkins CI/CD' }, { duration: '3年+', label: '自动化框架设计 / 性能测试 (JMeter)' }] },

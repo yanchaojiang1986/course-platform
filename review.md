@@ -18,7 +18,7 @@
 - `BYPASS_LOGIN`（`App.jsx:9`）的调试绕过用前端常量而非环境变量，无需改 .env，本地验收方便
 
 ### 问题
-- **`BYPASS_LOGIN = true` 硬编码**（`App.jsx:9`）：若部署前未手动改回，生产环境任何人都能以 svip 身份访问全课程。建议改为 `const BYPASS_LOGIN = import.meta.env.DEV`，彻底消灭人工记忆依赖
+- **`BYPASS_LOGIN = true` 硬编码**（`App.jsx:9`）：若部署前未手动改回，生产环境任何人都能以 svip 身份访问全教程。建议改为 `const BYPASS_LOGIN = import.meta.env.DEV`，彻底消灭人工记忆依赖
 - `server.js` 中 `PLAN_RANK` 和 `normalizePlan`、`hasPlanAccess` 均为内联副本（`server.js:2-4`，对比 `utils/access.js:1-15`），与前端实际存在两套，只是恰好内容一致。后端应直接 import `src/utils/access.js`，或把 utils 提到共享层
 
 ---
@@ -34,7 +34,7 @@
 
 ### 问题
 - **`/api/auth/redeem` 和 `/api/admin/invite-codes/generate` 缺少速率限制**：暴力枚举授权码 hash 理论可行（`sha256(code)`），建议加 `express-rate-limit` 或 IP 级频控
-- **`/api/content/:moduleId` 同步读文件**（`readFileSync`，`server.js:445`）：内容量小时无妨，但若课程 md 文件日后变大，会阻塞事件循环，建议改为 `fs.promises.readFile`
+- **`/api/content/:moduleId` 同步读文件**（`readFileSync`，`server.js:445`）：内容量小时无妨，但若教程 md 文件日后变大，会阻塞事件循环，建议改为 `fs.promises.readFile`
 - `systemPrompt` 由前端传入（`server.js:548`），后端直接使用未做校验，恶意用户可伪造 system prompt 覆盖教练人设。建议后端根据 `mode` 自行拼装 system，前端只传 `mode`
 
 ---
@@ -79,7 +79,7 @@
 
 ---
 
-## 六、课程内容（公开可见部分）
+## 六、教程内容（公开可见部分）
 
 **仅评审内容结构，未逐字审阅全部 md 文件。**
 

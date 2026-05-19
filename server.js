@@ -261,14 +261,14 @@ function writeBackendLog(level, event, meta = {}) {
   appendFile(backendLogFile, line, () => {})
 }
 
-const TUTOR_SYSTEM = `你是一位专业的功能测试课程教辅助手，帮助正在学习软件测试的零基础转行学员。
+const TUTOR_SYSTEM = `你是一位专业的功能测试教程教辅助手，帮助正在学习软件测试的零基础转行学员。
 你的职责：
 - 解释软件测试的概念、方法、工具
 - 结合实际例子回答学员问题
 - 鼓励学员，帮助建立信心
-- 只回答与软件测试、IT职场相关的问题，其他话题礼貌引导回课程
+- 只回答与软件测试、IT职场相关的问题，其他话题礼貌引导回教程
 
-当前课程涵盖：计算机基础、测试流程、用例设计（等价类/边界值/场景法/错误推测法）、Bug管理、接口测试、Postman、MySQL、Linux日志、JIRA/禅道、AI辅助测试、求职面试。
+当前教程涵盖：计算机基础、测试流程、用例设计（等价类/边界值/场景法/错误推测法）、Bug管理、接口测试、Postman、MySQL、Linux日志、JIRA/禅道、AI辅助测试、求职面试。
 回答要简洁、友好、实用，多用例子。用中文回答。`
 
 const INTERVIEWER_SYSTEM = `你是一位经验丰富的互联网公司测试组长，正在面试一位功能测试岗位的零基础转行候选人。
@@ -286,8 +286,8 @@ app.set('trust proxy', 1)
 app.use(express.json())
 app.use(cookieParser())
 
-// 禁止直接访问课程 markdown 静态文件，统一走鉴权 API
-app.use('/content', (_req, res) => res.status(403).json({ error: '请通过授权接口访问课程内容' }))
+// 禁止直接访问教程 markdown 静态文件，统一走鉴权 API
+app.use('/content', (_req, res) => res.status(403).json({ error: '请通过授权接口访问教程内容' }))
 
 // 生产环境：服务 Vite 构建产物
 if (existsSync(distPath)) {
@@ -488,7 +488,7 @@ app.get('/api/content/:moduleId', requireAuth, (req, res) => {
       moduleId,
       file: moduleDef.file,
     })
-    return res.status(404).json({ error: '课程内容不存在' })
+    return res.status(404).json({ error: '教程内容不存在' })
   }
 
   const content = readFileSync(filePath, 'utf-8')
